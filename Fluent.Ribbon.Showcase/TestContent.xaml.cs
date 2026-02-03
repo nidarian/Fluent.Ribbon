@@ -660,6 +660,48 @@ public partial class TestContent
     }
 }
 
+/// <summary>
+/// Test control for Issue #357 - KeyTips for standard controls.
+/// Standard WPF Slider with IKeyTipedControl implementation.
+/// </summary>
+public class KeyTipedSlider : Slider, IKeyTipedControl
+{
+    /// <summary>Identifies the <see cref="KeyTip"/> dependency property.</summary>
+    public static readonly DependencyProperty KeyTipProperty =
+        Fluent.KeyTip.KeysProperty.AddOwner(typeof(KeyTipedSlider));
+
+    /// <summary>
+    /// Gets or sets the KeyTip for this control.
+    /// </summary>
+    public string? KeyTip
+    {
+        get => (string?)this.GetValue(KeyTipProperty);
+        set => this.SetValue(KeyTipProperty, value);
+    }
+
+    /// <inheritdoc/>
+    public void OnKeyTipBack()
+    {
+    }
+
+    /// <inheritdoc/>
+    public KeyTipPressedResult OnKeyTipPressed()
+    {
+        this.Dispatcher.BeginInvoke(
+            System.Windows.Threading.DispatcherPriority.Normal,
+            (Action<Slider>)(ctrl =>
+            {
+                if (!ctrl.IsKeyboardFocusWithin)
+                {
+                    Keyboard.Focus(ctrl);
+                }
+            }),
+            this);
+
+        return KeyTipPressedResult.Empty;
+    }
+}
+
 public class TestRoutedCommand
 {
     public static RoutedCommand TestPresenterCommand { get; } = new(nameof(TestPresenterCommand), typeof(TestRoutedCommand));

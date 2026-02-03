@@ -2781,6 +2781,44 @@
                     Fluent:KeyTip.VerticalAlignment
                     Fluent:KeyTip.Margin
                 -->
+                <!-- Issue #357 test: KeyTips for standard WPF controls -->
+                <Fluent:RibbonGroupBox Header="Issue #357 Test">
+                    <!-- Bug: AutoPlacement=true (default) positions KeyTip wrong for non-Fluent controls -->
+                    <fluentTest:KeyTipedSlider Width="100"
+                                               Minimum="0"
+                                               Maximum="100"
+                                               Value="50"
+                                               Fluent:KeyTip.Keys="SL" />
+                    <!-- Adding a button makes the bug visible -->
+                    <Fluent:Button Header="Button"
+                                   Fluent:KeyTip.Keys="BT"
+                                   Icon="pack://application:,,,/Fluent.Ribbon.Showcase;component/Images/Green.png"
+                                   LargeIcon="pack://application:,,,/Fluent.Ribbon.Showcase;component/Images/GreenLarge.png" />
+                    <!-- Wrong workaround: Size gets overwritten by RibbonGroupBox -->
+                    <fluentTest:KeyTipedSlider Width="100"
+                                               Minimum="0"
+                                               Maximum="100"
+                                               Value="50"
+                                               Fluent:RibbonProperties.Size="Middle"
+                                               Fluent:KeyTip.Keys="SM" />
+                    <!-- Workaround 2: Use SizeDefinition -->
+                    <fluentTest:KeyTipedSlider Width="100"
+                                               Minimum="0"
+                                               Maximum="100"
+                                               Value="50"
+                                               Fluent:RibbonProperties.SizeDefinition="Middle, Middle, Middle"
+                                               Fluent:KeyTip.Keys="SD" />
+                    <!-- Workaround 3: Manual placement (AutoPlacement=False) -->
+                    <fluentTest:KeyTipedSlider Width="100"
+                                               Minimum="0"
+                                               Maximum="100"
+                                               Value="50"
+                                               Fluent:KeyTip.Keys="AP"
+                                               Fluent:KeyTip.AutoPlacement="False"
+                                               Fluent:KeyTip.HorizontalAlignment="Left"
+                                               Fluent:KeyTip.VerticalAlignment="Top" />
+                </Fluent:RibbonGroupBox>
+
                 <Fluent:RibbonGroupBox Header="Custom KeyTip placement">
                     <Fluent:Button Header="Center"
                                    Icon="pack://application:,,,/Fluent.Ribbon.Showcase;component/Images/Green.png"
