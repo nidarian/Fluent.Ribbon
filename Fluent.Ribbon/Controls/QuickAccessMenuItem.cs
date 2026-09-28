@@ -38,7 +38,32 @@ public class QuickAccessMenuItem : MenuItem
 {
     #region Fields
 
-    internal Ribbon? Ribbon { get; set; }
+    private Ribbon? ribbon;
+
+    /// <summary>
+    /// Gets or sets the ribbon owning this item.
+    /// Set by <see cref="Fluent.Ribbon.QuickAccessItems"/> when the item is added or removed.
+    /// </summary>
+    internal Ribbon? Ribbon
+    {
+        get => this.ribbon;
+        set
+        {
+            this.ribbon = value;
+
+            // Items declared in XAML get added to the toolbar through OnFirstLoaded, because they
+            // receive their Loaded event together with the ribbon.
+            // Items added from code after the ribbon is live only get Loaded once the quick access
+            // menu is opened, so a checked item would stay hidden until then (#1251).
+            // Only do this once the toolbar exists. Registering the element earlier would make the
+            // Loaded logic believe it's already shown, and it would never be added to the toolbar.
+            if (value?.QuickAccessToolBar is not null
+                && this.IsChecked)
+            {
+                value.AddToQuickAccessToolBar(this.Target);
+            }
+        }
+    }
 
     #endregion
 
