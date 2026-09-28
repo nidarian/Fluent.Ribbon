@@ -124,18 +124,65 @@ jobs:
           git push -q origin archive
 
   # ---------------------------------------------------------------------------
-  # NuGet packages + release files -> GitHub Releases on this fork
+  # Every package needed to BUILD develop (runs on Windows)
   # ---------------------------------------------------------------------------
-  binaries:
-    runs-on: ubuntu-latest
+  # Without these, even a perfect copy of the source couldn't be built if
+  # packages like ControlzEx vanished from NuGet.
+  #
+  # Why Windows: this was first tried on Linux (with EnableWindowsTargeting),
+  # and `dotnet restore` failed with no error message. The WPF projects need
+  # Windows even just to resolve their packages. build.yml already proves
+  # restore works on windows-latest.
+  dependencies:
+    runs-on: windows-latest
+    # Git Bash ships with the Windows runners, so the script can stay bash.
+    defaults:
+      run:
+        shell: bash
+    env:
+      # Pointing NUGET_PACKAGES at a folder makes every restore save its
+      # downloads there instead of the hidden per-user cache.
+      NUGET_PACKAGES: ${{ github.workspace }}/restore-cache
     steps:
       - name: Check out the fork
         uses: actions/checkout@v4
 
-      - name: Install .NET (for restoring dependencies)
+      - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
+
+      - name: Restore everything the build uses
+        run: |
+          dotnet restore Fluent.Ribbon.sln
+          dotnet restore .build/.build.csproj   # the Nuke build script's own packages
+          dotnet tool restore                   # xamlstyler, run during the build
+          # Flatten the cache (id/version/file.nupkg) into one folder.
+          mkdir -p deps
+          find restore-cache -name '*.nupkg' -exec cp -n {} deps/ \;
+          ls deps | wc -l
+
+      # Workflow artifacts are the standard way to hand files from one job to
+      # another (each job runs on a fresh machine). One day is plenty: the
+      # binaries job below picks them up within minutes.
+      - name: Hand the packages to the upload job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-packages
+          path: deps/*.nupkg
+          retention-days: 1
+
+  # ---------------------------------------------------------------------------
+  # NuGet packages + release files -> GitHub Releases on this fork
+  # ---------------------------------------------------------------------------
+  binaries:
+    needs: dependencies
+    # always(): if the dependency job fails, still archive everything else.
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the fork
+        uses: actions/checkout@v4
 
       - name: Download every published Fluent.Ribbon version from NuGet
         run: |
@@ -150,25 +197,17 @@ jobs:
           done
           ls nupkg | wc -l
 
-      - name: Download every dependency needed to build develop
-        # Without these, even a perfect copy of the source couldn't be built
-        # if packages like ControlzEx vanished from NuGet. Pointing
-        # NUGET_PACKAGES at a folder makes every restore save its downloads there.
-        env:
-          NUGET_PACKAGES: ${{ github.workspace }}/restore-cache
-          # Lets a Linux machine restore Windows-only (WPF) projects. We only
-          # download here, nothing is compiled.
-          EnableWindowsTargeting: "true"
-        run: |
-          dotnet restore Fluent.Ribbon.sln
-          dotnet restore .build/.build.csproj   # the Nuke build script's own packages
-          dotnet tool restore                   # xamlstyler, run during the build
-          # Flatten the cache (id/version/file.nupkg) into one folder.
-          find restore-cache -name '*.nupkg' -exec cp -n {} nupkg/ \;
-          ls nupkg | wc -l
+      - name: Collect the dependency packages from the Windows job
+        # Skipped if the dependencies job failed, so the rest still runs.
+        if: needs.dependencies.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-packages
+          # Same folder as the Fluent.Ribbon versions, so one upload handles both.
+          path: nupkg
 
       - name: Download files attached to upstream releases
-        # always(): still grab release files if a dependency failed to restore.
+        # always(): still grab release files if an earlier step failed.
         if: always()
         run: |
           mkdir -p release-files
