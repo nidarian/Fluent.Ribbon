@@ -1,0 +1,2694 @@
+[
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21002932"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21002932"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why remove this comment while adding it in other files?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T15:59:31Z",
+    "diff_hunk": "@@ -481,11 +482,6 @@ private void OnLoaded(object sender, RoutedEventArgs e)\n         #endregion\r\n \r\n         #region Overrides\r\n-\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21002932",
+    "id": 21002932,
+    "line": 484,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAyOTMy",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 12,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Gallery.cs",
+    "position": 12,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21002932/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T15:59:31Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21002932",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003023"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003023"
+      }
+    },
+    "author_association": "NONE",
+    "body": "That was a mistake. I didn't mean to. Please ignore that.\n\nThanks.\n\nConstantin\nOn Nov 27, 2014 7:59 AM, \"Bastian Schmidt\" notifications@github.com wrote:\n\n> In Fluent/Controls/Gallery.cs:\n> \n> > @@ -481,11 +482,6 @@ private void OnLoaded(object sender, RoutedEventArgs e)\n> >          #endregion\n> > \n> > ```\n> >      #region Overrides\n> > ```\n> > \n> > ## \n> \n> Why remove this comment while adding it in other files?\n> \n> —\n> Reply to this email directly or view it on GitHub\n> https://github.com/fluentribbon/Fluent.Ribbon/pull/27/files#r21002932.\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:01:27Z",
+    "diff_hunk": "@@ -481,11 +482,6 @@ private void OnLoaded(object sender, RoutedEventArgs e)\n         #endregion\r\n \r\n         #region Overrides\r\n-\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003023",
+    "id": 21003023,
+    "line": 484,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMDIz",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 12,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Gallery.cs",
+    "position": 12,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003023/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:01:27Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003023",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/9678958?v=4",
+      "events_url": "https://api.github.com/users/Gebelexis/events{/privacy}",
+      "followers_url": "https://api.github.com/users/Gebelexis/followers",
+      "following_url": "https://api.github.com/users/Gebelexis/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Gebelexis/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/Gebelexis",
+      "id": 9678958,
+      "login": "Gebelexis",
+      "node_id": "MDQ6VXNlcjk2Nzg5NTg=",
+      "organizations_url": "https://api.github.com/users/Gebelexis/orgs",
+      "received_events_url": "https://api.github.com/users/Gebelexis/received_events",
+      "repos_url": "https://api.github.com/users/Gebelexis/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/Gebelexis/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Gebelexis/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/Gebelexis",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003105"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003105"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why is this change needed?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:03:40Z",
+    "diff_hunk": "@@ -407,7 +411,11 @@ private void SubscribeEvents()\n             if (this.DropDownPopup != null)\r\n             {\r\n                 this.DropDownPopup.KeyDown += this.OnDropDownPopupKeyDown;\r\n-                this.DropDownPopup.AddHandler(MouseDownEvent, new RoutedEventHandler(this.OnDropDownPopupMouseDown), true);\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003105",
+    "id": 21003105,
+    "line": 410,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMTA1",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 15,
+    "original_start_line": null,
+    "path": "Fluent/Controls/DropDownButton.cs",
+    "position": 15,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003105/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:03:40Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003105",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003109"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003109"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why is this change needed?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:03:43Z",
+    "diff_hunk": "@@ -431,7 +439,11 @@ private void UnSubscribeEvents()\n             if (this.DropDownPopup != null)\r\n             {\r\n                 this.DropDownPopup.KeyDown -= this.OnDropDownPopupKeyDown;\r\n-                this.DropDownPopup.RemoveHandler(MouseDownEvent, new RoutedEventHandler(this.OnDropDownPopupMouseDown));\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003109",
+    "id": 21003109,
+    "line": 434,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMTA5",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 28,
+    "original_start_line": null,
+    "path": "Fluent/Controls/DropDownButton.cs",
+    "position": 28,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003109/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:03:43Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003109",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003177"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003177"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:05:35Z",
+    "diff_hunk": "@@ -57,8 +79,19 @@ protected override DependencyObject GetContainerForItemOverride()\n         /// <returns></returns>\r\n         protected override bool IsItemItsOwnContainerOverride(object item)\r\n         {\r\n-            return item is System.Windows.Controls.MenuItem \r\n-                || item is Separator;\r\n+            var isItemItsOwnContainerOverride = item is System.Windows.Controls.MenuItem \r\n+                            || item is MenuItem || item is Separator || item is Gallery;\r\n+\r\n+#if NET45\r\n+            if (isItemItsOwnContainerOverride == false)\r\n+            {\r\n+                this.currentItem = item;\r\n+            }\r\n+            else\r\n+                this.currentItem = null;\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003177",
+    "id": 21003177,
+    "line": 91,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMTc3",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 52,
+    "original_start_line": null,
+    "path": "Fluent/Controls/RibbonMenu.cs",
+    "position": 52,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003177/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:05:35Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003177",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003183"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003183"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:05:43Z",
+    "diff_hunk": "@@ -40,13 +40,35 @@ static object OnCoerceStyle(DependencyObject d, object basevalue)\n         #endregion\r\n \r\n         #region Overrides\r\n-\r\n+#if NET45\r\n+        private object currentItem;\r\n+#endif\r\n         /// <summary>\r\n         /// Creates or identifies the element that is used to display the given item.\r\n         /// </summary>\r\n         /// <returns>The element that is used to display the given item.</returns>\r\n         protected override DependencyObject GetContainerForItemOverride()\r\n         {\r\n+#if NET45\r\n+            var item = this.currentItem;\r\n+            this.currentItem = null;\r\n+\r\n+            if (item != null)\r\n+            {\r\n+                var dataTemplate = this.ItemTemplate;\r\n+                if (dataTemplate == null && this.UsesItemContainerTemplate && this.ItemContainerTemplateSelector != null)\r\n+                    dataTemplate = this.ItemContainerTemplateSelector.SelectTemplate(item, this);\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003183",
+    "id": 21003183,
+    "line": 60,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMTgz",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 22,
+    "original_start_line": null,
+    "path": "Fluent/Controls/RibbonMenu.cs",
+    "position": 22,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003183/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:05:43Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003183",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003202"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003202"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:06:05Z",
+    "diff_hunk": "@@ -853,6 +853,57 @@ protected override void OnKeyDown(KeyEventArgs e)\n             base.OnKeyDown(e);\r\n         }\r\n \r\n+#if NET45\r\n+        private object currentItem;\r\n+#endif\r\n+        /// <summary>\r\n+        /// Creates or identifies the element that is used to display the given item.\r\n+        /// </summary>\r\n+        /// <returns>The element that is used to display the given item.</returns>\r\n+        protected override DependencyObject GetContainerForItemOverride()\r\n+        {\r\n+#if NET45\r\n+            var item = this.currentItem;\r\n+            this.currentItem = null;\r\n+\r\n+            if (item != null)\r\n+            {\r\n+                var dataTemplate = this.ItemTemplate;\r\n+                if (dataTemplate == null && this.ItemTemplateSelector != null)\r\n+                    dataTemplate = this.ItemTemplateSelector.SelectTemplate(item, this);\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003202",
+    "id": 21003202,
+    "line": 873,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMjAy",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 21,
+    "original_start_line": null,
+    "path": "Fluent/Controls/ComboBox.cs",
+    "position": 21,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003202/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:06:05Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003202",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003218"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003218"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why no exception here, but in other places?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:06:25Z",
+    "diff_hunk": "@@ -853,6 +853,57 @@ protected override void OnKeyDown(KeyEventArgs e)\n             base.OnKeyDown(e);\r\n         }\r\n \r\n+#if NET45\r\n+        private object currentItem;\r\n+#endif\r\n+        /// <summary>\r\n+        /// Creates or identifies the element that is used to display the given item.\r\n+        /// </summary>\r\n+        /// <returns>The element that is used to display the given item.</returns>\r\n+        protected override DependencyObject GetContainerForItemOverride()\r\n+        {\r\n+#if NET45\r\n+            var item = this.currentItem;\r\n+            this.currentItem = null;\r\n+\r\n+            if (item != null)\r\n+            {\r\n+                var dataTemplate = this.ItemTemplate;\r\n+                if (dataTemplate == null && this.ItemTemplateSelector != null)\r\n+                    dataTemplate = this.ItemTemplateSelector.SelectTemplate(item, this);\r\n+                if (dataTemplate != null)\r\n+                {\r\n+                    var dataTemplateContent = (object)dataTemplate.LoadContent();\r\n+                    if (dataTemplateContent is ComboBoxItem)\r\n+                    {\r\n+                        return dataTemplateContent as DependencyObject;\r\n+                    }\r\n+\r\n+                    //throw new InvalidOperationException(\"Invalid ItemContainer\");\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003218",
+    "id": 21003218,
+    "line": 882,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMjE4",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 30,
+    "original_start_line": null,
+    "path": "Fluent/Controls/ComboBox.cs",
+    "position": 30,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003218/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:06:25Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003218",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003250"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003250"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Private?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:07:04Z",
+    "diff_hunk": "@@ -2148,5 +2148,104 @@ static void OnAutoStateManagement(DependencyObject d, DependencyPropertyChangedE\n         #endregion\r\n \r\n         #endregion\r\n+\r\n+        #region TabItems\r\n+\r\n+        #region TabItemsTemplate\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets TabItemsTemplate\r\n+        /// </summary>\r\n+        public DataTemplate TabItemsTemplate\r\n+        {\r\n+            get { return (DataTemplate)GetValue(TabItemsTemplateProperty); }\r\n+            set { SetValue(TabItemsTemplateProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for TabItemsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty TabItemsTemplateProperty =\r\n+            DependencyProperty.Register(\"TabItemsTemplate\", typeof(DataTemplate), typeof(Ribbon), new UIPropertyMetadata(null));\r\n+\r\n+        #endregion\r\n+\r\n+        #region TabItemsSource\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets TabItemsSource\r\n+        /// </summary>\r\n+        public IEnumerable TabItemsSource\r\n+        {\r\n+            get { return (IEnumerable)GetValue(TabItemsSourceProperty); }\r\n+            set { SetValue(TabItemsSourceProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for TabItemsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty TabItemsSourceProperty =\r\n+            DependencyProperty.Register(\"TabItemsSource\", typeof(IEnumerable), typeof(Ribbon), new UIPropertyMetadata(null, OnTabItemsSourceChanged));\r\n+\r\n+        static void OnTabItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r\n+        {\r\n+            Ribbon ribbon = (Ribbon)d;\r\n+            ItemsSourceHelper.ItemsSourceChanged<RibbonTabItem>(ribbon.Tabs, ribbon.TabItemsTemplate, e,\r\n+                (sender, args) => { Ribbon r = sender as Ribbon; r.SelectedTabIndex = ItemsSourceHelper.SelectorItemsSource_CollectionChanged(r.Tabs, r.TabItemsTemplate, r, args, r.SelectedTabIndex); });\r\n+        }\r\n+\r\n+        #endregion\r\n+\r\n+        #endregion\r\n+\r\n+        #region ContextualTabGroupsTemplate\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets TabItemsTemplate\r\n+        /// </summary>\r\n+        public DataTemplate ContextualTabGroupsTemplate\r\n+        {\r\n+            get { return (DataTemplate)GetValue(ContextualTabGroupsTemplateProperty); }\r\n+            set { SetValue(ContextualTabGroupsTemplateProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for ContextualTabGroupsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty ContextualTabGroupsTemplateProperty =\r\n+            DependencyProperty.Register(\"ContextualTabGroupsTemplate\", typeof(DataTemplate), typeof(Ribbon), new UIPropertyMetadata(null));\r\n+\r\n+        #endregion\r\n+\r\n+        #region ContextualTabGroupsSource\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets ContextualTabGroupsSource\r\n+        /// </summary>\r\n+        public IEnumerable ContextualTabGroupsSource\r\n+        {\r\n+            get { return (IEnumerable)GetValue(ContextualTabGroupsSourceProperty); }\r\n+            set { SetValue(ContextualTabGroupsSourceProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for ContextualTabGroupsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty ContextualTabGroupsSourceProperty =\r\n+            DependencyProperty.Register(\"ContextualTabGroupsSource\", typeof(IEnumerable), typeof(Ribbon), new UIPropertyMetadata(null, OnContextualTabGroupsSourceChanged));\r\n+\r\n+        static void OnContextualTabGroupsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003250",
+    "id": 21003250,
+    "line": 2241,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMjUw",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 94,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Ribbon.cs",
+    "position": 94,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003250/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:07:37Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003250",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003265"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003265"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Private?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:07:30Z",
+    "diff_hunk": "@@ -2148,5 +2148,104 @@ static void OnAutoStateManagement(DependencyObject d, DependencyPropertyChangedE\n         #endregion\r\n \r\n         #endregion\r\n+\r\n+        #region TabItems\r\n+\r\n+        #region TabItemsTemplate\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets TabItemsTemplate\r\n+        /// </summary>\r\n+        public DataTemplate TabItemsTemplate\r\n+        {\r\n+            get { return (DataTemplate)GetValue(TabItemsTemplateProperty); }\r\n+            set { SetValue(TabItemsTemplateProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for TabItemsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty TabItemsTemplateProperty =\r\n+            DependencyProperty.Register(\"TabItemsTemplate\", typeof(DataTemplate), typeof(Ribbon), new UIPropertyMetadata(null));\r\n+\r\n+        #endregion\r\n+\r\n+        #region TabItemsSource\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets TabItemsSource\r\n+        /// </summary>\r\n+        public IEnumerable TabItemsSource\r\n+        {\r\n+            get { return (IEnumerable)GetValue(TabItemsSourceProperty); }\r\n+            set { SetValue(TabItemsSourceProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for TabItemsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty TabItemsSourceProperty =\r\n+            DependencyProperty.Register(\"TabItemsSource\", typeof(IEnumerable), typeof(Ribbon), new UIPropertyMetadata(null, OnTabItemsSourceChanged));\r\n+\r\n+        static void OnTabItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003265",
+    "id": 21003265,
+    "line": 2192,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMjY1",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 45,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Ribbon.cs",
+    "position": 45,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003265/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:07:30Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003265",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003278"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003278"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Private?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:07:49Z",
+    "diff_hunk": "@@ -538,5 +534,51 @@ public override void OnApplyTemplate()\n         }\r\n \r\n         #endregion\r\n+\r\n+        #region GalleryGroupFilterTemplate\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets GalleryGroupFilterTemplate\r\n+        /// </summary>\r\n+        public DataTemplate GalleryGroupFilterTemplate\r\n+        {\r\n+            get { return (DataTemplate)GetValue(GalleryGroupFilterTemplateProperty); }\r\n+            set { SetValue(GalleryGroupFilterTemplateProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for GalleryGroupFilterTemplate. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty GalleryGroupFilterTemplateProperty =\r\n+            DependencyProperty.Register(\"GalleryGroupFilterTemplate\", typeof(DataTemplate), typeof(Gallery), new UIPropertyMetadata(null));\r\n+\r\n+        #endregion\r\n+\r\n+        #region GalleryGroupFilterSource\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets GalleryGroupFilterSource\r\n+        /// </summary>\r\n+        public IEnumerable GalleryGroupFilterSource\r\n+        {\r\n+            get { return (IEnumerable)GetValue(GalleryGroupFilterSourceProperty); }\r\n+            set { SetValue(GalleryGroupFilterSourceProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for GalleryGroupFilterSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty GalleryGroupFilterSourceProperty =\r\n+            DependencyProperty.Register(\"GalleryGroupFilterSource\", typeof(IEnumerable), typeof(Gallery), new UIPropertyMetadata(null, OnGalleryGroupFilterSourceChanged));\r\n+\r\n+        static void OnGalleryGroupFilterSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003278",
+    "id": 21003278,
+    "line": 576,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMjc4",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 63,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Gallery.cs",
+    "position": 63,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003278/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:07:49Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003278",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003304"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003304"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:08:28Z",
+    "diff_hunk": "@@ -745,5 +754,77 @@ public void OnKeyTipBack()\n                 this.TabControlParent.IsDropDownOpen = false;\r\n             }\r\n         }\r\n+\r\n+        #region Group binding\r\n+        public object ContextualGroupSource\r\n+        {\r\n+            get { return (object)GetValue(ContextualGroupSourceProperty); }\r\n+            set { base.SetValue(ContextualGroupSourceProperty, value); }\r\n+        }\r\n+\r\n+        public static readonly DependencyProperty ContextualGroupSourceProperty = DependencyProperty.Register(\"ContextualGroupSource\", typeof(object), typeof(RibbonTabItem),\r\n+            new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnContextualGroupSourcePropertyChanged)));\r\n+\r\n+        private static void OnContextualGroupSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r\n+        {\r\n+            RibbonTabItem container = d as RibbonTabItem;\r\n+            object ContextualGroupSource = e.NewValue;\r\n+            foreach ( var group in container.FindParentRibbon().ContextualGroups)\r\n+            {\r\n+                if (group.DataContext == ContextualGroupSource)\r\n+                    container.Group = group;\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003304",
+    "id": 21003304,
+    "line": 775,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzA0",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 38,
+    "original_start_line": null,
+    "path": "Fluent/Controls/RibbonTabItem.cs",
+    "position": 38,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003304/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:08:28Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003304",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003310"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003310"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Private?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:08:38Z",
+    "diff_hunk": "@@ -745,5 +754,77 @@ public void OnKeyTipBack()\n                 this.TabControlParent.IsDropDownOpen = false;\r\n             }\r\n         }\r\n+\r\n+        #region Group binding\r\n+        public object ContextualGroupSource\r\n+        {\r\n+            get { return (object)GetValue(ContextualGroupSourceProperty); }\r\n+            set { base.SetValue(ContextualGroupSourceProperty, value); }\r\n+        }\r\n+\r\n+        public static readonly DependencyProperty ContextualGroupSourceProperty = DependencyProperty.Register(\"ContextualGroupSource\", typeof(object), typeof(RibbonTabItem),\r\n+            new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnContextualGroupSourcePropertyChanged)));\r\n+\r\n+        private static void OnContextualGroupSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r\n+        {\r\n+            RibbonTabItem container = d as RibbonTabItem;\r\n+            object ContextualGroupSource = e.NewValue;\r\n+            foreach ( var group in container.FindParentRibbon().ContextualGroups)\r\n+            {\r\n+                if (group.DataContext == ContextualGroupSource)\r\n+                    container.Group = group;\r\n+            }\r\n+        }\r\n+        #endregion\r\n+\r\n+        #region GroupsItemsSource\r\n+\r\n+        #region GroupsTemplate\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets GroupsTemplate\r\n+        /// </summary>\r\n+        public DataTemplate GroupsTemplate\r\n+        {\r\n+            get { return (DataTemplate)GetValue(GroupsTemplateProperty); }\r\n+            set { SetValue(GroupsTemplateProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for GroupsTemplate. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty GroupsTemplateProperty =\r\n+            DependencyProperty.Register(\"GroupsTemplate\", typeof(DataTemplate), typeof(RibbonTabItem), new UIPropertyMetadata(null));\r\n+\r\n+        #endregion\r\n+\r\n+        #region GroupsSource\r\n+\r\n+        /// <summary>\r\n+        /// Gets or sets GroupsSource\r\n+        /// </summary>\r\n+        public IEnumerable GroupsSource\r\n+        {\r\n+            get { return (IEnumerable)GetValue(GroupsSourceProperty); }\r\n+            set { SetValue(GroupsSourceProperty, value); }\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Using a DependencyProperty as the backing store for GroupsSource. \r\n+        /// This enables animation, styling, binding, etc...\r\n+        /// </summary>\r\n+        public static readonly DependencyProperty GroupsSourceProperty =\r\n+            DependencyProperty.Register(\"GroupsSource\", typeof(IEnumerable), typeof(RibbonTabItem), new UIPropertyMetadata(null, OnGroupsSourceChanged));\r\n+\r\n+        static void OnGroupsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003310",
+    "id": 21003310,
+    "line": 820,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzEw",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 83,
+    "original_start_line": null,
+    "path": "Fluent/Controls/RibbonTabItem.cs",
+    "position": 83,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003310/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:08:38Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003310",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003319"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003319"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:08:45Z",
+    "diff_hunk": "@@ -0,0 +1,33 @@\n+﻿namespace Fluent.Converters\n+{\n+    using System;\n+    using System.Globalization;\n+    using System.Net.Cache;\n+    using System.Windows;\n+    using System.Windows.Controls;\n+    using System.Windows.Data;\n+    using System.Windows.Media;\n+    using System.Windows.Media.Imaging;\n+\n+    [ValueConversion(typeof(object), typeof(Visibility))]\n+    public class EmptyContentToVisibilty : IValueConverter\n+    {\n+        #region IValueConverter Members\n+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)\n+        {\n+            if (value == null)\n+                return Visibility.Collapsed;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003319",
+    "id": 21003319,
+    "line": 19,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzE5",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 19,
+    "original_start_line": null,
+    "path": "Fluent/Converters/EmptyContentToVisibilty.cs",
+    "position": 19,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003319/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:08:45Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003319",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003323"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003323"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:08:48Z",
+    "diff_hunk": "@@ -0,0 +1,33 @@\n+﻿namespace Fluent.Converters\n+{\n+    using System;\n+    using System.Globalization;\n+    using System.Net.Cache;\n+    using System.Windows;\n+    using System.Windows.Controls;\n+    using System.Windows.Data;\n+    using System.Windows.Media;\n+    using System.Windows.Media.Imaging;\n+\n+    [ValueConversion(typeof(object), typeof(Visibility))]\n+    public class EmptyContentToVisibilty : IValueConverter\n+    {\n+        #region IValueConverter Members\n+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)\n+        {\n+            if (value == null)\n+                return Visibility.Collapsed;\n+            if (!(value is string))\n+                return Visibility.Visible;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003323",
+    "id": 21003323,
+    "line": 21,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzIz",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 21,
+    "original_start_line": null,
+    "path": "Fluent/Converters/EmptyContentToVisibilty.cs",
+    "position": 21,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003323/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:08:48Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003323",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003327"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003327"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:08:53Z",
+    "diff_hunk": "@@ -0,0 +1,33 @@\n+﻿namespace Fluent.Converters\n+{\n+    using System;\n+    using System.Globalization;\n+    using System.Net.Cache;\n+    using System.Windows;\n+    using System.Windows.Controls;\n+    using System.Windows.Data;\n+    using System.Windows.Media;\n+    using System.Windows.Media.Imaging;\n+\n+    [ValueConversion(typeof(object), typeof(Visibility))]\n+    public class EmptyContentToVisibilty : IValueConverter\n+    {\n+        #region IValueConverter Members\n+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)\n+        {\n+            if (value == null)\n+                return Visibility.Collapsed;\n+            if (!(value is string))\n+                return Visibility.Visible;\n+            string str = (string)value;\n+            if (!string.IsNullOrEmpty(str) && str.Length > 0)\n+                return Visibility.Visible;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003327",
+    "id": 21003327,
+    "line": 24,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzI3",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 24,
+    "original_start_line": null,
+    "path": "Fluent/Converters/EmptyContentToVisibilty.cs",
+    "position": 24,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003327/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:08:53Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003327",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003341"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003341"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:09:26Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003341",
+    "id": 21003341,
+    "line": 31,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzQx",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 31,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 31,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003341/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:09:26Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003341",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003342"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003342"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:09:29Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;\n+                collection.Clear();\n+            }\n+            if (newViewModelCollection != null)\n+            {\n+                if (newViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)newViewModelCollection).CollectionChanged += collectionChangedHandler;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003342",
+    "id": 21003342,
+    "line": 37,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzQy",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 37,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 37,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003342/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:09:29Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003342",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003364"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003364"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:02Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;\n+                collection.Clear();\n+            }\n+            if (newViewModelCollection != null)\n+            {\n+                if (newViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)newViewModelCollection).CollectionChanged += collectionChangedHandler;\n+                ResetCollection<T>(collection, dataTemplate, newViewModelCollection);\n+            }\n+        }\n+\n+        private static void ResetCollection<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, IEnumerable viewModelCollection)\n+            where T : DependencyObject\n+        {\n+            collection.Clear();\n+            foreach (var item in viewModelCollection)\n+            {\n+                if (dataTemplate != null)\n+                {\n+                    T dObject = dataTemplate.LoadContent() as T;\n+                    if (dObject is FrameworkElement)\n+                    {\n+                        ((FrameworkElement)(DependencyObject)dObject).DataContext = item;\n+                    }\n+                    collection.Add(dObject);\n+                }\n+                else if (item is T) //make sure a converter is used in the binding to do the translation\n+                {\n+                    collection.Add((T)item);\n+                }                \n+            }\n+        }\n+\n+        public static void ItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e)\n+            where T : DependencyObject\n+        {\n+            switch (e.Action)\n+            {\n+                case NotifyCollectionChangedAction.Add:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Add(dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]); \n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Move:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                            collection.Insert(e.NewStartingIndex + i, dObject);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Remove:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Replace:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Insert(e.NewStartingIndex + i, dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]);\n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Reset:\n+                    {\n+                        ResetCollection<T>(collection, dataTemplate, sender as IEnumerable);\n+                        break;\n+                    }\n+            }\n+        }\n+\n+        public static int SelectorItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e, int selectedIndex)\n+            where T : DependencyObject\n+        {\n+            int currentIndex = selectedIndex;\n+            T currentSelected = collection[currentIndex];\n+\n+            ItemsSource_CollectionChanged(collection, dataTemplate, sender, e);\n+\n+            if (collection.Count == 0)\n+                selectedIndex = -1;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003364",
+    "id": 21003364,
+    "line": 150,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzY0",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 150,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 150,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003364/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:02Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003364",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003368"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003368"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:05Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;\n+                collection.Clear();\n+            }\n+            if (newViewModelCollection != null)\n+            {\n+                if (newViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)newViewModelCollection).CollectionChanged += collectionChangedHandler;\n+                ResetCollection<T>(collection, dataTemplate, newViewModelCollection);\n+            }\n+        }\n+\n+        private static void ResetCollection<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, IEnumerable viewModelCollection)\n+            where T : DependencyObject\n+        {\n+            collection.Clear();\n+            foreach (var item in viewModelCollection)\n+            {\n+                if (dataTemplate != null)\n+                {\n+                    T dObject = dataTemplate.LoadContent() as T;\n+                    if (dObject is FrameworkElement)\n+                    {\n+                        ((FrameworkElement)(DependencyObject)dObject).DataContext = item;\n+                    }\n+                    collection.Add(dObject);\n+                }\n+                else if (item is T) //make sure a converter is used in the binding to do the translation\n+                {\n+                    collection.Add((T)item);\n+                }                \n+            }\n+        }\n+\n+        public static void ItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e)\n+            where T : DependencyObject\n+        {\n+            switch (e.Action)\n+            {\n+                case NotifyCollectionChangedAction.Add:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Add(dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]); \n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Move:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                            collection.Insert(e.NewStartingIndex + i, dObject);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Remove:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Replace:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Insert(e.NewStartingIndex + i, dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]);\n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Reset:\n+                    {\n+                        ResetCollection<T>(collection, dataTemplate, sender as IEnumerable);\n+                        break;\n+                    }\n+            }\n+        }\n+\n+        public static int SelectorItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e, int selectedIndex)\n+            where T : DependencyObject\n+        {\n+            int currentIndex = selectedIndex;\n+            T currentSelected = collection[currentIndex];\n+\n+            ItemsSource_CollectionChanged(collection, dataTemplate, sender, e);\n+\n+            if (collection.Count == 0)\n+                selectedIndex = -1;\n+            else if (collection.Count - 1 >= currentIndex && currentIndex >= 0 && collection[currentIndex] == currentSelected)\n+                selectedIndex = currentIndex;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003368",
+    "id": 21003368,
+    "line": 152,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzY4",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 152,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 152,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003368/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:05Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003368",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003371"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003371"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:08Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;\n+                collection.Clear();\n+            }\n+            if (newViewModelCollection != null)\n+            {\n+                if (newViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)newViewModelCollection).CollectionChanged += collectionChangedHandler;\n+                ResetCollection<T>(collection, dataTemplate, newViewModelCollection);\n+            }\n+        }\n+\n+        private static void ResetCollection<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, IEnumerable viewModelCollection)\n+            where T : DependencyObject\n+        {\n+            collection.Clear();\n+            foreach (var item in viewModelCollection)\n+            {\n+                if (dataTemplate != null)\n+                {\n+                    T dObject = dataTemplate.LoadContent() as T;\n+                    if (dObject is FrameworkElement)\n+                    {\n+                        ((FrameworkElement)(DependencyObject)dObject).DataContext = item;\n+                    }\n+                    collection.Add(dObject);\n+                }\n+                else if (item is T) //make sure a converter is used in the binding to do the translation\n+                {\n+                    collection.Add((T)item);\n+                }                \n+            }\n+        }\n+\n+        public static void ItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e)\n+            where T : DependencyObject\n+        {\n+            switch (e.Action)\n+            {\n+                case NotifyCollectionChangedAction.Add:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Add(dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]); \n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Move:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                            collection.Insert(e.NewStartingIndex + i, dObject);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Remove:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Replace:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Insert(e.NewStartingIndex + i, dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]);\n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Reset:\n+                    {\n+                        ResetCollection<T>(collection, dataTemplate, sender as IEnumerable);\n+                        break;\n+                    }\n+            }\n+        }\n+\n+        public static int SelectorItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e, int selectedIndex)\n+            where T : DependencyObject\n+        {\n+            int currentIndex = selectedIndex;\n+            T currentSelected = collection[currentIndex];\n+\n+            ItemsSource_CollectionChanged(collection, dataTemplate, sender, e);\n+\n+            if (collection.Count == 0)\n+                selectedIndex = -1;\n+            else if (collection.Count - 1 >= currentIndex && currentIndex >= 0 && collection[currentIndex] == currentSelected)\n+                selectedIndex = currentIndex;\n+            else if (collection.Contains(currentSelected))\n+                selectedIndex = collection.IndexOf(currentSelected);",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003371",
+    "id": 21003371,
+    "line": 154,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzcx",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 154,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 154,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003371/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:08Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003371",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003373"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003373"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:11Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;\n+using System.Collections;\n+using System.Collections.Generic;\n+using System.Collections.ObjectModel;\n+using System.Collections.Specialized;\n+using System.Linq;\n+using System.Text;\n+using System.Threading.Tasks;\n+using System.Windows;\n+\n+namespace Fluent\n+{\n+    public static class ItemsSourceHelper\n+    {\n+\n+        public static void ItemsSourceChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, DependencyPropertyChangedEventArgs e,\n+            NotifyCollectionChangedEventHandler collectionChangedHandler = null)\n+            where T : DependencyObject\n+        {\n+            IEnumerable oldViewModelCollection = (IEnumerable)e.OldValue;\n+            IEnumerable newViewModelCollection = (IEnumerable)e.NewValue;\n+\n+            if (collectionChangedHandler == null)\n+            {\n+                collectionChangedHandler = (sender, args) => { ItemsSource_CollectionChanged(collection, dataTemplate, sender, args); };\n+            }\n+\n+            if (oldViewModelCollection != null)\n+            {\n+                if (oldViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)oldViewModelCollection).CollectionChanged -= collectionChangedHandler;\n+                collection.Clear();\n+            }\n+            if (newViewModelCollection != null)\n+            {\n+                if (newViewModelCollection is INotifyCollectionChanged)\n+                    ((INotifyCollectionChanged)newViewModelCollection).CollectionChanged += collectionChangedHandler;\n+                ResetCollection<T>(collection, dataTemplate, newViewModelCollection);\n+            }\n+        }\n+\n+        private static void ResetCollection<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, IEnumerable viewModelCollection)\n+            where T : DependencyObject\n+        {\n+            collection.Clear();\n+            foreach (var item in viewModelCollection)\n+            {\n+                if (dataTemplate != null)\n+                {\n+                    T dObject = dataTemplate.LoadContent() as T;\n+                    if (dObject is FrameworkElement)\n+                    {\n+                        ((FrameworkElement)(DependencyObject)dObject).DataContext = item;\n+                    }\n+                    collection.Add(dObject);\n+                }\n+                else if (item is T) //make sure a converter is used in the binding to do the translation\n+                {\n+                    collection.Add((T)item);\n+                }                \n+            }\n+        }\n+\n+        public static void ItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e)\n+            where T : DependencyObject\n+        {\n+            switch (e.Action)\n+            {\n+                case NotifyCollectionChangedAction.Add:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Add(dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]); \n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Move:\n+                    {\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                            collection.Insert(e.NewStartingIndex + i, dObject);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Remove:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Replace:\n+                    {\n+                        for (var i = 0; i < e.OldItems.Count; i++)\n+                        {\n+                            var dObject = collection[e.OldStartingIndex];\n+                            collection.RemoveAt(e.OldStartingIndex);\n+                        }\n+\n+                        for (var i = 0; i < e.NewItems.Count; i++)\n+                        {\n+                            if (dataTemplate != null)\n+                            {\n+                                T dObject = dataTemplate.LoadContent() as T;\n+                                if (dObject is FrameworkElement)\n+                                {\n+                                    ((FrameworkElement)(DependencyObject)dObject).DataContext = e.NewItems[i];\n+                                }\n+                                collection.Insert(e.NewStartingIndex + i, dObject);\n+                            }\n+                            else if (e.NewItems[i] is T) //make sure a converter is used in the binding to do the translation\n+                            {\n+                                collection.Add((T)e.NewItems[i]);\n+                            }\n+                        }\n+                        break;\n+                    }\n+                case NotifyCollectionChangedAction.Reset:\n+                    {\n+                        ResetCollection<T>(collection, dataTemplate, sender as IEnumerable);\n+                        break;\n+                    }\n+            }\n+        }\n+\n+        public static int SelectorItemsSource_CollectionChanged<T>(ObservableCollection<T> collection, DataTemplate dataTemplate, object sender, NotifyCollectionChangedEventArgs e, int selectedIndex)\n+            where T : DependencyObject\n+        {\n+            int currentIndex = selectedIndex;\n+            T currentSelected = collection[currentIndex];\n+\n+            ItemsSource_CollectionChanged(collection, dataTemplate, sender, e);\n+\n+            if (collection.Count == 0)\n+                selectedIndex = -1;\n+            else if (collection.Count - 1 >= currentIndex && currentIndex >= 0 && collection[currentIndex] == currentSelected)\n+                selectedIndex = currentIndex;\n+            else if (collection.Contains(currentSelected))\n+                selectedIndex = collection.IndexOf(currentSelected);\n+            else\n+                selectedIndex = 0;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003373",
+    "id": 21003373,
+    "line": 156,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzcz",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 156,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 156,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003373/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:11Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003373",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003386"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003386"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:30Z",
+    "diff_hunk": "@@ -371,6 +371,8 @@ private void Show()\n \r\n         private Backstage GetBackstage()\r\n         {\r\n+            if (this.ribbon.Menu == null)\r\n+                return null;\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003386",
+    "id": 21003386,
+    "line": 375,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzg2",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 5,
+    "original_start_line": null,
+    "path": "Fluent/Services/KeyTipService.cs",
+    "position": 5,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003386/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:30Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003386",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003388"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003388"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "missing { }\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:34Z",
+    "diff_hunk": "@@ -385,6 +387,8 @@ private Backstage GetBackstage()\n \r\n         private ApplicationMenu GetApplicationMenu()\r\n         {\r\n+            if (this.ribbon.Menu == null)\r\n+                return null;\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003388",
+    "id": 21003388,
+    "line": 391,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzMzg4",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 14,
+    "original_start_line": null,
+    "path": "Fluent/Services/KeyTipService.cs",
+    "position": 14,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003388/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:34Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003388",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003404"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003404"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why is this needed?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:10:56Z",
+    "diff_hunk": "@@ -414,7 +414,8 @@\n                                                                   SnapsToDevicePixels=\"True\"\r\n                                                                   KeyboardNavigation.DirectionalNavigation=\"None\"\r\n                                                                   VerticalAlignment=\"Stretch\"\r\n-                                                                  BorderThickness=\"0,0,0,1\">\r\n+                                                                  BorderThickness=\"0,0,0,1\"\r\n+                                                                  VerticalScrollBarVisibility=\"Auto\">\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003404",
+    "id": 21003404,
+    "line": 418,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzNDA0",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 6,
+    "original_start_line": null,
+    "path": "Fluent/Themes/Office2010/Controls/ComboBox.xaml",
+    "position": 6,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003404/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:10:56Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003404",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003417"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003417"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Why is this needed?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:11:14Z",
+    "diff_hunk": "@@ -387,7 +387,8 @@\n                                                                   SnapsToDevicePixels=\"True\"\r\n                                                                   KeyboardNavigation.DirectionalNavigation=\"None\"\r\n                                                                   VerticalAlignment=\"Stretch\"\r\n-                                                                  BorderThickness=\"0,0,0,1\">\r\n+                                                                  BorderThickness=\"0,0,0,1\"\r\n+                                                                  VerticalScrollBarVisibility=\"Auto\">\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003417",
+    "id": 21003417,
+    "line": 391,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzNDE3",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 6,
+    "original_start_line": null,
+    "path": "Fluent/Themes/Office2013/Controls/ComboBox.xaml",
+    "position": 6,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003417/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:11:14Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003417",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003526"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003526"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Could you please explain why this class is needed?\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:14:13Z",
+    "diff_hunk": "@@ -0,0 +1,161 @@\n+﻿using System;",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003526",
+    "id": 21003526,
+    "line": 1,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzNTI2",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 1,
+    "original_start_line": null,
+    "path": "Fluent/Helpers/ItemsSourceHelper.cs",
+    "position": 1,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003526/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:14:13Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003526",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003658"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003658"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "The problem is, i can't ignore it when merging your pull request automatically.\n",
+    "commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "created_at": "2014-11-27T16:17:15Z",
+    "diff_hunk": "@@ -481,11 +482,6 @@ private void OnLoaded(object sender, RoutedEventArgs e)\n         #endregion\r\n \r\n         #region Overrides\r\n-\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/27#discussion_r21003658",
+    "id": 21003658,
+    "line": 484,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDIxMDAzNjU4",
+    "original_commit_id": "ffc552f96bd996aeafd71ee2969d9deb41961fdb",
+    "original_line": null,
+    "original_position": 12,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Gallery.cs",
+    "position": 12,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/27",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003658/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2014-11-27T16:17:15Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/21003658",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328960"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328960"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Please don't use inline functions in DP-definitions.\n",
+    "commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "created_at": "2015-04-14T14:04:30Z",
+    "diff_hunk": "@@ -0,0 +1,771 @@\n+﻿using System;\n+using System.ComponentModel;\n+using System.Windows;\n+using System.Windows.Controls;\n+using System.Windows.Media;\n+\n+namespace Fluent.Controls.Primitives\n+{\n+    /// <summary>\n+    /// A custom border element for use in the <see cref=\"RibbonTabItem\"/> control\n+    /// template.\n+    /// </summary>\n+    /// <remarks>\n+    /// The border will render a different geometry based on the value of <see cref=\"RenderInnerBorder\"/> property\n+    /// being true or false.\n+    /// </remarks>\n+    public class RibbonTabItemBorder : Decorator\n+    {\n+        #region \"Fields\"\n+\n+        private Pen _cachedInnerBorderPen;\n+        private Pen _cachedOuterBorderPen;\n+        private IRenderer _mouserOverRenderer;\n+        private IRenderer _normalRenderer;\n+\n+        #endregion\n+\n+        #region \"Constructors\"\n+\n+        /// <summary>\n+        /// Initializes instance members of the <see cref=\"RibbonTabItemBorder\"/> class.\n+        /// </summary>\n+        public RibbonTabItemBorder()\n+        {\n+        }\n+\n+        #endregion\n+\n+        #region \"Properties\"\n+\n+        #region CornerRadius\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"CornerRadius\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(\n+            \"CornerRadius\",\n+            typeof(double),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                0.0,\n+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328960",
+    "id": 28328960,
+    "line": 53,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDI4MzI4OTYw",
+    "original_commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "original_line": null,
+    "original_position": 53,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Primitives/RibbonTabItemBorder.cs",
+    "position": 53,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328960/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-04-14T14:04:30Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328960",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328968"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328968"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Please don't use inline functions in DP-definitions.\n",
+    "commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "created_at": "2015-04-14T14:04:37Z",
+    "diff_hunk": "@@ -0,0 +1,771 @@\n+﻿using System;\n+using System.ComponentModel;\n+using System.Windows;\n+using System.Windows.Controls;\n+using System.Windows.Media;\n+\n+namespace Fluent.Controls.Primitives\n+{\n+    /// <summary>\n+    /// A custom border element for use in the <see cref=\"RibbonTabItem\"/> control\n+    /// template.\n+    /// </summary>\n+    /// <remarks>\n+    /// The border will render a different geometry based on the value of <see cref=\"RenderInnerBorder\"/> property\n+    /// being true or false.\n+    /// </remarks>\n+    public class RibbonTabItemBorder : Decorator\n+    {\n+        #region \"Fields\"\n+\n+        private Pen _cachedInnerBorderPen;\n+        private Pen _cachedOuterBorderPen;\n+        private IRenderer _mouserOverRenderer;\n+        private IRenderer _normalRenderer;\n+\n+        #endregion\n+\n+        #region \"Constructors\"\n+\n+        /// <summary>\n+        /// Initializes instance members of the <see cref=\"RibbonTabItemBorder\"/> class.\n+        /// </summary>\n+        public RibbonTabItemBorder()\n+        {\n+        }\n+\n+        #endregion\n+\n+        #region \"Properties\"\n+\n+        #region CornerRadius\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"CornerRadius\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(\n+            \"CornerRadius\",\n+            typeof(double),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                0.0,\n+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border.InvalidateGeometries();\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets a value that indicates the roundness of corners. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public double CornerRadius\n+        {\n+            get { return (double)GetValue(CornerRadiusProperty); }\n+            set { SetValue(CornerRadiusProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region RenderInnerBorder\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"RenderInnerBorder\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty RenderInnerBorderProperty = DependencyProperty.Register(\n+            \"RenderInnerBorder\",\n+            typeof(bool),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                false,\n+                FrameworkPropertyMetadataOptions.AffectsRender));\n+\n+        /// <summary>\n+        /// Gets or sets the RenderInnerBorder property. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public bool RenderInnerBorder\n+        {\n+            get { return (bool)GetValue(RenderInnerBorderProperty); }\n+            set { SetValue(RenderInnerBorderProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region BorderBrush\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"BorderBrush\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(\n+            \"BorderBrush\",\n+            typeof(Brush),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                null,\n+                FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328968",
+    "id": 28328968,
+    "line": 108,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDI4MzI4OTY4",
+    "original_commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "original_line": null,
+    "original_position": 108,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Primitives/RibbonTabItemBorder.cs",
+    "position": 108,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328968/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-04-14T14:04:37Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328968",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328974"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328974"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Please don't use inline functions in DP-definitions.\n",
+    "commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "created_at": "2015-04-14T14:04:41Z",
+    "diff_hunk": "@@ -0,0 +1,771 @@\n+﻿using System;\n+using System.ComponentModel;\n+using System.Windows;\n+using System.Windows.Controls;\n+using System.Windows.Media;\n+\n+namespace Fluent.Controls.Primitives\n+{\n+    /// <summary>\n+    /// A custom border element for use in the <see cref=\"RibbonTabItem\"/> control\n+    /// template.\n+    /// </summary>\n+    /// <remarks>\n+    /// The border will render a different geometry based on the value of <see cref=\"RenderInnerBorder\"/> property\n+    /// being true or false.\n+    /// </remarks>\n+    public class RibbonTabItemBorder : Decorator\n+    {\n+        #region \"Fields\"\n+\n+        private Pen _cachedInnerBorderPen;\n+        private Pen _cachedOuterBorderPen;\n+        private IRenderer _mouserOverRenderer;\n+        private IRenderer _normalRenderer;\n+\n+        #endregion\n+\n+        #region \"Constructors\"\n+\n+        /// <summary>\n+        /// Initializes instance members of the <see cref=\"RibbonTabItemBorder\"/> class.\n+        /// </summary>\n+        public RibbonTabItemBorder()\n+        {\n+        }\n+\n+        #endregion\n+\n+        #region \"Properties\"\n+\n+        #region CornerRadius\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"CornerRadius\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(\n+            \"CornerRadius\",\n+            typeof(double),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                0.0,\n+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border.InvalidateGeometries();\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets a value that indicates the roundness of corners. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public double CornerRadius\n+        {\n+            get { return (double)GetValue(CornerRadiusProperty); }\n+            set { SetValue(CornerRadiusProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region RenderInnerBorder\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"RenderInnerBorder\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty RenderInnerBorderProperty = DependencyProperty.Register(\n+            \"RenderInnerBorder\",\n+            typeof(bool),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                false,\n+                FrameworkPropertyMetadataOptions.AffectsRender));\n+\n+        /// <summary>\n+        /// Gets or sets the RenderInnerBorder property. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public bool RenderInnerBorder\n+        {\n+            get { return (bool)GetValue(RenderInnerBorderProperty); }\n+            set { SetValue(RenderInnerBorderProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region BorderBrush\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"BorderBrush\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(\n+            \"BorderBrush\",\n+            typeof(Brush),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                null,\n+                FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border._cachedOuterBorderPen = null;\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets the <see cref=\"Brush\"/> used to fill the outer border region. \n+        /// This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public Brush BorderBrush\n+        {\n+            get { return (Brush)GetValue(BorderBrushProperty); }\n+            set { SetValue(BorderBrushProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region InnerBorderBrush\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"InnerBorderBrush\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty InnerBorderBrushProperty = DependencyProperty.Register(\n+            \"InnerBorderBrush\",\n+            typeof(Brush),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                null,\n+                FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328974",
+    "id": 28328974,
+    "line": 139,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDI4MzI4OTc0",
+    "original_commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "original_line": null,
+    "original_position": 139,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Primitives/RibbonTabItemBorder.cs",
+    "position": 139,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328974/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-04-14T14:04:41Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328974",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328981"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328981"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Please don't use inline functions in DP-definitions.\n",
+    "commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "created_at": "2015-04-14T14:04:45Z",
+    "diff_hunk": "@@ -0,0 +1,771 @@\n+﻿using System;\n+using System.ComponentModel;\n+using System.Windows;\n+using System.Windows.Controls;\n+using System.Windows.Media;\n+\n+namespace Fluent.Controls.Primitives\n+{\n+    /// <summary>\n+    /// A custom border element for use in the <see cref=\"RibbonTabItem\"/> control\n+    /// template.\n+    /// </summary>\n+    /// <remarks>\n+    /// The border will render a different geometry based on the value of <see cref=\"RenderInnerBorder\"/> property\n+    /// being true or false.\n+    /// </remarks>\n+    public class RibbonTabItemBorder : Decorator\n+    {\n+        #region \"Fields\"\n+\n+        private Pen _cachedInnerBorderPen;\n+        private Pen _cachedOuterBorderPen;\n+        private IRenderer _mouserOverRenderer;\n+        private IRenderer _normalRenderer;\n+\n+        #endregion\n+\n+        #region \"Constructors\"\n+\n+        /// <summary>\n+        /// Initializes instance members of the <see cref=\"RibbonTabItemBorder\"/> class.\n+        /// </summary>\n+        public RibbonTabItemBorder()\n+        {\n+        }\n+\n+        #endregion\n+\n+        #region \"Properties\"\n+\n+        #region CornerRadius\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"CornerRadius\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(\n+            \"CornerRadius\",\n+            typeof(double),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                0.0,\n+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border.InvalidateGeometries();\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets a value that indicates the roundness of corners. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public double CornerRadius\n+        {\n+            get { return (double)GetValue(CornerRadiusProperty); }\n+            set { SetValue(CornerRadiusProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region RenderInnerBorder\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"RenderInnerBorder\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty RenderInnerBorderProperty = DependencyProperty.Register(\n+            \"RenderInnerBorder\",\n+            typeof(bool),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                false,\n+                FrameworkPropertyMetadataOptions.AffectsRender));\n+\n+        /// <summary>\n+        /// Gets or sets the RenderInnerBorder property. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public bool RenderInnerBorder\n+        {\n+            get { return (bool)GetValue(RenderInnerBorderProperty); }\n+            set { SetValue(RenderInnerBorderProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region BorderBrush\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"BorderBrush\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(\n+            \"BorderBrush\",\n+            typeof(Brush),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                null,\n+                FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border._cachedOuterBorderPen = null;\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets the <see cref=\"Brush\"/> used to fill the outer border region. \n+        /// This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public Brush BorderBrush\n+        {\n+            get { return (Brush)GetValue(BorderBrushProperty); }\n+            set { SetValue(BorderBrushProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region InnerBorderBrush\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"InnerBorderBrush\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty InnerBorderBrushProperty = DependencyProperty.Register(\n+            \"InnerBorderBrush\",\n+            typeof(Brush),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                null,\n+                FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>\n+                {\n+                    var border = (RibbonTabItemBorder)o;\n+                    border._cachedInnerBorderPen = null;\n+                }));\n+\n+        /// <summary>\n+        /// Gets or sets the <see cref=\"Brush\"/> used to fill the inner border region. This is a dependency property.\n+        /// </summary>\n+        [Bindable(true)]\n+        public Brush InnerBorderBrush\n+        {\n+            get { return (Brush)GetValue(InnerBorderBrushProperty); }\n+            set { SetValue(InnerBorderBrushProperty, value); }\n+        }\n+\n+        #endregion\n+\n+        #region BorderThickness\n+\n+        /// <summary>\n+        /// Identifies the <see cref=\"BorderThickness\"/> dependency property.\n+        /// </summary>\n+        public static readonly DependencyProperty BorderThicknessProperty = DependencyProperty.Register(\n+            \"BorderThickness\",\n+            typeof(double),\n+            typeof(RibbonTabItemBorder),\n+            new FrameworkPropertyMetadata(\n+                0.0,\n+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,\n+                (o, args) =>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/89#discussion_r28328981",
+    "id": 28328981,
+    "line": 169,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDI4MzI4OTgx",
+    "original_commit_id": "0b7779aa451739c00836280da55420b93d21a0a5",
+    "original_line": null,
+    "original_position": 169,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Primitives/RibbonTabItemBorder.cs",
+    "position": 169,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/89",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328981/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-04-14T14:04:45Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/28328981",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30976996"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30976996"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "This does not seem to be related to your fix. Why are you adding a new CommandBinding to the layer? The Backstage itself already has such a CommanBinding.\n",
+    "commit_id": "27f6bb141d73e2c37b53eba9816c311924bacb7a",
+    "created_at": "2015-05-25T12:17:39Z",
+    "diff_hunk": "@@ -378,6 +398,33 @@ private void CreateAndAttachBackstageAdorner()\n \r\n             var layer = AdornerLayer.GetAdornerLayer(this);\r\n             layer.Add(this.adorner);\r\n+\r\n+            layer.CommandBindings.Add(new CommandBinding(RibbonCommands.OpenBackstage,\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30976996",
+    "id": 30976996,
+    "line": 401,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDMwOTc2OTk2",
+    "original_commit_id": "733b9c8e696ebe970c7fa43dd27b43545abc4253",
+    "original_line": null,
+    "original_position": 50,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Backstage.cs",
+    "position": 62,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30976996/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-05-28T09:12:33Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30976996",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30977014"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30977014"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "Please move this method to the UIHelper class.\n",
+    "commit_id": "27f6bb141d73e2c37b53eba9816c311924bacb7a",
+    "created_at": "2015-05-25T12:18:14Z",
+    "diff_hunk": "@@ -378,6 +398,33 @@ private void CreateAndAttachBackstageAdorner()\n \r\n             var layer = AdornerLayer.GetAdornerLayer(this);\r\n             layer.Add(this.adorner);\r\n+\r\n+            layer.CommandBindings.Add(new CommandBinding(RibbonCommands.OpenBackstage,\r\n+                (sender, args) =>\r\n+                {\r\n+                    this.IsOpen = !this.IsOpen;\r\n+                }));\r\n+        }\r\n+\r\n+        /// <summary>\r\n+        /// Gets the first visual child of type TChildItem by walking down the visual tree.\r\n+        /// </summary>\r\n+        /// <typeparam name=\"TChildItem\">The type of visual child to find.</typeparam>\r\n+        /// <param name=\"obj\">The parent element whose visual tree shall be walked down.</param>\r\n+        /// <returns>The first element of type TChildItem found in the visual tree is returned. If none is found, null is returned.</returns>\r\n+        private TChildItem FindVisualChild<TChildItem>(DependencyObject obj) where TChildItem : DependencyObject\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30977014",
+    "id": 30977014,
+    "line": null,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDMwOTc3MDE0",
+    "original_commit_id": "733b9c8e696ebe970c7fa43dd27b43545abc4253",
+    "original_line": null,
+    "original_position": 63,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Backstage.cs",
+    "position": 1,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30977014/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-05-28T09:12:33Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30977014",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30978368"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30978368"
+      }
+    },
+    "author_association": "NONE",
+    "body": "The backstages CommandBindings do not work when the window content is an arbitrary .NET Object. Thus I removed the commandbindings from the backstage and added it to the AdornerLayer.\n",
+    "commit_id": "27f6bb141d73e2c37b53eba9816c311924bacb7a",
+    "created_at": "2015-05-25T12:55:17Z",
+    "diff_hunk": "@@ -378,6 +398,33 @@ private void CreateAndAttachBackstageAdorner()\n \r\n             var layer = AdornerLayer.GetAdornerLayer(this);\r\n             layer.Add(this.adorner);\r\n+\r\n+            layer.CommandBindings.Add(new CommandBinding(RibbonCommands.OpenBackstage,\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/118#discussion_r30978368",
+    "id": 30978368,
+    "line": 401,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDMwOTc4MzY4",
+    "original_commit_id": "733b9c8e696ebe970c7fa43dd27b43545abc4253",
+    "original_line": null,
+    "original_position": 50,
+    "original_start_line": null,
+    "path": "Fluent/Controls/Backstage.cs",
+    "position": 62,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/118",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30978368/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2015-05-28T09:24:32Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/30978368",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1050099?v=4",
+      "events_url": "https://api.github.com/users/janbernloehr/events{/privacy}",
+      "followers_url": "https://api.github.com/users/janbernloehr/followers",
+      "following_url": "https://api.github.com/users/janbernloehr/following{/other_user}",
+      "gists_url": "https://api.github.com/users/janbernloehr/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/janbernloehr",
+      "id": 1050099,
+      "login": "janbernloehr",
+      "node_id": "MDQ6VXNlcjEwNTAwOTk=",
+      "organizations_url": "https://api.github.com/users/janbernloehr/orgs",
+      "received_events_url": "https://api.github.com/users/janbernloehr/received_events",
+      "repos_url": "https://api.github.com/users/janbernloehr/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/janbernloehr/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/janbernloehr/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/janbernloehr",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/239#discussion_r49180602"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/239"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/49180602"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "The TabControl mirrors CanMinimize so we should use that one here instead of looking at the ribbon.\n",
+    "commit_id": "58675a0648009ee78b85fbac806fab96a8e815c0",
+    "created_at": "2016-01-08T11:38:32Z",
+    "diff_hunk": "@@ -609,7 +609,11 @@ protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)\n \r\n                 if (this.TabControlParent != null)\r\n                 {\r\n-                    this.TabControlParent.IsMinimized = !this.TabControlParent.IsMinimized;\r\n+                    var canMinimize = this.FindParentRibbon().CanMinimize;\r",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/239#discussion_r49180602",
+    "id": 49180602,
+    "line": null,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDQ5MTgwNjAy",
+    "original_commit_id": "8bb06f2cc3c36d7d03e58a889e06b9822f228fdd",
+    "original_line": null,
+    "original_position": 5,
+    "original_start_line": null,
+    "path": "Fluent/Controls/RibbonTabItem.cs",
+    "position": 1,
+    "pull_request_review_id": null,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/239",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/49180602/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2016-01-11T20:47:59Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/49180602",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/924#discussion_r668982114"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/924"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/668982114"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "I think the changes to this file should be reverted as they are not needed.",
+    "commit_id": "261f97ecbb82ff99621e3fa56e04e0a8674fa9e3",
+    "created_at": "2021-07-13T17:43:57Z",
+    "diff_hunk": "@@ -40,4 +43,9 @@\n     <Reference Include=\"System.Data\" />\n     <Reference Include=\"WindowsFormsIntegration\" />\n   </ItemGroup>\n+  <ItemGroup>\n+    <Compile Update=\"SimplifiedRibbonWindow.xaml.cs\">\n+      <SubType>Code</SubType>\n+    </Compile>\n+  </ItemGroup>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/924#discussion_r668982114",
+    "id": 668982114,
+    "line": null,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDY2ODk4MjExNA==",
+    "original_commit_id": "e1e4b636015d2263f5ca45bbcda6bfcac35f3f75",
+    "original_line": 50,
+    "original_position": 24,
+    "original_start_line": null,
+    "path": "Fluent.Ribbon.Showcase/Fluent.Ribbon.Showcase.csproj",
+    "position": 1,
+    "pull_request_review_id": 705478164,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/924",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/668982114/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2021-07-19T05:45:41Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/668982114",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/924#discussion_r679192151"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/924"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/679192151"
+      }
+    },
+    "author_association": "CONTRIBUTOR",
+    "body": "Thank you.\r\nI have fixed at commit https://github.com/fluentribbon/Fluent.Ribbon/pull/924/commits/91777cc9c00d3a4dfaa2426dcde4611aecd73b0b",
+    "commit_id": "261f97ecbb82ff99621e3fa56e04e0a8674fa9e3",
+    "created_at": "2021-07-29T14:15:09Z",
+    "diff_hunk": "@@ -40,4 +43,9 @@\n     <Reference Include=\"System.Data\" />\n     <Reference Include=\"WindowsFormsIntegration\" />\n   </ItemGroup>\n+  <ItemGroup>\n+    <Compile Update=\"SimplifiedRibbonWindow.xaml.cs\">\n+      <SubType>Code</SubType>\n+    </Compile>\n+  </ItemGroup>",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/924#discussion_r679192151",
+    "id": 679192151,
+    "in_reply_to_id": 668982114,
+    "line": null,
+    "node_id": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDY3OTE5MjE1MQ==",
+    "original_commit_id": "e1e4b636015d2263f5ca45bbcda6bfcac35f3f75",
+    "original_line": 50,
+    "original_position": 24,
+    "original_start_line": null,
+    "path": "Fluent.Ribbon.Showcase/Fluent.Ribbon.Showcase.csproj",
+    "position": 1,
+    "pull_request_review_id": 718149436,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/924",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/679192151/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2021-07-29T14:15:09Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/679192151",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/13976757?v=4",
+      "events_url": "https://api.github.com/users/nishy2000/events{/privacy}",
+      "followers_url": "https://api.github.com/users/nishy2000/followers",
+      "following_url": "https://api.github.com/users/nishy2000/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nishy2000/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/nishy2000",
+      "id": 13976757,
+      "login": "nishy2000",
+      "node_id": "MDQ6VXNlcjEzOTc2NzU3",
+      "organizations_url": "https://api.github.com/users/nishy2000/orgs",
+      "received_events_url": "https://api.github.com/users/nishy2000/received_events",
+      "repos_url": "https://api.github.com/users/nishy2000/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/nishy2000/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nishy2000/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/nishy2000",
+      "user_view_type": "public"
+    }
+  },
+  {
+    "_links": {
+      "html": {
+        "href": "https://github.com/fluentribbon/Fluent.Ribbon/pull/1112#discussion_r1129824715"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/1112"
+      },
+      "self": {
+        "href": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/1129824715"
+      }
+    },
+    "author_association": "MEMBER",
+    "body": "All resource usages have to use DynamicResource.\r\nOtherwise people won't be able to overwrite those.",
+    "commit_id": "e64467dcc4fcef230d327a484043904e61c424b9",
+    "created_at": "2023-03-08T17:41:12Z",
+    "diff_hunk": "@@ -58,7 +58,7 @@\n            TargetType=\"{x:Type Fluent:Button}\">\n         <Setter Property=\"Fluent:RibbonProperties.IconSize\" Value=\"Small\" />\n         <Setter Property=\"Fluent:RibbonProperties.MouseOverBackground\" Value=\"{DynamicResource Fluent.Ribbon.Brushes.BackstageTabItem.MouseOver.Background}\" />\n-        <Setter Property=\"FocusVisualStyle\" Value=\"{DynamicResource Fluent.Ribbon.Styles.ControlStyleEmptyFocus}\" />\n+        <Setter Property=\"FocusVisualStyle\" Value=\"{StaticResource Fluent.Ribbon.Styles.FocusVisual.Tight}\" />",
+    "html_url": "https://github.com/fluentribbon/Fluent.Ribbon/pull/1112#discussion_r1129824715",
+    "id": 1129824715,
+    "line": null,
+    "node_id": "PRRC_kwDOAY65tM5DV8HL",
+    "original_commit_id": "cab0d9bc4785122ae046abcf18dc52afcf0b3326",
+    "original_line": 61,
+    "original_position": 5,
+    "original_start_line": null,
+    "path": "Fluent.Ribbon/Themes/Controls/BackstageTabControl.xaml",
+    "position": 1,
+    "pull_request_review_id": 1331147742,
+    "pull_request_url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/1112",
+    "reactions": {
+      "+1": 0,
+      "-1": 0,
+      "confused": 0,
+      "eyes": 0,
+      "heart": 0,
+      "hooray": 0,
+      "laugh": 0,
+      "rocket": 0,
+      "total_count": 0,
+      "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/1129824715/reactions"
+    },
+    "side": "RIGHT",
+    "start_line": null,
+    "start_side": null,
+    "subject_type": "line",
+    "updated_at": "2023-03-08T17:41:13Z",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/pulls/comments/1129824715",
+    "user": {
+      "avatar_url": "https://avatars.githubusercontent.com/u/1971030?v=4",
+      "events_url": "https://api.github.com/users/batzen/events{/privacy}",
+      "followers_url": "https://api.github.com/users/batzen/followers",
+      "following_url": "https://api.github.com/users/batzen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/batzen/gists{/gist_id}",
+      "gravatar_id": "",
+      "html_url": "https://github.com/batzen",
+      "id": 1971030,
+      "login": "batzen",
+      "node_id": "MDQ6VXNlcjE5NzEwMzA=",
+      "organizations_url": "https://api.github.com/users/batzen/orgs",
+      "received_events_url": "https://api.github.com/users/batzen/received_events",
+      "repos_url": "https://api.github.com/users/batzen/repos",
+      "site_admin": false,
+      "starred_url": "https://api.github.com/users/batzen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/batzen/subscriptions",
+      "type": "User",
+      "url": "https://api.github.com/users/batzen",
+      "user_view_type": "public"
+    }
+  }
+]

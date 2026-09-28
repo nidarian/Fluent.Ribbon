@@ -1,0 +1,178 @@
+[
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "fc2929",
+    "default": false,
+    "description": "",
+    "id": 144239833,
+    "name": "Bug :lady_beetle:",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4MzM=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Bug%20:lady_beetle:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "cccccc",
+    "default": false,
+    "description": null,
+    "id": 144239834,
+    "name": "Duplicate",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4MzQ=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Duplicate"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "84b6eb",
+    "default": false,
+    "description": "",
+    "id": 144239835,
+    "name": "Feature :1st_place_medal:",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4MzU=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Feature%20:1st_place_medal:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "159818",
+    "default": true,
+    "description": "",
+    "id": 144239836,
+    "name": "help wanted",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4MzY=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/help%20wanted"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "cc317c",
+    "default": false,
+    "description": "Not an issue but a question instead.",
+    "id": 144239838,
+    "name": "Question :question:",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4Mzg=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Question%20:question:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "ffffff",
+    "default": false,
+    "description": "",
+    "id": 144239839,
+    "name": "WontFix :-1:",
+    "node_id": "MDU6TGFiZWwxNDQyMzk4Mzk=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/WontFix%20:-1:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "bfdadc",
+    "default": false,
+    "description": null,
+    "id": 144486066,
+    "name": "Build",
+    "node_id": "MDU6TGFiZWwxNDQ0ODYwNjY=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Build"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "bfe5bf",
+    "default": false,
+    "description": null,
+    "id": 158642854,
+    "name": "Styles",
+    "node_id": "MDU6TGFiZWwxNTg2NDI4NTQ=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Styles"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "eb6420",
+    "default": false,
+    "description": "Waiting for the reporter to respond to questions made by maintainer.",
+    "id": 192835495,
+    "name": "Waiting for user response :confused:",
+    "node_id": "MDU6TGFiZWwxOTI4MzU0OTU=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Waiting%20for%20user%20response%20:confused:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "fad8c7",
+    "default": false,
+    "description": null,
+    "id": 196617506,
+    "name": "WindowChrome",
+    "node_id": "MDU6TGFiZWwxOTY2MTc1MDY=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/WindowChrome"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "006b75",
+    "default": false,
+    "description": "",
+    "id": 197340029,
+    "name": "Documentation :memo:",
+    "node_id": "MDU6TGFiZWwxOTczNDAwMjk=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Documentation%20:memo:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "d4c5f9",
+    "default": false,
+    "description": null,
+    "id": 244614951,
+    "name": "Showcase-Application",
+    "node_id": "MDU6TGFiZWwyNDQ2MTQ5NTE=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Showcase-Application"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "fc2929",
+    "default": false,
+    "description": "",
+    "id": 363052139,
+    "name": "Breaking Change :fearful:",
+    "node_id": "MDU6TGFiZWwzNjMwNTIxMzk=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/Breaking%20Change%20:fearful:"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "5319e7",
+    "default": false,
+    "description": null,
+    "id": 412330244,
+    "name": "already fixed in newer version",
+    "node_id": "MDU6TGFiZWw0MTIzMzAyNDQ=",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/already%20fixed%20in%20newer%20version"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "0366d6",
+    "default": false,
+    "description": "Pull requests that update a dependency file",
+    "id": 1507511739,
+    "name": "dependencies",
+    "node_id": "MDU6TGFiZWwxNTA3NTExNzM5",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/dependencies"
+  },
+  {
+    "archived_at": null,
+    "archived_by": null,
+    "color": "2da508",
+    "default": false,
+    "description": "",
+    "id": 1580079374,
+    "name": "up-for-grabs",
+    "node_id": "MDU6TGFiZWwxNTgwMDc5Mzc0",
+    "url": "https://api.github.com/repos/fluentribbon/Fluent.Ribbon/labels/up-for-grabs"
+  }
+]
