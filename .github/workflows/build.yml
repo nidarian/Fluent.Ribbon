@@ -1,0 +1,67 @@
+# Builds and tests Fluent.Ribbon on a Windows machine hosted by GitHub.
+#
+# Why Windows: Fluent.Ribbon is a WPF (Windows desktop UI) library. WPF only
+# compiles and runs on Windows, so a Linux machine can't prove it works.
+#
+# This runs the project's own build script (build.cmd CI), the same command
+# the original project runs on its AppVeyor CI (see appveyor.yml). CI is a
+# Nuke build target defined in .build/Build.cs that does:
+#   Compile -> Test -> Pack (creates the .nupkg and zipped binaries)
+name: Build (Windows)
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+  # Allows manual runs, and lets sync-upstream.yml start a build after a sync.
+  workflow_dispatch:
+
+permissions:
+  contents: read    # a build only needs to read the code
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          # GitVersion works out the version number (e.g. 11.0.3-alpha.5) from
+          # tags and commit history, so it needs the full history.
+          fetch-depth: 0
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          # The SDK pinned in global.json builds the code. The older runtimes
+          # are needed to RUN things: the tests target net6.0-windows and
+          # net8.0-windows, and the build loads GitVersion with its net6.0 setting.
+          # net462 tests use the .NET Framework that ships with Windows.
+          global-json-file: global.json
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            9.0.x
+
+      - name: Build, test and pack
+        # Nuke sees it's on a CI server (IsLocalBuild = false) and switches to
+        # the Release configuration automatically.
+        run: .\build.cmd CI
+
+      # Uploaded even if the build fails ("always()"), so failing test
+      # reports can be downloaded from the run page and read.
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/*.trx
+          if-no-files-found: ignore
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            artifacts/*.nupkg
+            artifacts/*.zip

@@ -1,0 +1,205 @@
+# Backs up the parts of the original project that `git` does NOT copy.
+#
+# A git fork only holds code and commit history. If fluentribbon/Fluent.Ribbon
+# disappeared, these would be lost with it:
+#   1. Issues, pull-request discussions, code-review comments, releases list
+#   2. The wiki (a separate git repo: Fluent.Ribbon.wiki.git)
+#   3. The compiled NuGet packages people actually install
+#   4. The files attached to GitHub Releases (zipped binaries)
+#
+# Where each one goes in this fork:
+#   1 + 2 -> the "archive" branch (text: JSON + readable Markdown). Each monthly
+#            run is a new commit, so deleted/edited issues stay in history.
+#   3     -> GitHub Release "archive-nuget" (attached files; binaries stay out of
+#            git history, which would otherwise grow by gigabytes)
+#   4     -> GitHub Release "archive-releases"
+# Uploads only add missing files, so reruns are cheap and nothing is replaced.
+name: Archive upstream
+
+on:
+  schedule:
+    - cron: "43 7 3 * *"   # 07:43 UTC on the 3rd of every month
+  workflow_dispatch:
+
+concurrency:
+  group: archive-upstream
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # push the archive branch, create releases, upload files
+
+env:
+  UPSTREAM: fluentribbon/Fluent.Ribbon
+  # The gh CLI (preinstalled on GitHub runners) reads its login from GH_TOKEN.
+  # GITHUB_TOKEN can read any public repo, which is all we need from upstream.
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Issues, PRs, comments, wiki -> "archive" branch
+  # ---------------------------------------------------------------------------
+  discussions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the fork (for the scripts)
+        uses: actions/checkout@v4
+        with:
+          path: fork
+
+      - name: Download issues, comments and releases from the GitHub API
+        run: |
+          mkdir -p dump
+          # --paginate follows GitHub's "next page" links until the end. Each
+          # page is its own JSON array; `jq -s 'add'` joins them into one.
+          # per_page=100 is the API maximum, which keeps the request count low.
+          api() { gh api --paginate "repos/$UPSTREAM/$1" | jq -s 'add // []'; }
+          api "issues?state=all&per_page=100"   > dump/issues.json          # includes PRs
+          api "issues/comments?per_page=100"    > dump/issue-comments.json
+          api "pulls/comments?per_page=100"     > dump/review-comments.json
+          api "releases?per_page=100"           > dump/releases.json
+          api "labels?per_page=100"             > dump/labels.json
+          api "milestones?state=all&per_page=100" > dump/milestones.json
+          # Print counts in the log as a quick sanity check.
+          for f in dump/*.json; do echo "$f: $(jq length "$f")"; done
+
+      - name: Check out (or start) the archive branch
+        run: |
+          git init -q archive && cd archive
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch -q --depth 1 origin archive; then
+            git checkout -q -b archive FETCH_HEAD
+          else
+            # First run: an "orphan" branch shares no history with the code
+            # branches, so it never gets mixed into develop by accident.
+            git checkout -q --orphan archive
+          fi
+
+      - name: Write JSON and Markdown into the archive
+        run: |
+          # Start clean so issues deleted upstream disappear from the newest
+          # snapshot (older commits on this branch still have them).
+          rm -rf archive/issues-json archive/issues-markdown
+          mkdir -p archive/issues-json
+          # jq -S sorts keys, and sort_by gives a stable order, so monthly diffs
+          # only show real changes instead of reshuffled JSON.
+          for f in dump/*.json; do
+            jq -S 'if type == "array" then sort_by(.id) else . end' "$f" > "archive/issues-json/$(basename "$f")"
+          done
+          python3 fork/.github/scripts/export-issues.py dump archive/issues-markdown
+
+      - name: Copy the wiki
+        run: |
+          rm -rf archive/wiki
+          if git clone -q --depth 1 "https://github.com/$UPSTREAM.wiki.git" wiki-src; then
+            rm -rf wiki-src/.git
+            mv wiki-src archive/wiki
+          else
+            echo "::warning::Could not clone the upstream wiki"
+          fi
+
+      - name: Commit and push
+        working-directory: archive
+        run: |
+          # This timestamp changes on every run, so every run makes a commit.
+          # That's deliberate: GitHub switches off scheduled workflows in repos
+          # with no activity for 60 days, and this commit keeps them alive even
+          # when upstream goes quiet.
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > last-run.txt
+          cat > README.md <<'EOF'
+          # Upstream archive
+
+          Copied monthly from https://github.com/fluentribbon/Fluent.Ribbon by
+          `.github/workflows/archive-upstream.yml` on the develop branch.
+
+          - `issues-markdown/INDEX.md`: readable list of every issue and PR
+          - `issues-json/`: complete raw API data (lossless)
+          - `wiki/`: the project wiki
+          - NuGet packages and release files are in this repo's GitHub
+            Releases: `archive-nuget` and `archive-releases`
+          EOF
+          git add -A
+          git commit -q -m "Archive upstream $(cat last-run.txt)"
+          git push -q origin archive
+
+  # ---------------------------------------------------------------------------
+  # NuGet packages + release files -> GitHub Releases on this fork
+  # ---------------------------------------------------------------------------
+  binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the fork
+        uses: actions/checkout@v4
+
+      - name: Install .NET (for restoring dependencies)
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download every published Fluent.Ribbon version from NuGet
+        run: |
+          mkdir -p nupkg
+          # NuGet's "flat container" API: a plain list of versions, then one
+          # URL per .nupkg file. Package IDs must be lowercase in these URLs.
+          base=https://api.nuget.org/v3-flatcontainer/fluent.ribbon
+          for v in $(curl -fsSL "$base/index.json" | jq -r '.versions[]'); do
+            # One bad version shouldn't stop the rest; warn and keep going.
+            curl -fsSL -o "nupkg/fluent.ribbon.$v.nupkg" "$base/$v/fluent.ribbon.$v.nupkg" \
+              || echo "::warning::could not download Fluent.Ribbon $v"
+          done
+          ls nupkg | wc -l
+
+      - name: Download every dependency needed to build develop
+        # Without these, even a perfect copy of the source couldn't be built
+        # if packages like ControlzEx vanished from NuGet. Pointing
+        # NUGET_PACKAGES at a folder makes every restore save its downloads there.
+        env:
+          NUGET_PACKAGES: ${{ github.workspace }}/restore-cache
+          # Lets a Linux machine restore Windows-only (WPF) projects. We only
+          # download here, nothing is compiled.
+          EnableWindowsTargeting: "true"
+        run: |
+          dotnet restore Fluent.Ribbon.sln
+          dotnet restore .build/.build.csproj   # the Nuke build script's own packages
+          dotnet tool restore                   # xamlstyler, run during the build
+          # Flatten the cache (id/version/file.nupkg) into one folder.
+          find restore-cache -name '*.nupkg' -exec cp -n {} nupkg/ \;
+          ls nupkg | wc -l
+
+      - name: Download files attached to upstream releases
+        # always(): still grab release files if a dependency failed to restore.
+        if: always()
+        run: |
+          mkdir -p release-files
+          for tag in $(gh release list --repo "$UPSTREAM" --limit 1000 --json tagName -q '.[].tagName'); do
+            mkdir -p "tmp/$tag"
+            gh release download "$tag" --repo "$UPSTREAM" --dir "tmp/$tag" || true
+            # Prefix with the tag so files from different releases can't collide.
+            for f in "tmp/$tag"/*; do
+              [ -e "$f" ] && mv "$f" "release-files/${tag}--$(basename "$f")"
+            done
+          done
+          ls release-files | wc -l
+
+      - name: Upload anything not already archived
+        if: always()
+        run: |
+          # upload_missing <release-tag> <folder> <title>
+          upload_missing() {
+            local tag="$1" dir="$2" title="$3"
+            [ -d "$dir" ] || return 0
+            # Create the release on first use. It's only a container for files.
+            gh release view "$tag" >/dev/null 2>&1 || \
+              gh release create "$tag" --title "$title" --latest=false \
+                --notes "Backup copies made by archive-upstream.yml. Not a Fluent.Ribbon release."
+            gh release view "$tag" --json assets -q '.assets[].name' | sort > existing.txt
+            # comm -13 = lines only in the second list = files not uploaded yet.
+            ls "$dir" | sort | comm -13 existing.txt - > missing.txt
+            echo "$tag: $(wc -l < missing.txt) new file(s)"
+            while read -r name; do
+              gh release upload "$tag" "$dir/$name"
+            done < missing.txt
+          }
+          upload_missing archive-nuget    nupkg         "Archive: NuGet packages"
+          upload_missing archive-releases release-files "Archive: upstream release files"
