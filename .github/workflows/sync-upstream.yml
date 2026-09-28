@@ -1,0 +1,67 @@
+# Keeps this fork current with the original project (fluentribbon/Fluent.Ribbon).
+# All the logic lives in .github/scripts/sync-upstream.sh, which explains the
+# rules. In short: copy new branches, commits and tags, never delete or overwrite.
+name: Sync from upstream
+
+on:
+  schedule:
+    # Cron fields: minute hour day-of-month month day-of-week (times in UTC).
+    # "Every Monday 06:17". The odd minute avoids the top-of-the-hour rush,
+    # when GitHub delays scheduled jobs the most.
+    - cron: "17 6 * * 1"
+  # Adds a "Run workflow" button on the Actions tab, for syncing on demand.
+  workflow_dispatch:
+
+# Never run two syncs at the same time. They would race each other's pushes.
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+# The built-in GITHUB_TOKEN is read-only unless a workflow asks for more.
+permissions:
+  contents: write   # push branches and tags
+  actions: write    # start the build workflow after develop changes
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    outputs:
+      develop_changed: ${{ steps.sync.outputs.develop_changed }}
+    steps:
+      - name: Check out the fork
+        uses: actions/checkout@v4
+        with:
+          # 0 = full history. The script compares commit ancestry, which a
+          # shallow clone can't do.
+          fetch-depth: 0
+          # SYNC_TOKEN is an optional personal access token with the "workflow"
+          # scope. It's only needed if upstream ever adds or changes files in
+          # .github/workflows/, because GitHub refuses to let GITHUB_TOKEN
+          # push those. Without the secret we fall back to GITHUB_TOKEN.
+          token: ${{ secrets.SYNC_TOKEN || github.token }}
+
+      - name: Configure git identity for merge commits
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync branches and tags
+        id: sync
+        run: bash .github/scripts/sync-upstream.sh
+
+  # Pushes made with GITHUB_TOKEN deliberately don't trigger other workflows
+  # (GitHub's guard against infinite loops), so the build won't start by itself
+  # after a sync. A manual "workflow_dispatch" call is the allowed exception,
+  # so we start the Windows build that way. Its result shows whether the fresh
+  # upstream code still compiles and passes its tests.
+  build-after-sync:
+    needs: sync
+    # always() lets this run even when the sync reported a warning, as long as
+    # develop actually moved.
+    if: always() && needs.sync.outputs.develop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start the build workflow on develop
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run build.yml --repo "${{ github.repository }}" --ref develop

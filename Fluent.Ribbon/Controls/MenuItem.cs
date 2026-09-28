@@ -142,7 +142,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
     }
 
     /// <summary>Identifies the <see cref="ResizeMode"/> dependency property.</summary>
-    public static readonly DependencyProperty ResizeModeProperty = DependencyProperty.Register(nameof(ResizeMode), typeof(ContextMenuResizeMode), typeof(MenuItem), new PropertyMetadata(ContextMenuResizeMode.None));
+    public static readonly DependencyProperty ResizeModeProperty = DropDownButton.ResizeModeProperty.AddOwner(typeof(MenuItem));
 
     #endregion
 
@@ -158,7 +158,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
     }
 
     /// <summary>Identifies the <see cref="MaxDropDownHeight"/> dependency property.</summary>
-    public static readonly DependencyProperty MaxDropDownHeightProperty = DependencyProperty.Register(nameof(MaxDropDownHeight), typeof(double), typeof(MenuItem), new FrameworkPropertyMetadata(double.NaN, null, DropDownHelper.CoerceMaxDropDownHeight));
+    public static readonly DependencyProperty MaxDropDownHeightProperty = DropDownButton.MaxDropDownHeightProperty.AddOwner(typeof(MenuItem));
 
     #endregion
 
@@ -288,30 +288,27 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 {
                     CanAddButtonToQuickAccessToolBar = false
                 };
+
                 RibbonControl.BindQuickAccessItem(this, button);
-                RibbonControl.Bind(this, button, nameof(this.ResizeMode), ResizeModeProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.MaxDropDownHeight), MaxDropDownHeightProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.DisplayMemberPath), DisplayMemberPathProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.GroupStyleSelector), GroupStyleSelectorProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemContainerStyle), ItemContainerStyleProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemsPanel), ItemsPanelProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemStringFormat), ItemStringFormatProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemTemplate), ItemTemplateProperty, BindingMode.OneWay);
+
+                RibbonControl.Bind(this, button, nameof(this.IsCheckable), SplitButton.IsCheckableProperty, BindingMode.OneWay);
+                RibbonControl.Bind(this, button, nameof(this.IsChecked), SplitButton.IsCheckedProperty, BindingMode.TwoWay);
+
+                RibbonControl.Bind(this, button, nameof(this.ResizeMode), DropDownButton.ResizeModeProperty, BindingMode.OneWay);
+                RibbonControl.Bind(this, button, nameof(this.MaxDropDownHeight), DropDownButton.MaxDropDownHeightProperty, BindingMode.OneWay);
+
                 button.DropDownOpened += this.OnQuickAccessOpened;
                 return button;
             }
             else
             {
                 var button = new DropDownButton();
+
                 RibbonControl.BindQuickAccessItem(this, button);
-                RibbonControl.Bind(this, button, nameof(this.ResizeMode), ResizeModeProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.MaxDropDownHeight), MaxDropDownHeightProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.DisplayMemberPath), DisplayMemberPathProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.GroupStyleSelector), GroupStyleSelectorProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemContainerStyle), ItemContainerStyleProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemsPanel), ItemsPanelProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemStringFormat), ItemStringFormatProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.ItemTemplate), ItemTemplateProperty, BindingMode.OneWay);
+
+                RibbonControl.Bind(this, button, nameof(this.ResizeMode), DropDownButton.ResizeModeProperty, BindingMode.OneWay);
+                RibbonControl.Bind(this, button, nameof(this.MaxDropDownHeight), DropDownButton.MaxDropDownHeightProperty, BindingMode.OneWay);
+
                 button.DropDownOpened += this.OnQuickAccessOpened;
                 return button;
             }
@@ -321,14 +318,17 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
             if (this.IsCheckable)
             {
                 var toggleButton = new ToggleButton();
-                RibbonControl.Bind(this, toggleButton, nameof(this.IsChecked), System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, BindingMode.TwoWay);
+
                 RibbonControl.BindQuickAccessItem(this, toggleButton);
+
                 return toggleButton;
             }
             else
             {
                 var button = new Button();
+
                 RibbonControl.BindQuickAccessItem(this, button);
+
                 return button;
             }
         }

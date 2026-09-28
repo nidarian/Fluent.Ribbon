@@ -1,5 +1,16 @@
 # Changelog for Fluent.Ribbon
 
+## vNext
+
+### Bug fixes
+
+- [#1281](../../issues/1281) - SplitButton will not apply ItemTemplateSelector within QuickAccess (thanks @DoctorVanGogh)
+
+### Enhancements/Features
+
+- [#1267](../../issues/1267) - Fluent ribbon startup time dominated by resource dictionary merging  
+  Added AppContext-Switch "Switch.Fluent.Ribbon.DisableDefaultStyleLoading" to disable default style loading.
+
 ## 11.0.2
 
 ### Bug fixes
@@ -497,7 +508,6 @@
 | ---                                    | Fluent.Ribbon.Brushes.RibbonTabItem.Selected.MouseOver.Foreground                 |
 | ---                                    | Fluent.Ribbon.Brushes.Backstage.Background                                        |
 | ---                                    | Fluent.Ribbon.Brushes.Backstage.Foreground                                        |
-| ---                                    | Fluent.Ribbon.Brushes.BackstageTabControl.Button.MouseOver.Background             |
 | ---                                    | Fluent.Ribbon.Brushes.BackstageTabItem.Header.Foreground                          |
 | ---                                    | Fluent.Ribbon.Brushes.BackstageTabItem.MouseOver.Background                       |
 | ---                                    | Fluent.Ribbon.Brushes.BackstageTabItem.Selected.Background                        |

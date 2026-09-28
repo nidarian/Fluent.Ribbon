@@ -13,6 +13,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+
+using Fluent.Collections;
 using Fluent.Extensions;
 using Fluent.Helpers;
 using Fluent.Internal;
@@ -104,9 +106,9 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
     [Category("Action")]
     [Localizability(LocalizationCategory.NeverLocalize)]
     [Bindable(true)]
-    public ICommand Command
+    public ICommand? Command
     {
-        get => (ICommand)this.GetValue(CommandProperty);
+        get => (ICommand?)this.GetValue(CommandProperty);
 
         set => this.SetValue(CommandProperty, value);
     }
@@ -258,73 +260,114 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
     /// Binds default properties of control to quick access element
     /// </summary>
     /// <param name="source">Source item</param>
-    /// <param name="element">Toolbar item</param>
-    public static void BindQuickAccessItem(FrameworkElement source, FrameworkElement element)
+    /// <param name="target">Toolbar item</param>
+    public static void BindQuickAccessItem(FrameworkElement source, FrameworkElement target)
     {
-        Bind(source, element, nameof(source.DataContext), DataContextProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(source.DataContext), DataContextProperty, BindingMode.OneWay);
+
+        Bind(source, target, nameof(FontFamily), FontFamilyProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(FontSize), FontSizeProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(FontStretch), FontStretchProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(FontStyle), FontStyleProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(FontWeight), FontWeightProperty, BindingMode.OneWay);
+
+        Bind(source, target, nameof(Foreground), ForegroundProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(IsEnabled), IsEnabledProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(Opacity), OpacityProperty, BindingMode.OneWay);
+        Bind(source, target, nameof(SnapsToDevicePixels), SnapsToDevicePixelsProperty, BindingMode.OneWay);
+
+        Bind(source, target, FocusManager.IsFocusScopeProperty, BindingMode.OneWay);
+
+        Bind(source, target, InputControlProperties.InputMinWidthProperty, BindingMode.OneWay);
+        Bind(source, target, InputControlProperties.InputWidthProperty, BindingMode.OneWay);
+        Bind(source, target, InputControlProperties.InputHeightProperty, BindingMode.OneWay);
 
         if (source is ICommandSource)
         {
             if (source is MenuItem)
             {
-                Bind(source, element, nameof(ICommandSource.CommandParameter), System.Windows.Controls.MenuItem.CommandParameterProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(ICommandSource.CommandTarget), System.Windows.Controls.MenuItem.CommandTargetProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(ICommandSource.Command), System.Windows.Controls.MenuItem.CommandProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.CommandParameter), System.Windows.Controls.MenuItem.CommandParameterProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.CommandTarget), System.Windows.Controls.MenuItem.CommandTargetProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.Command), System.Windows.Controls.MenuItem.CommandProperty, BindingMode.OneWay);
             }
             else
             {
-                Bind(source, element, nameof(ICommandSource.CommandParameter), ButtonBase.CommandParameterProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(ICommandSource.CommandTarget), ButtonBase.CommandTargetProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(ICommandSource.Command), ButtonBase.CommandProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.CommandParameter), ButtonBase.CommandParameterProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.CommandTarget), ButtonBase.CommandTargetProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ICommandSource.Command), ButtonBase.CommandProperty, BindingMode.OneWay);
             }
         }
 
-        Bind(source, element, nameof(FontFamily), FontFamilyProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(FontSize), FontSizeProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(FontStretch), FontStretchProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(FontStyle), FontStyleProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(FontWeight), FontWeightProperty, BindingMode.OneWay);
-
-        Bind(source, element, nameof(Foreground), ForegroundProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(IsEnabled), IsEnabledProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(Opacity), OpacityProperty, BindingMode.OneWay);
-        Bind(source, element, nameof(SnapsToDevicePixels), SnapsToDevicePixelsProperty, BindingMode.OneWay);
-
-        Bind(source, element, new PropertyPath(FocusManager.IsFocusScopeProperty), FocusManager.IsFocusScopeProperty, BindingMode.OneWay);
-
-        Bind(source, element, new PropertyPath(InputControlProperties.InputMinWidthProperty), InputControlProperties.InputMinWidthProperty, BindingMode.OneWay);
-        Bind(source, element, new PropertyPath(InputControlProperties.InputWidthProperty), InputControlProperties.InputWidthProperty, BindingMode.OneWay);
-        Bind(source, element, new PropertyPath(InputControlProperties.InputHeightProperty), InputControlProperties.InputHeightProperty, BindingMode.OneWay);
-
-        if (source is IHeaderedControl headeredControl)
+        if (source is System.Windows.Controls.Primitives.ToggleButton or System.Windows.Controls.MenuItem
+            && target is System.Windows.Controls.Primitives.ToggleButton)
         {
-            if (headeredControl is HeaderedItemsControl)
+            Bind(source, target, nameof(System.Windows.Controls.Primitives.ToggleButton.IsChecked), System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, BindingMode.TwoWay);
+        }
+
+        if (source is ItemsControl sourceItemsControl
+            && target is ItemsControl targetItemsControl)
+        {
+            Bind(source, target, nameof(ItemsControl.AlternationCount), ItemsControl.AlternationCountProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.DisplayMemberPath), ItemsControl.DisplayMemberPathProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.ItemBindingGroup), ItemsControl.ItemBindingGroupProperty, BindingMode.OneWay);
+            Bind(source, target, nameof(ItemsControl.ItemStringFormat), ItemsControl.ItemStringFormatProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.ItemTemplate), ItemsControl.ItemTemplateProperty, BindingMode.OneWay);
+            Bind(source, target, nameof(ItemsControl.ItemTemplateSelector), ItemsControl.ItemTemplateSelectorProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.ItemsPanel), ItemsControl.ItemsPanelProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.ItemContainerStyle), ItemsControl.ItemContainerStyleProperty, BindingMode.OneWay);
+            Bind(source, target, nameof(ItemsControl.ItemContainerStyleSelector), ItemsControl.ItemContainerStyleSelectorProperty, BindingMode.OneWay);
+
+            Bind(source, target, nameof(ItemsControl.GroupStyleSelector), ItemsControl.GroupStyleSelectorProperty, BindingMode.OneWay);
+
+            // cannot "bind" to GroupStyle observable collection property, but can at least keep them in sync
+            _ = new CollectionSyncHelper<GroupStyle>(sourceItemsControl.GroupStyle, targetItemsControl.GroupStyle);
+
+            if (source is Selector
+                && target is Selector)
             {
-                Bind(source, element, nameof(HeaderedItemsControl.Header), HeaderedItemsControl.HeaderProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(HeaderedItemsControl.HeaderStringFormat), HeaderedItemsControl.HeaderStringFormatProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(HeaderedItemsControl.HeaderTemplate), HeaderedItemsControl.HeaderTemplateProperty, BindingMode.OneWay);
-                Bind(source, element, nameof(HeaderedItemsControl.HeaderTemplateSelector), HeaderedItemsControl.HeaderTemplateSelectorProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(Selector.SelectedValuePath), Selector.SelectedValuePathProperty, BindingMode.OneWay);
+
+                Bind(source, target, nameof(Selector.IsSynchronizedWithCurrentItem), Selector.IsSynchronizedWithCurrentItemProperty, BindingMode.OneWay);
             }
-            else
+        }
+
+        if (source is IHeaderedControl
+            && target is IHeaderedControl)
+        {
+            Bind(source, target, nameof(IHeaderedControl.Header), HeaderProperty, BindingMode.OneWay);
+
+            // The header properties of HeaderedItemsControl are different from the ones of RibbonControl (and its derived/AddOwner types),
+            // so we can only use them if both, source and target, are a HeaderedItemsControl.
+            if (source is HeaderedItemsControl
+                && target is HeaderedItemsControl)
             {
-                Bind(source, element, nameof(IHeaderedControl.Header), HeaderProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(HeaderedItemsControl.Header), HeaderedItemsControl.HeaderProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(HeaderedItemsControl.HeaderStringFormat), HeaderedItemsControl.HeaderStringFormatProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(HeaderedItemsControl.HeaderTemplate), HeaderedItemsControl.HeaderTemplateProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(HeaderedItemsControl.HeaderTemplateSelector), HeaderedItemsControl.HeaderTemplateSelectorProperty, BindingMode.OneWay);
             }
 
             if (source.ToolTip is not null
                 || BindingOperations.IsDataBound(source, ToolTipProperty))
             {
-                Bind(source, element, nameof(ToolTip), ToolTipProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(ToolTip), ToolTipProperty, BindingMode.OneWay);
             }
             else
             {
-                Bind(source, element, nameof(IHeaderedControl.Header), ToolTipProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(IHeaderedControl.Header), ToolTipProperty, BindingMode.OneWay);
             }
         }
 
-        var ribbonControl = source as IRibbonControl;
-        if (ribbonControl?.Icon is not null)
+        Bind(source, target, RibbonProperties.CustomIconSizeProperty, BindingMode.OneWay);
+
+        if (source is IRibbonControl sourceRibbonControl)
         {
-            if (ribbonControl.Icon is Visual iconVisual)
+            if (sourceRibbonControl.Icon is Visual iconVisual)
             {
                 var rect = new Rectangle
                 {
@@ -332,15 +375,53 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
                     Height = 16,
                     Fill = new VisualBrush(iconVisual)
                 };
-                ((IRibbonControl)element).Icon = rect;
+                target.SetValue(IconProperty, rect);
             }
             else
             {
-                Bind(source, element, nameof(IRibbonControl.Icon), IconProperty, BindingMode.OneWay);
+                Bind(source, target, nameof(IRibbonControl.Icon), IconProperty, BindingMode.OneWay);
             }
         }
 
-        RibbonProperties.SetSize(element, RibbonControlSize.Small);
+        if (source is IMediumIconProvider sourceMediummIconProvider)
+        {
+            if (sourceMediummIconProvider.MediumIcon is Visual iconVisual)
+            {
+                var rect = new Rectangle
+                {
+                    Width = 24,
+                    Height = 24,
+                    Fill = new VisualBrush(iconVisual)
+                };
+                target.SetValue(MediumIconProviderProperties.MediumIconProperty, rect);
+            }
+            else
+            {
+                Bind(source, target, nameof(IMediumIconProvider.MediumIcon), MediumIconProviderProperties.MediumIconProperty, BindingMode.OneWay);
+            }
+        }
+
+        if (source is ILargeIconProvider sourceLargeIconProvider)
+        {
+            if (sourceLargeIconProvider.LargeIcon is Visual iconVisual)
+            {
+                var rect = new Rectangle
+                {
+                    Width = 32,
+                    Height = 32,
+                    Fill = new VisualBrush(iconVisual)
+                };
+                target.SetValue(LargeIconProviderProperties.LargeIconProperty, rect);
+            }
+            else
+            {
+                Bind(source, target, nameof(ILargeIconProvider.LargeIcon), LargeIconProviderProperties.LargeIconProperty, BindingMode.OneWay);
+            }
+        }
+
+        Bind(source, target, new PropertyPath(RibbonProperties.QATIconSizeProperty), RibbonProperties.IconSizeProperty, BindingMode.OneWay);
+
+        RibbonProperties.SetSize(target, RibbonControlSize.Small);
     }
 
     /// <inheritdoc />
@@ -365,6 +446,11 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
     #endregion
 
     #region Binding
+
+    internal static void Bind(object source, FrameworkElement target, DependencyProperty property, BindingMode mode)
+    {
+        Bind(source, target, new PropertyPath(property), property, mode);
+    }
 
     internal static void Bind(object source, FrameworkElement target, string path, DependencyProperty property, BindingMode mode)
     {
