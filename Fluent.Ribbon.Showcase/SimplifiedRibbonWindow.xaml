@@ -280,6 +280,27 @@
                     </fluent:Button>
                 </fluent:RibbonGroupBox>
 
+                <!--  #1233: "..." overflow for rarely used commands.
+                      The last group always collapses in the simplified ribbon (SimplifiedStateDefinition="Collapsed"),
+                      so its commands open from a single "..." button at the end of the tab.
+                      In the classic ribbon it's a normal group, the same as in Office.  -->
+                <fluent:RibbonGroupBox x:Name="OverflowGroup"
+                                       Header="..."
+                                       SimplifiedStateDefinition="Collapsed">
+                    <fluent:Button Header="Rarely used command 1">
+                        <fluent:Button.Icon>
+                            <local:TestIcon IconBrush="Gray"
+                                            IconSize="16" />
+                        </fluent:Button.Icon>
+                    </fluent:Button>
+                    <fluent:Button Header="Rarely used command 2">
+                        <fluent:Button.Icon>
+                            <local:TestIcon IconBrush="Gray"
+                                            IconSize="16" />
+                        </fluent:Button.Icon>
+                    </fluent:Button>
+                </fluent:RibbonGroupBox>
+
             </fluent:RibbonTabItem>
 
             <fluent:RibbonTabItem x:Name="RibbonTab2"
