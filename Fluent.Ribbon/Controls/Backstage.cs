@@ -32,6 +32,19 @@ public class Backstage : RibbonControl
     /// </summary>
     public event DependencyPropertyChangedEventHandler? IsOpenChanged;
 
+    /// <summary>
+    /// Occurs when the user is about to close the backstage.
+    /// Set <see cref="CancelEventArgs.Cancel"/> to <c>true</c> to keep it open,
+    /// for example to finish saving or validating what the user entered.
+    /// </summary>
+    /// <remarks>
+    /// Raised for every way the user can close the backstage: Escape, clicking outside, the back button,
+    /// the backstage button, commands and KeyTips.
+    /// It's not raised when <see cref="IsOpen"/> is set directly from code, because then the app itself
+    /// decided to close it.
+    /// </remarks>
+    public event EventHandler<CancelEventArgs>? Closing;
+
     private BackstageAdorner? adorner;
 
     #region Properties
@@ -96,7 +109,31 @@ public class Backstage : RibbonControl
 
     internal void SetIsOpen(bool isOpen)
     {
+        // #1247: Give the app a chance to cancel closing.
+        // Skipped when CanChangeIsOpen is false, because CoerceIsOpen keeps the backstage open anyway.
+        if (isOpen == false
+            && this.IsOpen
+            && this.CanChangeIsOpen)
+        {
+            var args = new CancelEventArgs();
+            this.OnClosing(args);
+
+            if (args.Cancel)
+            {
+                return;
+            }
+        }
+
         this.SetCurrentValue(IsOpenProperty, BooleanBoxes.Box(isOpen));
+    }
+
+    /// <summary>
+    /// Raises the <see cref="Closing"/> event.
+    /// </summary>
+    /// <param name="e">Set <see cref="CancelEventArgs.Cancel"/> to <c>true</c> to keep the backstage open.</param>
+    protected virtual void OnClosing(CancelEventArgs e)
+    {
+        this.Closing?.Invoke(this, e);
     }
 
     #endregion
