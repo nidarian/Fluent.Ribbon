@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -112,6 +113,9 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
         spinner.ValueToTextBoxText();
 
         spinner.ValueChanged?.Invoke(spinner, new RoutedPropertyChangedEventArgs<double>((double)e.OldValue, (double)e.NewValue));
+
+        // FromElement only returns a peer if an automation client already asked for one, so this costs nothing otherwise.
+        (UIElementAutomationPeer.FromElement(spinner) as Fluent.Automation.Peers.RibbonSpinnerAutomationPeer)?.RaiseValuePropertyChangedEvent((double)e.OldValue, (double)e.NewValue);
     }
 
     private void ValueToTextBoxText()
@@ -396,6 +400,9 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
     #endregion
 
     #region Overrides
+
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer() => new Fluent.Automation.Peers.RibbonSpinnerAutomationPeer(this);
 
     /// <summary>
     /// When overridden in a derived class, is invoked whenever application code or internal processes call <see cref="M:System.Windows.FrameworkElement.ApplyTemplate"/>.
