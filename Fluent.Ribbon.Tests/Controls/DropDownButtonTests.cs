@@ -1,5 +1,6 @@
 namespace Fluent.Tests.Controls;
 
+using System.Windows;
 using System.Windows.Input;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
@@ -58,17 +59,35 @@ public class DropDownButtonTests
 
             CloseDropDown(dropDownButton);
 
-            // 2. Turned off: the first item must not get focus (and so isn't highlighted),
-            //    but keyboard focus must still be inside the drop down so arrow keys keep working.
+            // 2. Turned off: the first item must not get focus (and so isn't highlighted).
+            //    Focus stays on the button so keys still reach the control.
             dropDownButton.FocusFirstItemOnDropDownOpen = false;
             OpenDropDown(dropDownButton);
 
             Assert.That(firstItem.IsKeyboardFocused, Is.False, "First item must not be focused");
             Assert.That(firstItem.IsHighlighted, Is.False, "First item must not look highlighted");
-            Assert.That(dropDownButton.DropDownPopup.Child.IsKeyboardFocusWithin, Is.True, "Focus should be inside the drop down content");
+            Assert.That(dropDownButton.IsKeyboardFocused, Is.True, "Focus should stay on the drop down button");
+
+            // 3. The first Down key press moves focus into the drop down, to the first item.
+            PressKey(dropDownButton, Key.Down);
+
+            Assert.That(firstItem.IsKeyboardFocused, Is.True, "Down should focus the first item");
+            Assert.That(dropDownButton.IsDropDownOpen, Is.True, "Down must not close the drop down");
 
             CloseDropDown(dropDownButton);
         }
+    }
+
+    // Simulates a key press the way WPF delivers it: a KeyDown event on the focused element.
+    private static void PressKey(UIElement target, Key key)
+    {
+        var args = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(target), 0, key)
+        {
+            RoutedEvent = Keyboard.KeyDownEvent
+        };
+
+        target.RaiseEvent(args);
+        UIHelper.DoEvents();
     }
 
     private static void OpenDropDown(DropDownButton dropDownButton)
