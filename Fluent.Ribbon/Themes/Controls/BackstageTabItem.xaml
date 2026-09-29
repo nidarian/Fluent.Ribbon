@@ -60,7 +60,7 @@
                 <Setter TargetName="underlineBorder" Property="Visibility" Value="Visible" />
             </Trigger>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter TargetName="rootBorder" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Black}" />
+                <Setter TargetName="rootBorder" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border}" />
             </Trigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>

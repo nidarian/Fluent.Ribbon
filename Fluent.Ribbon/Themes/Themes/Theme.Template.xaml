@@ -143,6 +143,7 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.BackstageTabControl.ItemsPanelBackground" Color="{{Fluent.Ribbon.Brushes.BackstageTabControl.ItemsPanelBackground}}" options:Freeze="True" />
 
     <!-- BackstageTabItem -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border" Color="{{Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border}}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.BackstageTabItem.Header.Foreground" Color="{{Fluent.Ribbon.Brushes.BackstageTabItem.Header.Foreground}}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.BackstageTabItem.MouseOver.Background" Color="{{Fluent.Ribbon.Brushes.BackstageTabItem.MouseOver.Background}}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.BackstageTabItem.Selected.Background" Color="{{Fluent.Ribbon.Brushes.BackstageTabItem.Selected.Background}}" options:Freeze="True" />
