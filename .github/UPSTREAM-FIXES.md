@@ -115,6 +115,50 @@ Showcase window narrow and drag across the ribbon groups.
 
 ---
 
+## Simplified ribbon ignores SimplifiedStateDefinition (found while looking at #1233)
+
+No issue of its own yet. It's the reason the workaround the maintainer suggested
+in https://github.com/fluentribbon/Fluent.Ribbon/issues/1233 doesn't work.
+Branch to submit: `upstream-pr/simplified-state-definition-reset`
+
+**Bug.** In the simplified ribbon, a group's starting state is taken from
+`StateDefinition` (the classic ribbon's setting) instead of
+`SimplifiedStateDefinition`. `RibbonGroupsContainer` only changes a group's state
+later if the group is listed in the tab's `ReduceOrder`, and most apps don't set
+that. So `SimplifiedStateDefinition="Collapsed"` or `"Middle,Collapsed"` has no
+effect: the group stays Large.
+
+**Fix** (`RibbonGroupBox.TryClearCacheAndResetStateAndScale`, 1 line of logic):
+start from the first state of the definition for the current mode. Both
+defaults start with Large, so nothing changes for apps using the defaults.
+
+**Evidence (Windows CI):**
+
+| Run | Code | Result |
+|---|---|---|
+| [#18](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36531412624) | tests only, no fix | Fails as expected on all 3 frameworks for `"Collapsed"` and `"Middle,Collapsed"` (*expected Middle, was Large*). The default case and everything else pass. |
+| [#19](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36531461643) | tests + fix | 309/309 pass on each framework |
+
+### #1233 Showcase sample (for the discussion, not a feature)
+
+Branch: `feature/issue-1233-overflow-sample` (built in
+[run #20](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36531568958); it
+needs the fix above). The Simplified Ribbon window of the Showcase gets a last group
+on tab 1 with `Header="..."` and `SimplifiedStateDefinition="Collapsed"`,
+holding two "rarely used" commands. In the simplified ribbon it's a single "..."
+dropdown at the end of the tab. In the classic ribbon it's a normal group, like
+in Office.
+
+That covers what #1233 asked for with existing controls. What it doesn't do is
+the maintainer's "sub-groups" point (sections from several groups inside one
+overflow menu). That would be a real new feature, so it's worth asking whether
+this sample is enough before building it.
+
+**Needs a human check:** run the Showcase, open the Simplified Ribbon window,
+and look at the end of tab 1. Toggle to the classic ribbon and back.
+
+---
+
 ## Proposals (add public API, so ask the maintainer first)
 
 These add new public members (a property, an event, a class or a resource key). The code is tested, but whether to add the
@@ -242,7 +286,6 @@ Ask whether it's still needed.
 | Issue | Why not |
 |---|---|
 | #1279 QAT icon size | Already solved upstream (`QATIconSize`, #1281/#1282). Waiting for a release. |
-| #1233 "..." button in Simplified ribbon | Real feature. The maintainer asked for a draft pull request to discuss first, so it needs your go-ahead with him. |
 | #1018, #1270, #708 | Theme/design work (High Contrast, Office look). |
 | #803, #962 | Documentation / logo, not code. |
 | #1283 | Support question, the maintainer already answered. |
@@ -254,7 +297,8 @@ Ask whether it's still needed.
 2. Title: `Fix #1251: show checked QAT items added from code-behind`. Paste the
    #1251 section above as the description.
 3. Do the same for `upstream-pr/357-keytip-placement` after the Showcase check,
-   and for `upstream-pr/1176-touch-scrolling` after the touch screen check.
+   and for `upstream-pr/1176-touch-scrolling` after the touch screen check,
+   and for `upstream-pr/simplified-state-definition-reset`.
 4. For #813, #1247, #647 and #1265, first comment on each issue with the proposed API (the
    "Adds" line above) and ask if it's wanted. Open the pull request only after
    a yes.
