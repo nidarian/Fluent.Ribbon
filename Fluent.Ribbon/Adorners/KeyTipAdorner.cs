@@ -771,7 +771,11 @@ public class KeyTipAdorner : Adorner
 
     private static bool IsTextBoxShapedControl(FrameworkElement element)
     {
-        return element is Spinner || element is System.Windows.Controls.ComboBox || element is System.Windows.Controls.TextBox || element is System.Windows.Controls.CheckBox;
+        return element is Spinner
+            || element is System.Windows.Controls.ComboBox
+            || element is System.Windows.Controls.TextBox
+            || element is System.Windows.Controls.CheckBox
+            || (element is IKeyTipedControl && element is not IRibbonControl);
     }
 
     // Determines whether the element is children to RibbonToolBar
