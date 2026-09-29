@@ -297,6 +297,8 @@
            TargetType="{x:Type Fluent:RibbonGroupsContainerScrollViewer}"
            BasedOn="{StaticResource Fluent.Ribbon.Styles.RibbonScrollViewer}">
         <Setter Property="Fluent:RibbonProperties.CornerRadius" Value="{DynamicResource Fluent.Ribbon.Values.RibbonTabControl.Content.CornerRadius}" />
+        <!--  #1176: ScrollViewer ignores touch drags unless PanningMode is set. It has to be set here (a style setter) and not as a metadata default, because ScrollViewer only enables manipulation when the value changes.  -->
+        <Setter Property="PanningMode" Value="HorizontalOnly" />
     </Style>
 
     <ControlTemplate x:Key="Fluent.Ribbon.Templates.ScrollViewer"
