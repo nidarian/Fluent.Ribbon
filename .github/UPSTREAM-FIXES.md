@@ -80,9 +80,44 @@ top-left on the slider. Then tick the test plan in the fork PR.
 
 ---
 
+## #1176: ribbon groups can't be scrolled with touch
+
+Issue: https://github.com/fluentribbon/Fluent.Ribbon/issues/1176
+Branch to submit: `upstream-pr/1176-touch-scrolling`
+
+**Bug.** When the window is narrow, the ribbon groups scroll with the arrow
+buttons and the mouse wheel, but dragging a finger does nothing (1, 2 or 3
+fingers, in any direction).
+
+**Cause.** `RibbonGroupsContainerScrollViewer` never sets `PanningMode`, and a
+WPF `ScrollViewer` ignores touch drags while it's `None` (the default). This
+likely explains why the maintainer couldn't reproduce it: a phone-to-PC touch
+forwarding tool may send mouse-wheel events instead of touch.
+
+**Fix** (2 files):
+
+- `PanningMode = HorizontalOnly` in the default style. It has to be a style
+  setter: `ScrollViewer` only turns on `IsManipulationEnabled` when
+  `PanningMode` *changes*, so a metadata default wouldn't enable touch.
+- Swallow `ManipulationBoundaryFeedback`, so dragging past the first or last
+  group doesn't make Windows bounce the whole window.
+
+**Evidence (Windows CI):**
+
+| Run | Code | Result |
+|---|---|---|
+| [#14](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36510887638) | test only, no fix | Fails as expected on all 3 frameworks: *PanningMode expected HorizontalOnly, was None* |
+| [#15](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36510890291) | test + fix | All pass |
+
+**Needs a human check:** the test proves touch panning is switched on. It can't
+move a real finger. Before submitting, try it on a touch screen: make the
+Showcase window narrow and drag across the ribbon groups.
+
+---
+
 ## Proposals (add public API, so ask the maintainer first)
 
-These two add new public members. The code is tested, but whether to add the
+These add new public members (a property, an event, a class or a resource key). The code is tested, but whether to add the
 API, and under what name, is the maintainer's call. Ask in the issue before
 opening a pull request.
 
@@ -134,6 +169,50 @@ same as `Window.Closing`.
 **Evidence:** [run #10](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36502318713)
 passed. The 3 new tests are in `BackstageTests.cs`.
 
+### #647: automation peer for Spinner
+
+Issue: https://github.com/fluentribbon/Fluent.Ribbon/issues/647
+Branch to submit: `upstream-pr/647-spinner-automation-peer`
+
+The issue's checklist still has 4 unticked controls, but only `Spinner` really
+lacks a peer. `BackstageTabControl` and `BackstageTabItem` already have one, and
+`StartScreen` inherits the `Backstage` one. Worth telling the maintainer so the
+checklist can be ticked.
+
+**Adds** `RibbonSpinnerAutomationPeer` (Spinner used the generic
+`RibbonControlAutomationPeer` before):
+
+- control type `Spinner`, name from `Header`, like the other ribbon peers
+- RangeValue pattern: `Value`, `Minimum`, `Maximum`,
+  `SmallChange`/`LargeChange` = `Increment`, `IsReadOnly` when disabled
+- `SetValue` follows WPF's `RangeBaseAutomationPeer` rules: it rejects
+  disabled controls and out-of-range values, and uses `SetCurrentValue` so a
+  binding on `Value` survives
+- raises the RangeValue `Value` changed event, so screen readers announce changes
+
+**Evidence:** [run #13](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36510725550)
+passed, 311/311 per framework. The 6 new tests are in
+`Automation/Peers/RibbonSpinnerAutomationPeerTests.cs`.
+
+### #1265: brush key for the backstage tab focus frame
+
+Issue: https://github.com/fluentribbon/Fluent.Ribbon/issues/1265
+Branch to submit: `upstream-pr/1265-backstage-focus-brush`
+
+The unused `BackstageTabControl.Button.MouseOver.Background` brush the
+maintainer mentioned was already removed upstream (a7c5a6dd). What's left from
+the reporter's request is a resource for the focus frame color.
+
+**Adds** `Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border`, generated for
+every theme. It defaults to `Fluent.Ribbon.Colors.Black`, the color used
+before, so nothing changes visually. The `IsKeyboardFocused` trigger in the
+`BackstageTabItem` template now uses it. `ReferenceData/vNextResourceKeys.txt`
+is updated.
+
+**Evidence:** [run #16](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36511096327)
+passed. The tests check that the key exists in Light and Dark with the old
+color, and that the template uses it.
+
 ---
 
 ## Open question for the maintainer (#1251 follow-up)
@@ -148,6 +227,10 @@ Ask whether it's still needed.
 
 ## Fork maintenance (not for upstream)
 
+- `ci/1176-test-only` only existed to prove the #1176 test fails without the
+  fix. Its run is linked above. Delete the branch on GitHub (Branches page, trash
+  icon). This session isn't allowed to delete branches.
+
 - 2026-09-29: moved the fork's workflows to Node 24 action versions (checkout v7,
   setup-dotnet v6, upload-artifact v7, download-artifact v8). Build, sync and
   archive all passed.
@@ -159,8 +242,8 @@ Ask whether it's still needed.
 | Issue | Why not |
 |---|---|
 | #1279 QAT icon size | Already solved upstream (`QATIconSize`, #1281/#1282). Waiting for a release. |
-| #1176 Touch scrolling | Needs a real touch screen to reproduce. |
-| #647, #1018, #1233, #1265, #1270, #708 | Large features or theme/design work. |
+| #1233 "..." button in Simplified ribbon | Real feature. The maintainer asked for a draft pull request to discuss first, so it needs your go-ahead with him. |
+| #1018, #1270, #708 | Theme/design work (High Contrast, Office look). |
 | #803, #962 | Documentation / logo, not code. |
 | #1283 | Support question, the maintainer already answered. |
 
@@ -170,7 +253,8 @@ Ask whether it's still needed.
    `upstream-pr/1251-qat-ischecked`, **to** `fluentribbon/Fluent.Ribbon`, branch `develop`.
 2. Title: `Fix #1251: show checked QAT items added from code-behind`. Paste the
    #1251 section above as the description.
-3. Do the same for `upstream-pr/357-keytip-placement`, after the Showcase check.
-4. For #813 and #1247, first comment on each issue with the proposed API (the
+3. Do the same for `upstream-pr/357-keytip-placement` after the Showcase check,
+   and for `upstream-pr/1176-touch-scrolling` after the touch screen check.
+4. For #813, #1247, #647 and #1265, first comment on each issue with the proposed API (the
    "Adds" line above) and ask if it's wanted. Open the pull request only after
    a yes.
