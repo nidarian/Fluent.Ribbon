@@ -80,13 +80,85 @@ top-left on the slider. Then tick the test plan in the fork PR.
 
 ---
 
-## The other open issues (not worked on, to save usage)
+## Proposals (add public API, so ask the maintainer first)
 
-| Issue | Why not now |
+These two add new public members. The code is tested, but whether to add the
+API, and under what name, is the maintainer's call. Ask in the issue before
+opening a pull request.
+
+### #813: don't focus the first item when a drop down opens
+
+Issue: https://github.com/fluentribbon/Fluent.Ribbon/issues/813
+Branch to submit: `upstream-pr/813-focus-first-item`
+
+**Adds** `DropDownButton.FocusFirstItemOnDropDownOpen` (dependency property,
+default `true`). `SplitButton` inherits it.
+
+- `true` (default): exactly the current behavior. That code path is unchanged.
+- `false`: the drop down opens with nothing focused or highlighted. Focus stays
+  on the button, and the first Up/Down key press moves to the last/first item,
+  like standard menus opened with the mouse. Escape still closes it.
+
+**Evidence:**
+
+- [Run #9](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36502205599)
+  failed, and that was useful. The first version tried to put focus on the popup
+  content, but that control (`ResizeableContentControl`) isn't focusable.
+- [Run #11](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36503188134)
+  passed after the redesign: 307/307 on each framework, 0 inconclusive. The test
+  runs a baseline with the default first, so it can't pass by accident if
+  keyboard focus doesn't work on the CI machine.
+
+**Found along the way (existing code, not changed):** when every item in the
+drop down is disabled, `DropDownButton` falls back to
+`Keyboard.Focus(DropDownPopup.Child)`. That call can never succeed, because the
+child is a `ResizeableContentControl`, which sets `Focusable = false`. Worth
+mentioning to the maintainer.
+
+### #1247: cancel closing the backstage
+
+Issue: https://github.com/fluentribbon/Fluent.Ribbon/issues/1247
+Branch to submit: `upstream-pr/1247-backstage-closing`
+
+**Adds** `Backstage.Closing` (`EventHandler<CancelEventArgs>`) and
+`protected virtual void OnClosing(CancelEventArgs e)`. Set `e.Cancel = true` to
+keep the backstage open, for example until a form is saved. The pattern is the
+same as `Window.Closing`.
+
+- It's raised for every user close (Escape, click outside, back button,
+  backstage button, commands, KeyTips), because they all go through the internal
+  `SetIsOpen`.
+- It's not raised when `IsOpen` is set from code, when the backstage is already
+  closed, or when `CanChangeIsOpen` is `false`.
+
+**Evidence:** [run #10](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36502318713)
+passed. The 3 new tests are in `BackstageTests.cs`.
+
+---
+
+## Open question for the maintainer (#1251 follow-up)
+
+`QuickAccessMenuItem.OnUnchecked` returns early while the item isn't loaded. So
+unchecking an item from code before its menu has ever been opened doesn't
+remove it from the toolbar. The guard dates from before 2017 and its reason
+isn't recorded. It may protect bindings or state loading, so I left it alone.
+Ask whether it's still needed.
+
+---
+
+## Fork maintenance (not for upstream)
+
+- 2026-09-29: moved the fork's workflows to Node 24 action versions (checkout v7,
+  setup-dotnet v6, upload-artifact v7, download-artifact v8). Build, sync and
+  archive all passed.
+
+---
+
+## The other open issues (not worked on)
+
+| Issue | Why not |
 |---|---|
 | #1279 QAT icon size | Already solved upstream (`QATIconSize`, #1281/#1282). Waiting for a release. |
-| #1247 Cancel backstage close | The maintainer called it "a good addition". It adds public API, so agree the design first. |
-| #813 Disable auto focus of first menu item | Small feature. Adds public API, so agree the design first. |
 | #1176 Touch scrolling | Needs a real touch screen to reproduce. |
 | #647, #1018, #1233, #1265, #1270, #708 | Large features or theme/design work. |
 | #803, #962 | Documentation / logo, not code. |
@@ -99,3 +171,6 @@ top-left on the slider. Then tick the test plan in the fork PR.
 2. Title: `Fix #1251: show checked QAT items added from code-behind`. Paste the
    #1251 section above as the description.
 3. Do the same for `upstream-pr/357-keytip-placement`, after the Showcase check.
+4. For #813 and #1247, first comment on each issue with the proposed API (the
+   "Adds" line above) and ask if it's wanted. Open the pull request only after
+   a yes.
