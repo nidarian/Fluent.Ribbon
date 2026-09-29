@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the fork (for the scripts)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: fork
 
@@ -145,10 +145,10 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/restore-cache
     steps:
       - name: Check out the fork
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -166,7 +166,7 @@ jobs:
       # another (each job runs on a fresh machine). One day is plenty: the
       # binaries job below picks them up within minutes.
       - name: Hand the packages to the upload job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-packages
           path: deps/*.nupkg
@@ -182,7 +182,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the fork
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download every published Fluent.Ribbon version from NuGet
         run: |
@@ -200,7 +200,7 @@ jobs:
       - name: Collect the dependency packages from the Windows job
         # Skipped if the dependencies job failed, so the rest still runs.
         if: needs.dependencies.result == 'success'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dependency-packages
           # Same folder as the Fluent.Ribbon versions, so one upload handles both.

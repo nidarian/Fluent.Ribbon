@@ -29,7 +29,7 @@ jobs:
       develop_changed: ${{ steps.sync.outputs.develop_changed }}
     steps:
       - name: Check out the fork
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # 0 = full history. The script compares commit ancestry, which a
           # shallow clone can't do.

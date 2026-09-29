@@ -24,14 +24,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # GitVersion works out the version number (e.g. 11.0.3-alpha.5) from
           # tags and commit history, so it needs the full history.
           fetch-depth: 0
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           # The SDK pinned in global.json builds the code. The older runtimes
           # are needed to RUN things: the tests target net6.0-windows and
@@ -52,14 +52,14 @@ jobs:
       # reports can be downloaded from the run page and read.
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: TestResults/*.trx
           if-no-files-found: ignore
 
       - name: Upload packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: packages
           path: |
