@@ -311,6 +311,29 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     #endregion
 
+    #region FocusFirstItemOnDropDownOpen
+
+    /// <summary>
+    /// Gets or sets whether the first item receives keyboard focus when the drop down is opened.
+    /// Default is <c>true</c>.
+    /// </summary>
+    /// <remarks>
+    /// A focused item also shows its highlighted (mouse over like) style, which can be confusing when
+    /// the drop down was opened with the mouse. Set this to <c>false</c> to keep keyboard focus on the
+    /// drop down content instead, so no item is highlighted until the user moves the mouse or presses an arrow key.
+    /// </remarks>
+    public bool FocusFirstItemOnDropDownOpen
+    {
+        get => (bool)this.GetValue(FocusFirstItemOnDropDownOpenProperty);
+        set => this.SetValue(FocusFirstItemOnDropDownOpenProperty, BooleanBoxes.Box(value));
+    }
+
+    /// <summary>Identifies the <see cref="FocusFirstItemOnDropDownOpen"/> dependency property.</summary>
+    public static readonly DependencyProperty FocusFirstItemOnDropDownOpenProperty =
+        DependencyProperty.Register(nameof(FocusFirstItemOnDropDownOpen), typeof(bool), typeof(DropDownButton), new PropertyMetadata(BooleanBoxes.TrueBox));
+
+    #endregion
+
     #region ClosePopupOnMouseDownDelay
 
     /// <summary>
@@ -748,6 +771,19 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 this.RunInDispatcherAsync(
                     () =>
                     {
+                        if (this.FocusFirstItemOnDropDownOpen == false)
+                        {
+                            // #813: Don't focus (and thereby highlight) the first item.
+                            // Focus the popup content instead, so arrow keys and Escape keep working,
+                            // unless focus already moved into the popup (for example via keyboard navigation).
+                            if (this.DropDownPopup.Child?.IsKeyboardFocusWithin != true)
+                            {
+                                Keyboard.Focus(this.DropDownPopup.Child);
+                            }
+
+                            return;
+                        }
+
                         var container = this.ItemContainerGenerator.ContainerFromIndex(0);
 
                         NavigateToContainer(container);
