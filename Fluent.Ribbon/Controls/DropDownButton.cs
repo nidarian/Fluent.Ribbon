@@ -311,6 +311,30 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     #endregion
 
+    #region FocusFirstItemOnDropDownOpen
+
+    /// <summary>
+    /// Gets or sets whether the first item receives keyboard focus when the drop down is opened.
+    /// Default is <c>true</c>.
+    /// </summary>
+    /// <remarks>
+    /// A focused item also shows its highlighted (mouse over like) style, which can be confusing when
+    /// the drop down was opened with the mouse. Set this to <c>false</c> to keep keyboard focus on the
+    /// drop down button instead, so no item is highlighted until the user moves the mouse or presses an arrow key.
+    /// The first Up or Down key press then focuses the last or first item.
+    /// </remarks>
+    public bool FocusFirstItemOnDropDownOpen
+    {
+        get => (bool)this.GetValue(FocusFirstItemOnDropDownOpenProperty);
+        set => this.SetValue(FocusFirstItemOnDropDownOpenProperty, BooleanBoxes.Box(value));
+    }
+
+    /// <summary>Identifies the <see cref="FocusFirstItemOnDropDownOpen"/> dependency property.</summary>
+    public static readonly DependencyProperty FocusFirstItemOnDropDownOpenProperty =
+        DependencyProperty.Register(nameof(FocusFirstItemOnDropDownOpen), typeof(bool), typeof(DropDownButton), new PropertyMetadata(BooleanBoxes.TrueBox));
+
+    #endregion
+
     #region ClosePopupOnMouseDownDelay
 
     /// <summary>
@@ -626,6 +650,13 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
                     handled = true;
                 }
+                else if (this.IsFocusStillOnButtonWhileOpen())
+                {
+                    // #813: Opened without focusing an item, so the first key press moves into the drop down.
+                    NavigateToContainer(this.ItemContainerGenerator.ContainerFromIndex(0), FocusNavigationDirection.Down);
+
+                    handled = true;
+                }
 
                 break;
 
@@ -638,6 +669,13 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                     var container = this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1);
 
                     NavigateToContainer(container, FocusNavigationDirection.Up);
+
+                    handled = true;
+                }
+                else if (this.IsFocusStillOnButtonWhileOpen())
+                {
+                    // #813: Same as Down, starting from the last item.
+                    NavigateToContainer(this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1), FocusNavigationDirection.Up);
 
                     handled = true;
                 }
@@ -666,6 +704,18 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         }
 
         base.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// True when the drop down is open but no item has focus yet, which only happens
+    /// when <see cref="FocusFirstItemOnDropDownOpen"/> is <c>false</c>.
+    /// </summary>
+    private bool IsFocusStillOnButtonWhileOpen()
+    {
+        return this.HasItems
+               && this.IsDropDownOpen
+               && this.FocusFirstItemOnDropDownOpen == false
+               && this.DropDownPopup?.Child?.IsKeyboardFocusWithin != true;
     }
 
     internal static void NavigateToContainer(DependencyObject container, FocusNavigationDirection focusNavigationDirection = FocusNavigationDirection.Down)
@@ -748,6 +798,15 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 this.RunInDispatcherAsync(
                     () =>
                     {
+                        // #813: Don't focus (and thereby highlight) the first item.
+                        // Focus stays on the drop down button, and the first Up/Down key press moves it
+                        // into the drop down (see OnKeyDown). The popup content itself can't take focus
+                        // (ResizeableContentControl isn't focusable), so it can't hold it instead.
+                        if (this.FocusFirstItemOnDropDownOpen == false)
+                        {
+                            return;
+                        }
+
                         var container = this.ItemContainerGenerator.ContainerFromIndex(0);
 
                         NavigateToContainer(container);
