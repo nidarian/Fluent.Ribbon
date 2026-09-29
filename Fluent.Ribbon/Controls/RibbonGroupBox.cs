@@ -898,9 +898,17 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
             return false;
         }
 
-        this.State = this.StateDefinition.States[0];
+        // Start from the first state of the definition that applies to the current mode.
+        // RibbonGroupsContainer already uses SimplifiedStateDefinition when enlarging/reducing a simplified group,
+        // but the reset always used StateDefinition, so a SimplifiedStateDefinition like "Collapsed" or
+        // "Middle,Collapsed" was ignored unless the group was also listed in the tab's ReduceOrder.
+        var initialState = this.IsSimplified
+            ? this.SimplifiedStateDefinition.States[0]
+            : this.StateDefinition.States[0];
+
+        this.State = initialState;
         this.Scale = 0;
-        this.StateIntermediate = this.StateDefinition.States[0];
+        this.StateIntermediate = initialState;
         this.ScaleIntermediate = 0;
 
         this.ResetScaleableItems();
