@@ -94,6 +94,10 @@ public class RibbonStateStorage : IRibbonStateStorage
     /// <inheritdoc />
     public virtual void SaveTemporary()
     {
+        // The stream is reused for every save. Cut it to zero, not just rewind it:
+        // a shorter state written over a longer one would otherwise keep the old tail
+        // ("True,True,True" over "False,False,False" gives "True,True,Truelse").
+        this.memoryStream.SetLength(0);
         this.memoryStream.Position = 0;
         this.Save(this.memoryStream);
     }
@@ -203,7 +207,9 @@ public class RibbonStateStorage : IRibbonStateStorage
 
                     // Copy loaded state to MemoryStream for temporary storage.
                     // Temporary storage is used for style changes etc. so we can apply the current state again.
+                    // Empty the temporary stream first, so nothing a longer earlier state left behind remains.
                     stream.Position = 0;
+                    this.memoryStream.SetLength(0);
                     this.memoryStream.Position = 0;
                     stream.CopyTo(this.memoryStream);
                 }
