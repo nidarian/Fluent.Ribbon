@@ -1,6 +1,7 @@
 ﻿namespace Fluent.Automation.Peers;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -118,7 +119,10 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
                 //automationPeer.ResetChildrenCache();
 
                 var ribbonTabs = automationPeer.GetChildren();
-                children.AddRange(ribbonTabs);
+
+                // The tab control's children start with the same menu that was added above,
+                // so skip peers that are already listed.
+                children.AddRange(ribbonTabs.Where(x => children.Contains(x) == false));
                 // Resetting the children cache might call a recursive loop...
                 //ribbonTabs.ForEach(x => x.ResetChildrenCache());
             }
