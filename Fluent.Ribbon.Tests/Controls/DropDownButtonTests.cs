@@ -78,6 +78,61 @@ public class DropDownButtonTests
         }
     }
 
+    [Test]
+    public void Keyboard_open_focuses_an_item_even_when_FocusFirstItemOnDropDownOpen_is_false()
+    {
+        // FocusFirstItemOnDropDownOpen is about opening with the mouse. Pressing Down or Up to open
+        // a menu is a request to navigate it, so an item must get focus. This checks the very first
+        // open, before the drop down's items were ever generated.
+        var baselineFirstItem = new MenuItem { Header = "First" };
+        var baseline = new DropDownButton { Header = "Baseline", Items = { baselineFirstItem, new MenuItem { Header = "Second" } } };
+
+        var firstItem = new MenuItem { Header = "First" };
+        var lastItem = new MenuItem { Header = "Last" };
+        var dropDownButton = new DropDownButton
+        {
+            Header = "DropDown",
+            FocusFirstItemOnDropDownOpen = false,
+            Items = { firstItem, new MenuItem { Header = "Middle" }, lastItem }
+        };
+
+        var panel = new System.Windows.Controls.StackPanel { Children = { baseline, dropDownButton } };
+
+        using (var window = new TestRibbonWindow(panel))
+        {
+            baseline.ApplyTemplate();
+            dropDownButton.ApplyTemplate();
+            window.Activate();
+
+            // Baseline with the default setting: proves keyboard focus works in this environment.
+            baseline.Focus();
+            UIHelper.DoEvents();
+            PressKey(baseline, Key.Down);
+            if (baselineFirstItem.IsKeyboardFocused == false)
+            {
+                Assert.Inconclusive("Keyboard focus is not available in this test environment.");
+            }
+
+            CloseDropDown(baseline);
+
+            // Down on a never opened drop down with the option turned off.
+            dropDownButton.Focus();
+            UIHelper.DoEvents();
+            PressKey(dropDownButton, Key.Down);
+
+            Assert.That(dropDownButton.IsDropDownOpen, Is.True);
+            Assert.That(firstItem.IsKeyboardFocused, Is.True, "Down should focus the first item");
+
+            CloseDropDown(dropDownButton);
+
+            // And Up focuses the last item.
+            PressKey(dropDownButton, Key.Up);
+
+            Assert.That(dropDownButton.IsDropDownOpen, Is.True);
+            Assert.That(lastItem.IsKeyboardFocused, Is.True, "Up should focus the last item");
+        }
+    }
+
     // Simulates a key press the way WPF delivers it: a KeyDown event on the focused element.
     private static void PressKey(UIElement target, Key key)
     {

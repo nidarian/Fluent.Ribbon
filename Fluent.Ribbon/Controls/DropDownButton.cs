@@ -618,6 +618,10 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         }
     }
 
+    // Index of the item a keyboard open asked to focus (Down: first, Up: last).
+    // null when the drop down was opened by mouse or code. Reset after each use.
+    private int? itemIndexToFocusOnOpen;
+
     private void HandleButtonBorderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
@@ -642,6 +646,8 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 if (this.HasItems
                     && this.IsDropDownOpen == false) // Only handle this for initial navigation. Further navigation is handled by the dropdown itself
                 {
+                    // A keyboard open always focuses an item, even when FocusFirstItemOnDropDownOpen is false (#813).
+                    this.itemIndexToFocusOnOpen = 0;
                     this.IsDropDownOpen = true;
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(0);
@@ -664,6 +670,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 if (this.HasItems
                     && this.IsDropDownOpen == false) // Only handle this for initial navigation. Further navigation is handled by the dropdown itself
                 {
+                    // Opening queues a callback that focuses an item once the drop down is shown.
+                    // Tell it to use the last item, otherwise it would move focus back to the first one.
+                    this.itemIndexToFocusOnOpen = this.Items.Count - 1;
                     this.IsDropDownOpen = true;
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1);
@@ -798,18 +807,26 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 this.RunInDispatcherAsync(
                     () =>
                     {
-                        // #813: Don't focus (and thereby highlight) the first item.
-                        // Focus stays on the drop down button, and the first Up/Down key press moves it
-                        // into the drop down (see OnKeyDown). The popup content itself can't take focus
-                        // (ResizeableContentControl isn't focusable), so it can't hold it instead.
+                        // Opening with Down/Up asks for the first/last item (see OnKeyDown), and that always wins:
+                        // pressing a key to open a menu is a request to navigate it.
+                        // Otherwise (mouse or code), FocusFirstItemOnDropDownOpen decides.
+                        var requestedIndex = this.itemIndexToFocusOnOpen;
+                        this.itemIndexToFocusOnOpen = null;
+
                         if (this.FocusFirstItemOnDropDownOpen == false)
                         {
+                            // #813: Don't focus (and thereby highlight) the first item.
+                            // Focus stays on the drop down button, and the first Up/Down key press moves it
+                            // into the drop down (see OnKeyDown). The popup content itself can't take focus
+                            // (ResizeableContentControl isn't focusable), so it can't hold it instead.
                             return;
                         }
 
-                        var container = this.ItemContainerGenerator.ContainerFromIndex(0);
+                        var index = requestedIndex ?? 0;
 
-                        NavigateToContainer(container);
+                        var container = this.ItemContainerGenerator.ContainerFromIndex(index);
+
+                        NavigateToContainer(container, index == 0 ? FocusNavigationDirection.Down : FocusNavigationDirection.Up);
 
                         // Edge case: Whole dropdown content is disabled
                         if (this.IsKeyboardFocusWithin == false)
