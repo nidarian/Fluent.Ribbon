@@ -262,6 +262,73 @@ property calls `SaveTemporary` by itself, so it overwrote the saved state. It
 failed both without the fix (run #36) and with it (run #37). The final test
 leaves that property alone and says why.
 
+### Hidden KeyTips count as a prefix
+
+Branch to submit: `upstream-pr/keytip-hidden-prefix`
+
+**Bug.** An expanded group's own KeyTip (like "ZC") is hidden and can't be pressed: `TryGetKeyTipInformation` only considers visible KeyTips. `ContainsKeyTipStartingWith` didn't check visibility, so typing "Z" counted as the start of "ZC". The service then filtered away every visible KeyTip and swallowed the key. In the Showcase: Alt, K, Z.
+
+**Fix:** the prefix check uses the same conditions as activation (enabled and visible). One line.
+
+| Run | Code | Result |
+|---|---|---|
+| [#44](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687765504) | test only | Fails: *Hidden KeyTip "ZC" must not match the prefix "Z"* |
+| [#45](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687859550) | test + fix | 306/306 on each framework |
+
+With this fix, "Z" is treated like any key that matches nothing. At the tab level that currently closes all KeyTips, because of the dead "beep" branch listed in `FINDINGS.md`.
+
+### "Add Gallery to Quick Access Toolbar" is always disabled
+
+Branch to submit: `upstream-pr/qat-gallery-can-execute`
+
+**Bug.** Right-clicking a `Gallery` shows "Add Gallery to Quick Access Toolbar", and `AddToQuickAccessToolBar` supports galleries by adding the control hosting them. But the command's can-execute check first required the Gallery itself to be an `IQuickAccessItemProvider`, which it isn't, so its Gallery branch never ran and the entry was always disabled.
+
+**Fix:** the redirect (Gallery, or menu item without icon, becomes its host control) moved into one helper that both `AddToQuickAccessToolBar` and the can-execute check use. For an icon-less menu item, can-execute now answers for the control that would really be added.
+
+| Run | Code | Result |
+|---|---|---|
+| [#46](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687986486) | test only | Fails: *CanExecute expected True, was False* |
+| [#47](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688066693) | test + fix | 306/306 on each framework |
+
+### Quick Access elements added before the template never appear
+
+Branch to submit: `upstream-pr/qat-add-before-template`
+
+**Bug.** Apps often restore their toolbar in the window constructor. The Ribbon has no template yet then, so `AddToQuickAccessToolBar` records the element but `QuickAccessToolBar?.Items.Add(...)` does nothing, and `OnApplyTemplate` never adds recorded copies to the new toolbar. The element never shows, and since it counts as added it can't be added again.
+
+**Fix:** when `OnApplyTemplate` creates the toolbar, it adds the recorded copies. Re-templating is unchanged.
+
+| Run | Code | Result |
+|---|---|---|
+| [#48](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688151084) | test only | Fails: the toolbar is empty |
+| [#49](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688230067) | test + fix | 306/306 on each framework |
+
+### Disabling KeyTip handling leaves KeyTips on screen
+
+Branch to submit: `upstream-pr/keytip-detach-terminates`
+
+**Bug.** `KeyTipService.Detach` (run when `IsKeyTipHandlingEnabled` becomes false, and on unload) removes the keyboard and window handlers but didn't end a KeyTip chain that was showing. Nothing could close those KeyTips anymore.
+
+**Fix:** `Detach` terminates a showing chain first: the same clean-up as Escape. Does nothing when no KeyTips are showing.
+
+| Run | Code | Result |
+|---|---|---|
+| [#50](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688349862) | test only | Fails: KeyTips still visible after `Detach` |
+| [#51](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688418462) | test + fix | 306/306 on each framework |
+
+### Enter clicks a SplitButton's disabled button part
+
+Branch to submit: `upstream-pr/splitbutton-enter-disabled-button`
+
+**Bug.** `SplitButton.OnKeyDown` calls `InvokeClick()` on every Enter, and `InvokeClick` doesn't check `IsEnabled`. With `IsButtonEnabled = false` (or a command that can't execute, which disables only the button part), Enter still raised `Click` and toggled `IsChecked`. A bound `Command` itself was still protected by WPF's can-execute check.
+
+**Fix:** only click when the button part is enabled; otherwise Enter just opens the drop down.
+
+| Run | Code | Result |
+|---|---|---|
+| [#52](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688670103) | test only | Fails: 2 clicks instead of 1 (the enabled baseline clicked once) |
+| [#53](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688741470) | test + fix | 306/306 on each framework |
+
 ### `ReduceOrder` documentation says the opposite of the code
 
 Branch to submit: `upstream-pr/reduceorder-xml-doc`
@@ -432,7 +499,10 @@ Ask whether it's still needed.
    The same goes for the architecture review bugs: `upstream-pr/backstage-content-visibility-binding`,
    `upstream-pr/keytip-row-snapping` (after the Showcase check),
    `upstream-pr/dropdown-up-key-focus`, `upstream-pr/qat-items-clear`,
-   `upstream-pr/state-storage-temporary-truncate` and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/state-storage-temporary-truncate`, `upstream-pr/keytip-hidden-prefix`,
+   `upstream-pr/qat-gallery-can-execute`, `upstream-pr/qat-add-before-template`,
+   `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`
+   and `upstream-pr/reduceorder-xml-doc`.
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.
