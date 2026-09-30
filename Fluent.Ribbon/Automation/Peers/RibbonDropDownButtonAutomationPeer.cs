@@ -55,12 +55,24 @@ public class RibbonDropDownButtonAutomationPeer : RibbonHeaderedControlAutomatio
     /// <inheritdoc />
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwnerDropDownButton.IsDropDownOpen = false;
     }
 
     /// <inheritdoc />
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwnerDropDownButton.IsDropDownOpen = true;
     }
 
