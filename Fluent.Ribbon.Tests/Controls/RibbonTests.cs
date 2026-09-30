@@ -209,4 +209,43 @@ public class RibbonTests
             Key.A
         }));
     }
+
+    /// <summary>
+    /// Right-clicking a <see cref="Gallery"/> shows "Add Gallery to Quick Access Toolbar".
+    /// A Gallery can't be put on the toolbar itself, so AddToQuickAccessToolBar adds the control
+    /// hosting it instead (here the drop down). The command's can-execute check didn't do that
+    /// redirect: it required the Gallery itself to be addable, so the menu entry was always disabled.
+    /// </summary>
+    [Test]
+    public void AddToQuickAccessCommand_is_enabled_for_a_gallery_and_adds_its_host()
+    {
+        var gallery = new Gallery();
+        var dropDownButton = new DropDownButton { Header = "Host", Items = { gallery } };
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem
+                {
+                    Header = "Tab",
+                    Groups = { new RibbonGroupBox { Header = "Group", Items = { dropDownButton } } }
+                }
+            }
+        };
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null, "Precondition: the ribbon has its toolbar");
+            Assert.That(LogicalTreeHelper.GetParent(gallery), Is.SameAs(dropDownButton), "Precondition: the drop down hosts the gallery");
+
+            Assert.That(Ribbon.AddToQuickAccessCommand.CanExecute(gallery, ribbon), Is.True, "Adding a gallery must be offered");
+
+            Ribbon.AddToQuickAccessCommand.Execute(gallery, ribbon);
+
+            Assert.That(ribbon.IsInQuickAccessToolBar(dropDownButton), Is.True, "Executing adds the host control");
+            Assert.That(Ribbon.AddToQuickAccessCommand.CanExecute(gallery, ribbon), Is.False, "Once the host is on the toolbar, adding it again isn't offered");
+        }
+    }
 }

@@ -1497,20 +1497,14 @@ public class Ribbon : Control, ILogicalChildSupport
     // Occurs when add to quick access command can execute handles
     private static void OnAddToQuickAccessCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
+        // Check the element that AddToQuickAccessToolBar would really add. For a Gallery (or a menu item
+        // without an icon) that's the control hosting it, so checking the Gallery itself always said no.
         if (sender is Ribbon ribbon
             && ribbon.IsQuickAccessToolBarVisible
-            && e.Parameter is UIElement element
-            && QuickAccessItemsProvider.IsSupported(element)
-            && ribbon.IsInQuickAccessToolBar(element) is false)
+            && GetElementToAddToQuickAccessToolBar(e.Parameter as UIElement) is { } element
+            && QuickAccessItemsProvider.IsSupported(element))
         {
-            if (e.Parameter is Gallery gallery)
-            {
-                e.CanExecute = ribbon.IsInQuickAccessToolBar(FindParentRibbonControl(gallery) as UIElement) == false;
-            }
-            else
-            {
-                e.CanExecute = ribbon.IsInQuickAccessToolBar(element) == false;
-            }
+            e.CanExecute = ribbon.IsInQuickAccessToolBar(element) == false;
         }
         else
         {
@@ -1751,21 +1745,7 @@ public class Ribbon : Control, ILogicalChildSupport
     /// <param name="element">Element</param>
     public void AddToQuickAccessToolBar(UIElement? element)
     {
-        if (element is null)
-        {
-            return;
-        }
-
-        if (element is Gallery)
-        {
-            element = FindParentRibbonControl(element) as UIElement;
-        }
-
-        // Do not add menu items without icon.
-        if (element is System.Windows.Controls.MenuItem menuItem && menuItem.Icon is null)
-        {
-            element = FindParentRibbonControl(element) as UIElement;
-        }
+        element = GetElementToAddToQuickAccessToolBar(element);
 
         if (element is null)
         {
@@ -1789,6 +1769,27 @@ public class Ribbon : Control, ILogicalChildSupport
                 this.QuickAccessToolBar?.Items.Add(control);
             }
         }
+    }
+
+    /// <summary>
+    /// Gets the element that is put on the quick access toolbar when <paramref name="element"/> is added.
+    /// A <see cref="Gallery"/>, or a menu item without an icon, is represented by the ribbon control hosting it.
+    /// Used by <see cref="AddToQuickAccessToolBar"/> and by the add command's can-execute check, so both agree.
+    /// </summary>
+    private static UIElement? GetElementToAddToQuickAccessToolBar(UIElement? element)
+    {
+        if (element is Gallery)
+        {
+            element = FindParentRibbonControl(element) as UIElement;
+        }
+
+        // Do not add menu items without icon.
+        if (element is System.Windows.Controls.MenuItem menuItem && menuItem.Icon is null)
+        {
+            element = FindParentRibbonControl(element) as UIElement;
+        }
+
+        return element;
     }
 
     private static IRibbonControl? FindParentRibbonControl(DependencyObject element)
