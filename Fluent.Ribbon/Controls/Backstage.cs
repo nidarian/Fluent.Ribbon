@@ -498,6 +498,10 @@ public class Backstage : RibbonControl
         {
             this.adorner.Visibility = Visibility.Collapsed;
             this.RestoreParentProperties();
+
+            // Same as the animated path below: give focus back to the backstage button,
+            // otherwise it stays on the content that was just hidden.
+            this.Focus();
         }
 
         void HandleStoryboardOnCompleted(object? sender, EventArgs args)
