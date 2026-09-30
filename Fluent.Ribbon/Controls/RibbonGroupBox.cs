@@ -198,6 +198,16 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
         var ribbonGroupBox = (RibbonGroupBox)d;
         ribbonGroupBox.updateChildSizesItemContainerGeneratorAction.QueueAction();
         ribbonGroupBox.Focusable = ribbonGroupBox.IsInButtonState;
+
+        // The drop down only exists while the group is collapsed (see CoerceIsDropDownOpen),
+        // so close it when the group leaves that state. Closing it explicitly instead of
+        // re-coercing, so it doesn't reopen by itself when the group collapses again.
+        if (ribbonGroupBox.IsDropDownOpen
+            && ribbonGroupBox.State != RibbonGroupBoxState.Collapsed
+            && ribbonGroupBox.State != RibbonGroupBoxState.QuickAccess)
+        {
+            ribbonGroupBox.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
+        }
     }
 
     private void UpdateChildSizes()
