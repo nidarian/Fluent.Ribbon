@@ -95,7 +95,7 @@ def check_note(note: Path) -> list[str]:
 
 
 def main() -> int:
-    notes = [Path(a) for a in sys.argv[1:]] or sorted(NOTES.glob("*.md"))
+    notes = [Path(a) for a in sys.argv[1:]] or sorted(NOTES.glob("[0-9][0-9]-*.md"))
     failed = 0
     for note in notes:
         problems, count = check_note(note)
