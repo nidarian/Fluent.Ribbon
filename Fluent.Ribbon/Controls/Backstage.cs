@@ -224,7 +224,8 @@ public class Backstage : RibbonControl
 
         if (e.OldValue is not null)
         {
-            if (e.NewValue is DependencyObject dependencyObject)
+            // Release the old content: it must stop following the backstage's visibility.
+            if (e.OldValue is DependencyObject dependencyObject)
             {
                 BindingOperations.ClearBinding(dependencyObject, VisibilityProperty);
             }
