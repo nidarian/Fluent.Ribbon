@@ -53,4 +53,31 @@ public class KeyTipServiceTests
 
         Assert.That(keytipService.AreAnyKeyTipsVisible, Is.False);
     }
+
+    /// <summary>
+    /// Detach runs when <see cref="Ribbon.IsKeyTipHandlingEnabled"/> is set to false (and when the ribbon unloads).
+    /// It unhooked the keyboard and window handlers but left KeyTips that were showing on screen.
+    /// With the handlers gone, nothing (Escape, Alt, clicking elsewhere) could remove them anymore.
+    /// Same setup as the #908 test above.
+    /// </summary>
+    [Test]
+    public void Detach_closes_KeyTips_that_are_showing()
+    {
+        var ribbon = new Ribbon { Menu = new Backstage() };
+
+        using var testWindow = new TestRibbonWindow(ribbon);
+        testWindow.Activate();
+        var keytipService = new KeyTipService(ribbon);
+
+        keytipService.Attach();
+
+        keytipService.GetType().GetMethod("Show", BindingFlags.Instance | BindingFlags.NonPublic)
+            .Invoke(keytipService, null);
+
+        Assert.That(keytipService.AreAnyKeyTipsVisible, Is.True, "Precondition: KeyTips are showing");
+
+        keytipService.Detach();
+
+        Assert.That(keytipService.AreAnyKeyTipsVisible, Is.False, "Detaching must close the KeyTips that are showing");
+    }
 }
