@@ -218,6 +218,50 @@ and the callback uses it and then resets it.
 | [#30](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678603225) | tests only | Down passes, *Up should focus the last item* fails |
 | [#31](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36679578827) | tests + fix | 307/307 on each framework |
 
+### `QuickAccessItems.Clear()` leaves entries in the customize menu
+
+Branch to submit: `upstream-pr/qat-items-clear`
+
+**Bug.** `QuickAccessToolBar.OnQuickAccessItemsCollectionChanged` copies Add,
+Remove and Replace into the customize menu (the toolbar's small arrow), but has
+no case for Reset, which `ObservableCollection.Clear()` raises. The cleared
+entries stay in the menu.
+
+**Fix:** on Reset, remove every `QuickAccessMenuItem` from the menu and insert
+the collection's current items again, the way `OnApplyTemplate` fills the menu.
+The template's own menu entries aren't `QuickAccessMenuItem`s, so they stay.
+Like Remove, it doesn't touch items already on the toolbar.
+
+| Run | Code | Result |
+|---|---|---|
+| [#38](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682235757) | test only | Fails: the menu still holds "First" and "Second" after `Clear()` |
+| [#39](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682295012) | test + fix | 306/306 on each framework |
+
+### `RibbonStateStorage` temporary state keeps stale text
+
+Branch to submit: `upstream-pr/state-storage-temporary-truncate`
+
+**Bug.** `SaveTemporary` sets the memory stream's `Position` to 0 and writes,
+but never truncates it. The same goes for the copy in `Load`. A shorter state
+written over a longer one keeps the old tail ("True,True,True" over
+"False,False,False" gives "True,True,Truelse"), so on `LoadTemporary` the last
+value doesn't parse and is skipped. The library itself never calls
+`LoadTemporary`, so this only affects apps that call it through
+`IRibbonStateStorage`.
+
+**Fix** (2 lines): `SetLength(0)` before writing, in both places.
+
+| Run | Code | Result |
+|---|---|---|
+| [#40](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682494127) | test only | Fails: *IsSimplified expected True, was False* |
+| [#41](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682530646) | test + fix | 306/306 on each framework |
+
+My first version of the test was wrong. It changed
+`ShowQuickAccessToolBarAboveRibbon` between saving and loading, and that
+property calls `SaveTemporary` by itself, so it overwrote the saved state. It
+failed both without the fix (run #36) and with it (run #37). The final test
+leaves that property alone and says why.
+
 ### `ReduceOrder` documentation says the opposite of the code
 
 Branch to submit: `upstream-pr/reduceorder-xml-doc`
@@ -387,7 +431,8 @@ Ask whether it's still needed.
    and for `upstream-pr/simplified-state-definition-reset`.
    The same goes for the architecture review bugs: `upstream-pr/backstage-content-visibility-binding`,
    `upstream-pr/keytip-row-snapping` (after the Showcase check),
-   `upstream-pr/dropdown-up-key-focus` and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/dropdown-up-key-focus`, `upstream-pr/qat-items-clear`,
+   `upstream-pr/state-storage-temporary-truncate` and `upstream-pr/reduceorder-xml-doc`.
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.

@@ -45,6 +45,8 @@ You don't need to change any code to get these. Just watch for them.
 | KeyTip row snapping (#572 regression) | Press Alt, then a tab's KeyTip. KeyTips of every control inside a group (small, middle and large buttons) now move up or down onto the nearest of the group's row lines, so they line up. Only the height changes, not the left/right position. **This is the most visible change.** If it looks worse in your app, say so. |
 | Up key on drop downs | Focus a `DropDownButton` or `SplitButton` with Tab and press Up: the drop down opens with the **last** item focused. Before, it focused the first. |
 | Backstage content replaced | Only if your app swaps `Backstage.Content` at runtime and reuses the old element elsewhere: the old element no longer hides when the backstage closes. |
+| Clearing Quick Access items | Only if your app calls `QuickAccessItems.Clear()` on a `QuickAccessToolBar`: the entries now also leave the toolbar's customize menu (the small arrow). |
+| Temporary ribbon state | Only if your app calls `RibbonStateStorage.SaveTemporary()` / `LoadTemporary()` itself: the restored state is now always complete. |
 | Simplified ribbon state | If you use the simplified ribbon and set `SimplifiedStateDefinition` on groups, that setting is now respected. Groups with custom values may look different than before, which is the fix working. |
 
 **Regressions to watch for:** Quick Access Toolbar contents after startup and

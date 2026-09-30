@@ -21,6 +21,8 @@ A candidate can also be **rejected** (the code is fine, or it's intended) or
 | **KeyTips in groups never snap to rows.** `KeyTipAdorner.SnapToRowsIfPresent` took the position as a `Point` (a struct) by value, so the snapped Y was lost. This has been broken since ddaa57fb (2018), the commit that added snapping for #572. | `fix/keytip-row-snapping` | Tests only, [run #27](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678426690): *KeyTip center 18.96 should be on one of the rows 0, 14, 28, 47*. With fix, [run #28](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678474843): 306/306. **Changes where KeyTips appear: needs a visual check.** |
 | **Backstage keeps replaced content bound to its visibility.** `Backstage.OnContentChanged` cleared the binding on `e.NewValue` inside the `e.OldValue` branch. | `fix/backstage-content-visibility-binding` | Tests only, [run #25](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678264930): *expected False, was True*. With fix, [run #26](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678305314): 306/306. |
 | **Up opens a drop down with the first item focused.** The key handler focused the last item, then the queued open callback always focused item 0. | `fix/dropdown-up-key-focus` | Tests only, [run #30](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678603225): Down passes, *Up should focus the last item* fails. With fix, [run #31](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36679578827): 307/307, both keyboard tests pass on all 3 frameworks. |
+| **`QuickAccessItems.Clear()` leaves the entries in the toolbar's customize menu.** The handler mirrored Add, Remove and Replace into the menu, but ignored Reset, which `Clear()` raises. (Candidate from `06`.) | `fix/qat-items-clear` | Tests only, [run #38](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682235757): *Cleared entries must leave the menu*, and the menu still held "First" and "Second". With fix, [run #39](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682295012): 306/306. |
+| **`RibbonStateStorage` temporary state keeps stale text.** `SaveTemporary` rewound the memory stream but never truncated it, so a shorter state kept the tail of a longer one, and the last value failed to parse on `LoadTemporary`. The library never calls `LoadTemporary` itself, so only apps that call it are affected. (Candidate from `01`.) | `fix/state-storage-temporary-truncate` | Tests only, [run #40](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682494127): *IsSimplified expected True, was False*. With fix, [run #41](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36682530646): 306/306. A first version of the test was wrong: changing `ShowQuickAccessToolBarAboveRibbon` saves the temporary state by itself, which overwrote the saved state (runs #36 / #37, failing on `IsMinimized` with and without the fix). |
 | **Simplified groups ignore `SimplifiedStateDefinition`.** The reset always used `StateDefinition`. Found independently by the group-resizing note (S1) and earlier by hand. | `fix/simplified-state-definition-reset` | Runs #18 / #19, see `UPSTREAM-FIXES.md` |
 | **`ReduceOrder` XML doc says the opposite of the code.** The code reduces the last entry first. | `docs/reduceorder-xml-doc` | Documentation only. Every sentence checked against `RibbonGroupsContainer.cs`. Build: [run #29](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678547621) |
 
@@ -54,7 +56,6 @@ them as questions, not facts.** The note is given for each, for its evidence.
 - Calling `AddToQuickAccessToolBar` before the ribbon has its template records the element but shows nothing. After that it can never be added.
 - Re-templating the Ribbon empties the toolbar, and nothing re-adds the checked items.
 - After a re-template, the old `CollectionSyncHelper` is never unsubscribed.
-- `QuickAccessItems.Clear()` (Reset) isn't handled, so cleared entries stay in the drop down.
 - `SizeChanged` handlers stay attached when the toolbar is cleared.
 - The `Gallery` branch in the Add command's can-execute check can't run (dead code).
 - Likely intended: removing a menu entry leaves its target on the toolbar, and turning `CanAddToQuickAccessToolBar` off doesn't remove an existing item.
@@ -79,7 +80,6 @@ them as questions, not facts.** The note is given for each, for its evidence.
 - Reopening during the close animation: the old "completed" handler can hide the Backstage while `IsOpen` is true.
 - Destroying the adorner clears all command bindings on a layer the Backstage and StartScreen may share.
 - A StartScreen with `Shown = true` still receives KeyTips while invisible.
-- The state storage's memory stream is rewound but not truncated, so a shorter write can leave stale characters.
 - Turning `AutomaticStateManagement` back on after load never reads the saved file.
 - `CanUseSimplified = false` while simplified hides the menu item to switch back.
 
