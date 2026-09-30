@@ -76,7 +76,7 @@ passed, all tests on all three frameworks.
 **Needs a human check on Windows:** the test proves the placement *decision*,
 not how the KeyTip looks. Before submitting, run `Fluent.Ribbon.Showcase`, open
 the KeyTips tab, group "Issue #357 Test", press Alt, and confirm the KeyTip sits
-top-left on the slider. Then tick the test plan in the fork PR.
+top-left on the slider. (The fork PR #1 for this was closed without merging; nothing to tick there anymore.)
 
 ---
 

@@ -18,7 +18,7 @@ original project README is still here: [README.md](../README.md).
 | `fix/...`, `feature/...` | One fix each, with tests | No |
 | `upstream-pr/...` | The same fixes, cleaned up for sending to the original project | No |
 | `archive` | Copies of the original's issues, pull requests and wiki | Yes, monthly |
-| `fix/issue-357-keytip-placement` | My own fix from Feb 2026, fork PR #1 | No |
+| `fix/issue-357-keytip-placement` | My own fix from Feb 2026 (its fork PR #1 was closed on 2026-09-30 without merging: the fix is in `integration/all-fixes` and `upstream-pr/357-keytip-placement`) | No |
 
 Why the fixes aren't in `develop`: it stays a clean copy of the original, so
 the backup sync never hits merge conflicts. That matters most once the
