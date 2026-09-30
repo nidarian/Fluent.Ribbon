@@ -38,11 +38,15 @@ public class RibbonGroupsContainer : Panel, IScrollInfo
     #region Reduce Order
 
     /// <summary>
-    /// Gets or sets reduce order of group in the ribbon panel.
-    /// It must be enumerated with comma from the first to reduce to
-    /// the last to reduce (use Control.Name as group name in the enum).
-    /// Enclose in parentheses as (Control.Name) to reduce/enlarge
-    /// scalable elements in the given group
+    /// Gets or sets the order in which groups are reduced when there isn't enough space.
+    /// It's a comma separated list of group names (use Control.Name as group name).
+    /// The LAST entry is reduced first, then the one before it, and so on;
+    /// when space becomes available again, groups are enlarged in the opposite order.
+    /// Each entry reduces its group by one step of its StateDefinition (or SimplifiedStateDefinition),
+    /// so list a group several times to reduce it several steps.
+    /// Enclose a name in parentheses, like (Control.Name), to reduce/enlarge the
+    /// scalable elements (for example galleries) in that group instead.
+    /// Groups that aren't listed are never reduced.
     /// </summary>
     public string? ReduceOrder
     {
