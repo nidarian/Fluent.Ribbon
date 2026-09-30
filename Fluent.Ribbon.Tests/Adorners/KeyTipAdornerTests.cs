@@ -156,4 +156,42 @@ public class KeyTipAdornerTests
         {
         }
     }
+
+    /// <summary>
+    /// A group's own KeyTip (like "ZC") is only shown while the group is collapsed. While it's
+    /// expanded, the KeyTip is hidden and can't be pressed: activation only considers visible KeyTips.
+    /// The prefix check didn't look at visibility, so typing "Z" counted as the start of the hidden "ZC".
+    /// The service then kept waiting for more keys while every KeyTip was hidden, and the key was swallowed.
+    /// </summary>
+    [Test]
+    public void Hidden_KeyTips_do_not_count_as_a_prefix()
+    {
+        var button = new Fluent.Button { Header = "Button", KeyTip = "B" };
+
+        // Expanded group (not Collapsed): its own KeyTip is hidden, its button's KeyTip is shown.
+        var groupBox = new RibbonGroupBox { Header = "Group" };
+        KeyTip.SetKeys(groupBox, "ZC");
+        groupBox.Items.Add(button);
+
+        var panel = new StackPanel { Children = { groupBox } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            groupBox.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.Not.EqualTo(RibbonGroupBoxState.Collapsed), "Precondition: the group is expanded");
+
+            var adorner = new KeyTipAdorner(panel, panel, null);
+
+            var groupKeyTip = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, groupBox));
+            Assert.That(groupKeyTip.Visibility, Is.Not.EqualTo(Visibility.Visible), "Precondition: an expanded group's own KeyTip is hidden");
+
+            // Visible KeyTips still match.
+            Assert.That(adorner.ContainsKeyTipStartingWith("B"), Is.True);
+
+            // The hidden one can't be pressed, so it must not keep the input going either.
+            Assert.That(adorner.ContainsKeyTipStartingWith("Z"), Is.False, "Hidden KeyTip \"ZC\" must not match the prefix \"Z\"");
+        }
+    }
 }

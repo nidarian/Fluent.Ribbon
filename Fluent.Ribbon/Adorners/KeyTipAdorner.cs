@@ -473,7 +473,9 @@ public class KeyTipAdorner : Adorner
     /// <returns><c>true</c> if any keytip start with <paramref name="keys"/>. Otherwise <c>false</c>.</returns>
     public bool ContainsKeyTipStartingWith(string keys)
     {
-        foreach (var keyTipInformation in this.keyTipInformations.Where(x => x.IsEnabled))
+        // Same conditions as TryGetKeyTipInformation: a hidden KeyTip (for example the KeyTip of an
+        // expanded group) can't be pressed, so it must not keep partial input alive either.
+        foreach (var keyTipInformation in this.keyTipInformations.Where(x => x.IsEnabled && x.Visibility == Visibility.Visible))
         {
             var content = keyTipInformation.Keys;
 
