@@ -760,6 +760,17 @@ public class Backstage : RibbonControl
     {
         this.RemoveHandler(PopupService.DismissPopupEvent, (EventHandler<DismissPopupEventArgs>)this.OnDismissPopup);
 
+        if (this.IsOpen)
+        {
+            // Unloaded while open. The adorner is destroyed below, and Hide() can't restore the ribbon
+            // without it, so restore it now. IsOpen stays true: like a backstage opened before it was
+            // loaded, it's shown again when it's loaded again.
+            this.RestoreParentProperties();
+
+            this.Loaded -= this.OnDelayedShow;
+            this.Loaded += this.OnDelayedShow;
+        }
+
         this.DestroyAdorner();
     }
 
