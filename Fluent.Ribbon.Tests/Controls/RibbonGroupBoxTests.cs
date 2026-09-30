@@ -171,4 +171,41 @@ public class RibbonGroupBoxTests
 public class ItemViewModel
 {
     public RibbonControlSize ControlSize { get; set; }
+
+    /// <summary>
+    /// A collapsed group shows its controls in a drop down. The drop down can only be open while the
+    /// group is collapsed (see CoerceIsDropDownOpen), but that rule was only checked when IsDropDownOpen
+    /// itself was set. When the group went back to a normal state while its drop down was open (for
+    /// example because the ribbon got wider), an empty drop down stayed open under the group.
+    /// </summary>
+    [Test]
+    public void Leaving_the_collapsed_state_closes_the_drop_down()
+    {
+        var ribbonGroupBox = new RibbonGroupBox
+        {
+            Header = "Group",
+            Items = { new Fluent.Button { Header = "Button" } }
+        };
+
+        using (new TestRibbonWindow(ribbonGroupBox))
+        {
+            ribbonGroupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            ribbonGroupBox.IsDropDownOpen = true;
+            UIHelper.DoEvents();
+            Assert.That(ribbonGroupBox.IsDropDownOpen, Is.True, "Precondition: a collapsed group's drop down can open");
+
+            ribbonGroupBox.State = RibbonGroupBoxState.Large;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbonGroupBox.IsDropDownOpen, Is.False, "An expanded group has no drop down to show");
+
+            // Collapsing again later must not bring the old drop down back by itself.
+            ribbonGroupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbonGroupBox.IsDropDownOpen, Is.False, "The drop down must not reopen by itself");
+        }
+    }
 }
