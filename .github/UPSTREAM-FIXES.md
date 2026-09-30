@@ -329,6 +329,45 @@ Branch to submit: `upstream-pr/splitbutton-enter-disabled-button`
 | [#52](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688670103) | test only | Fails: 2 clicks instead of 1 (the enabled baseline clicked once) |
 | [#53](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688741470) | test + fix | 306/306 on each framework |
 
+### Unloading an open backstage leaves the ribbon stuck
+
+Branch to submit: `upstream-pr/backstage-unload-while-open`
+
+**Bug.** `Backstage.OnBackstageUnloaded` destroys the adorner, but `IsOpen` stays true and nothing that `Show()` changed on the ribbon is restored: `IsBackstageOrStartScreenOpen` (which hides the Quick Access Toolbar), the window's Esc handler, the tab control's close request, collapsed WindowsFormsHosts. A later close returns early in `Hide()` because there's no adorner. Happens when an app moves the ribbon or swaps window content while the backstage is open.
+
+**Fix:** on unload while open, restore the ribbon before destroying the adorner, and re-arm the existing delayed show so a reload with `IsOpen` still true shows the backstage again (the same rule as a backstage opened before it was loaded). A StartScreen keeps its own "show once" rule.
+
+| Run | Code | Result |
+|---|---|---|
+| [#54](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688881286) | test only | Fails: *IsBackstageOrStartScreenOpen expected False, was True* after unloading |
+| [#55](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688992864) | test + fix | 306/306 on each framework (the test also reloads and closes) |
+
+### An expanded group keeps its drop down open
+
+Branch to submit: `upstream-pr/groupbox-close-dropdown-on-expand`
+
+**Bug.** `RibbonGroupBox.CoerceIsDropDownOpen` only allows an open drop down while the group is Collapsed or QuickAccess, but it only runs when `IsDropDownOpen` is set. When a collapsed group with an open drop down goes back to a normal state (the ribbon got wider, a reset), an empty drop down stays open under it.
+
+**Fix:** `OnStateChanged` closes the drop down (`SetCurrentValue`) when leaving those states. Not re-coercing on purpose: that would reopen it by itself on the next collapse. The test checks that too.
+
+| Run | Code | Result |
+|---|---|---|
+| [#56](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689167900) | test only | Fails: *IsDropDownOpen expected False, was True* |
+| [#57](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689246700) | test + fix | 306/306 on each framework |
+
+### A ribbon in an already small window doesn't collapse
+
+Branch to submit: `upstream-pr/ribbon-collapse-on-load`
+
+**Bug.** `Ribbon.MaintainIsCollapsed` only runs on the owner window's `SizeChanged` (subscribed on Loaded) and when `IsAutomaticCollapseEnabled` changes. The window's first size change happens before the ribbon is loaded, so a window that starts (or is restored) below `MinimalVisibleWidth`/`Height` shows a full ribbon until the user resizes it.
+
+**Fix:** `AttachToWindow` runs `MaintainIsCollapsed` once after subscribing. One line.
+
+| Run | Code | Result |
+|---|---|---|
+| [#58](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689585574) | test only | Fails: *IsCollapsed expected True, was False* |
+| [#59](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689653003) | test + fix | 306/306 on each framework |
+
 ### `ReduceOrder` documentation says the opposite of the code
 
 Branch to submit: `upstream-pr/reduceorder-xml-doc`
@@ -501,8 +540,9 @@ Ask whether it's still needed.
    `upstream-pr/dropdown-up-key-focus`, `upstream-pr/qat-items-clear`,
    `upstream-pr/state-storage-temporary-truncate`, `upstream-pr/keytip-hidden-prefix`,
    `upstream-pr/qat-gallery-can-execute`, `upstream-pr/qat-add-before-template`,
-   `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`
-   and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`,
+   `upstream-pr/backstage-unload-while-open`, `upstream-pr/groupbox-close-dropdown-on-expand`,
+   `upstream-pr/ribbon-collapse-on-load` and `upstream-pr/reduceorder-xml-doc`.
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.
