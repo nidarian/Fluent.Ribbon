@@ -813,8 +813,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                         var requestedIndex = this.itemIndexToFocusOnOpen;
                         this.itemIndexToFocusOnOpen = null;
 
-                        if (requestedIndex is null
-                            && this.FocusFirstItemOnDropDownOpen == false)
+                        if (this.FocusFirstItemOnDropDownOpen == false)
                         {
                             // #813: Don't focus (and thereby highlight) the first item.
                             // Focus stays on the drop down button, and the first Up/Down key press moves it
