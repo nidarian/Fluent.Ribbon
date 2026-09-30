@@ -280,7 +280,8 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     #region DropDownHeight
 
     /// <summary>
-    /// Gets or sets initial dropdown height
+    /// Not used by <see cref="DropDownButton"/>: setting it doesn't change the drop down's height.
+    /// Use <see cref="MaxDropDownHeight"/> to limit it. (Only <see cref="ComboBox"/> uses its own DropDownHeight.)
     /// </summary>
     public double DropDownHeight
     {

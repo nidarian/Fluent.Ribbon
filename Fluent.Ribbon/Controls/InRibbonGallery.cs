@@ -185,7 +185,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region MinItemsInDropDownRow
 
     /// <summary>
-    /// Min width of the Gallery
+    /// Gets or sets the minimum number of items in one row of the drop down.
     /// </summary>
     public int MinItemsInDropDownRow
     {
@@ -202,7 +202,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region MaxItemsInDropDownRow
 
     /// <summary>
-    /// Max width of the Gallery
+    /// Gets or sets the maximum number of items in one row of the drop down.
     /// </summary>
     public int MaxItemsInDropDownRow
     {
@@ -266,8 +266,8 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region GroupByAdvanced
 
     /// <summary>
-    /// Gets or sets name of property which
-    /// will use to group items in the Gallery.
+    /// Gets or sets a function that returns the group name for an item.
+    /// When set, it is used instead of <see cref="GroupBy"/>.
     /// </summary>
     public Func<object, string>? GroupByAdvanced
     {
@@ -714,7 +714,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region CanCollapseToButton
 
     /// <summary>
-    /// Gets or sets whether InRibbonGallery
+    /// Gets or sets whether the gallery may collapse to a button by itself when the ribbon gets too narrow.
     /// </summary>
     public bool CanCollapseToButton
     {
@@ -731,7 +731,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region IsCollapsed
 
     /// <summary>
-    /// Gets whether InRibbonGallery is collapsed to button
+    /// Gets or sets whether the gallery is collapsed to a button.
     /// </summary>
     public bool IsCollapsed
     {
@@ -936,7 +936,8 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region MaxDropDownWidth
 
     /// <summary>
-    /// Get or sets max width of drop down popup
+    /// Not used by the drop down of this <see cref="InRibbonGallery"/>: setting it doesn't limit the drop down's width.
+    /// It is only passed on to the gallery's copy in the Quick Access Toolbar.
     /// </summary>
     public double MaxDropDownWidth
     {
@@ -953,7 +954,8 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region DropDownHeight
 
     /// <summary>
-    /// Gets or sets initial dropdown height
+    /// Not used by <see cref="InRibbonGallery"/>: setting it doesn't change the drop down's height.
+    /// Use <see cref="MaxDropDownHeight"/> to limit it.
     /// </summary>
     public double DropDownHeight
     {
@@ -970,7 +972,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region DropDownWidth
 
     /// <summary>
-    /// Gets or sets initial dropdown width
+    /// Not used by <see cref="InRibbonGallery"/>: setting it doesn't change the drop down's width.
     /// </summary>
     public double DropDownWidth
     {

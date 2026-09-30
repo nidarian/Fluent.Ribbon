@@ -90,7 +90,8 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
     #region Description
 
     /// <summary>
-    /// Useless property only used in secon level application menu items
+    /// Gets or sets a description shown under the header.
+    /// When it is set, the default style shows the menu item with the description template.
     /// </summary>
     public string? Description
     {
@@ -117,7 +118,8 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
     #region IsDefinitive
 
     /// <summary>
-    /// Gets or sets whether ribbon control click must close backstage
+    /// Gets or sets whether a click closes open drop downs and popups (and the backstage). Default is true.
+    /// Only applies to menu items without a submenu, or split menu items.
     /// </summary>
     public bool IsDefinitive
     {
