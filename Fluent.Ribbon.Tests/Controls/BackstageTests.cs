@@ -1,8 +1,8 @@
 ﻿namespace Fluent.Tests.Controls;
 
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
 using NUnit.Framework;
