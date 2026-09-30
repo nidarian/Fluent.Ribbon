@@ -1639,6 +1639,16 @@ public class Ribbon : Control, ILogicalChildSupport
                 };
                 this.QuickAccessToolBar.SetBinding(QuickAccessToolBar.CanQuickAccessLocationChangingProperty, binding);
             }
+
+            // Elements added before the ribbon had a template (for example in a window constructor)
+            // were recorded in QuickAccessElements, but there was no toolbar to show their copies yet.
+            foreach (var control in this.QuickAccessElements.Values)
+            {
+                if (this.QuickAccessToolBar.Items.Contains(control) == false)
+                {
+                    this.QuickAccessToolBar.Items.Add(control);
+                }
+            }
         }
 
         if (this.ShowQuickAccessToolBarAboveRibbon)

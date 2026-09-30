@@ -248,4 +248,43 @@ public class RibbonTests
             Assert.That(Ribbon.AddToQuickAccessCommand.CanExecute(gallery, ribbon), Is.False, "Once the host is on the toolbar, adding it again isn't offered");
         }
     }
+
+    /// <summary>
+    /// Apps often restore their Quick Access Toolbar in the window's constructor, right after
+    /// InitializeComponent. The Ribbon has no template yet at that point, so it has no toolbar:
+    /// AddToQuickAccessToolBar recorded the element but had nowhere to put its toolbar copy, and
+    /// nothing added the recorded copies once the template (and so the toolbar) was created.
+    /// The element never appeared, and because it counted as added, it couldn't be added again.
+    /// </summary>
+    [Test]
+    public void Elements_added_before_the_template_is_applied_appear_on_the_toolbar()
+    {
+        var button = new Fluent.Button { Header = "Early" };
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem
+                {
+                    Header = "Tab",
+                    Groups = { new RibbonGroupBox { Header = "Group", Items = { button } } }
+                }
+            }
+        };
+
+        // Like in a window constructor: the ribbon isn't shown, so it has no template yet.
+        Assert.That(ribbon.QuickAccessToolBar, Is.Null, "Precondition: no template applied yet");
+        ribbon.AddToQuickAccessToolBar(button);
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null, "Precondition: the template created the toolbar");
+            Assert.That(ribbon.IsInQuickAccessToolBar(button), Is.True);
+
+            var copy = ribbon.GetQuickAccessElements()[button];
+            Assert.That(ribbon.QuickAccessToolBar.Items, Does.Contain(copy), "The toolbar copy must be on the toolbar");
+        }
+    }
 }
