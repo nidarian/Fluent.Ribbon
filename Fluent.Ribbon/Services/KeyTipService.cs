@@ -152,6 +152,10 @@ public class KeyTipService
         // prevent delay show
         this.timer.Stop();
 
+        // Close KeyTips that are showing now: once the handlers below are removed,
+        // nothing (Escape, Alt, clicking elsewhere) could close them anymore.
+        this.Terminate();
+
         if (this.window is not null)
         {
             this.window.PreviewKeyDown -= this.OnWindowPreviewKeyDown;
