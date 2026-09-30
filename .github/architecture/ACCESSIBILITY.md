@@ -22,11 +22,18 @@ Standards referred to: WCAG 2.1.1 (keyboard), 2.4.7 (focus visible),
 
 | Problem | Who is affected | Branch | Proof |
 |---|---|---|---|
-| A collapsed group always reported "collapsed" to UI Automation, even while its drop down was open. | Screen reader users, UI tests | `fix/uia-groupbox-expand-state` | See `UPSTREAM-FIXES.md` |
-| UI Automation could open a **disabled** drop down or backstage, and click a SplitButton's **disabled** button part. UIA requires `ElementNotEnabledException` there (the InRibbonGallery peer already did it). | Screen reader users, UI tests | `fix/uia-respect-disabled` | Tests only, run #63: 3 failures. With fix, run #67: 308/308 |
-| The backstage button ("File") had no automation name. Narrator said only "menu". | Screen reader users | `fix/uia-backstage-name` | Tests only, run #64. With fix, run #68: 307/307 |
-| The ribbon listed its menu ("File") twice to UI Automation. | Screen reader users | `fix/uia-ribbon-menu-once` | Tests only, run #65. With fix, run #69: 306/306 |
-| With animations off, closing the backstage left keyboard focus on the hidden content: nothing visible had focus. | Keyboard users, and users who turn animations off | `fix/backstage-focus-no-animation` | See `UPSTREAM-FIXES.md` |
+| A collapsed group always reported "collapsed" to UI Automation, even while its drop down was open. | Screen reader users, UI tests | `fix/uia-groupbox-expand-state` | Tests only, [run #72](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36776740350). With fix, [run #73](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36776785882): 306/306 |
+| UI Automation could open a **disabled** drop down or backstage, and click a SplitButton's **disabled** button part. UIA requires `ElementNotEnabledException` there (the InRibbonGallery peer already did it). | Screen reader users, UI tests | `fix/uia-respect-disabled` | Tests only, [run #63](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775121538): 3 failures. With fix, [run #67](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775298146): 308/308 |
+| The backstage button ("File") had no automation name. Narrator said only "menu". | Screen reader users | `fix/uia-backstage-name` | Tests only, [run #64](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775125648). With fix, [run #68](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775301012): 307/307 |
+| The ribbon listed its menu ("File") twice to UI Automation. | Screen reader users | `fix/uia-ribbon-menu-once` | Tests only, [run #65](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775128710). With fix, [run #69](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775303570): 306/306 |
+| With animations off, closing the backstage left keyboard focus on the hidden content: nothing visible had focus. | Keyboard users, and users who turn animations off | `fix/backstage-focus-no-animation` | Tests only, [run #70](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775488430). With fix, [run #71](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775561237) (second attempt: in the first, the CI machine had no keyboard focus on net8.0 and the test was inconclusive there): 306/306 |
+
+Two of these tests were wrong at first, and CI caught both: the group test set
+the state before loading (loading resets it), and failed on its own setup line
+(runs #62 and #66, both unusable as proof). The focus test uses a keyboard-focus
+baseline and is marked inconclusive when the CI machine can't focus the window;
+NUnit's report shows that as "NotExecuted", which the fork's result checker now
+flags.
 
 ## Screen readers: found, not fixed
 
