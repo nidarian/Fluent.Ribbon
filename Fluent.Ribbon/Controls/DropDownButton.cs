@@ -594,6 +594,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         }
     }
 
+    // Index of the item that gets focus when the drop down opens. Reset to 0 (the first item) after each use.
+    private int itemIndexToFocusOnOpen;
+
     private void HandleButtonBorderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
@@ -633,6 +636,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 if (this.HasItems
                     && this.IsDropDownOpen == false) // Only handle this for initial navigation. Further navigation is handled by the dropdown itself
                 {
+                    // Opening queues a callback that focuses an item once the drop down is shown.
+                    // Tell it to use the last item, otherwise it would move focus back to the first one.
+                    this.itemIndexToFocusOnOpen = this.Items.Count - 1;
                     this.IsDropDownOpen = true;
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1);
@@ -748,9 +754,13 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 this.RunInDispatcherAsync(
                     () =>
                     {
-                        var container = this.ItemContainerGenerator.ContainerFromIndex(0);
+                        // Usually the first item. Opening with the Up key asks for the last one (see OnKeyDown).
+                        var index = this.itemIndexToFocusOnOpen;
+                        this.itemIndexToFocusOnOpen = 0;
 
-                        NavigateToContainer(container);
+                        var container = this.ItemContainerGenerator.ContainerFromIndex(index);
+
+                        NavigateToContainer(container, index == 0 ? FocusNavigationDirection.Down : FocusNavigationDirection.Up);
 
                         // Edge case: Whole dropdown content is disabled
                         if (this.IsKeyboardFocusWithin == false)
