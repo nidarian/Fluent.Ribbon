@@ -1712,6 +1712,10 @@ public class Ribbon : Control, ILogicalChildSupport
             this.ownerWindow.SizeChanged += this.OnSizeChanged;
             this.ownerWindow.KeyDown += this.OnKeyDown;
         }
+
+        // SizeChanged only reports later changes. The window may already be too small
+        // (its first SizeChanged happens before the ribbon is loaded), so check it now.
+        this.MaintainIsCollapsed();
     }
 
     private void DetachFromWindow()

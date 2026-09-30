@@ -287,4 +287,32 @@ public class RibbonTests
             Assert.That(ribbon.QuickAccessToolBar.Items, Does.Contain(copy), "The toolbar copy must be on the toolbar");
         }
     }
+
+    /// <summary>
+    /// The ribbon collapses automatically when its window is smaller than
+    /// <see cref="Ribbon.MinimalVisibleWidth"/> x <see cref="Ribbon.MinimalVisibleHeight"/>.
+    /// That was only checked when the window's size changed after the ribbon had subscribed on Loaded.
+    /// A ribbon loaded into a window that was already that small (for example a window restored to a
+    /// small saved size) stayed expanded until the user resized the window.
+    /// </summary>
+    [Test]
+    public void Ribbon_loaded_into_a_small_window_is_collapsed()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow())
+        {
+            window.Width = Ribbon.MinimalVisibleWidth - 50;
+            window.Height = Ribbon.MinimalVisibleHeight - 50;
+            UIHelper.DoEvents();
+
+            Assert.That(window.ActualWidth, Is.LessThan(Ribbon.MinimalVisibleWidth), "Precondition: the window is already small");
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsAutomaticCollapseEnabled, Is.True, "Precondition: automatic collapse is on by default");
+            Assert.That(ribbon.IsCollapsed, Is.True, "A ribbon in a window that is too small must be collapsed");
+        }
+    }
 }
