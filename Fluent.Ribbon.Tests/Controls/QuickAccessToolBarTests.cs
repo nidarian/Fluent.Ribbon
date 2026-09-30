@@ -3,6 +3,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 [TestFixture]
@@ -66,5 +67,41 @@ public class QuickAccessToolBarTests
         toolbar.UpdateKeyTipsAction = null;
 
         TestDefaultKeyTips(toolbar);
+    }
+
+    /// <summary>
+    /// QuickAccessItems are the entries of the toolbar's customize menu (the small arrow).
+    /// Adding, removing and replacing them was mirrored into that menu, but Clear() raises a
+    /// "Reset" change, which the handler ignored. The cleared entries stayed in the menu.
+    /// </summary>
+    [Test]
+    public void Clearing_QuickAccessItems_removes_them_from_the_customize_menu()
+    {
+        var toolbar = new QuickAccessToolBar();
+
+        using (new TestRibbonWindow(toolbar))
+        {
+            toolbar.ApplyTemplate();
+
+            var first = new QuickAccessMenuItem { Header = "First" };
+            var second = new QuickAccessMenuItem { Header = "Second" };
+            toolbar.QuickAccessItems.Add(first);
+            toolbar.QuickAccessItems.Add(second);
+
+            var menu = toolbar.MenuDownButton;
+            Assert.That(menu, Is.Not.Null, "Precondition: the template has the customize menu");
+            Assert.That(menu.Items.OfType<QuickAccessMenuItem>(), Is.EqualTo(new[] { first, second }), "Precondition: added entries appear in the menu");
+
+            toolbar.QuickAccessItems.Clear();
+
+            Assert.That(menu.Items.OfType<QuickAccessMenuItem>(), Is.Empty, "Cleared entries must leave the menu");
+
+            // Adding after a clear works as before: the entry goes right after the menu header.
+            var third = new QuickAccessMenuItem { Header = "Third" };
+            toolbar.QuickAccessItems.Add(third);
+
+            Assert.That(menu.Items.OfType<QuickAccessMenuItem>(), Is.EqualTo(new[] { third }));
+            Assert.That(menu.Items.IndexOf(third), Is.EqualTo(1));
+        }
     }
 }

@@ -157,6 +157,80 @@ this sample is enough before building it.
 **Needs a human check:** run the Showcase, open the Simplified Ribbon window,
 and look at the end of tab 1. Toggle to the classic ribbon and back.
 
+## Bugs found by the architecture review (no issue of their own)
+
+Found while writing the state diagrams in `.github/architecture/` (see
+`FINDINGS.md` there). Each was proven the same way: a tests-only commit fails on
+Windows CI, then the fix commit passes on all 3 frameworks.
+
+### Backstage keeps replaced content bound to its visibility
+
+Branch to submit: `upstream-pr/backstage-content-visibility-binding`
+
+**Bug.** `Backstage.OnContentChanged` binds the new content's `Visibility` to
+the backstage. Inside the block for the *old* content it cleared the binding on
+`e.NewValue`, a copy/paste slip. So replaced content keeps appearing and
+disappearing with the backstage.
+
+**Fix** (1 line): clear the binding on `e.OldValue`.
+
+| Run | Code | Result |
+|---|---|---|
+| [#25](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678264930) | test only | Fails: *expected False, was True* |
+| [#26](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678305314) | test + fix | 306/306 on each framework |
+
+### KeyTips in ribbon groups never snap to the group's rows (#572 regression)
+
+Branch to submit: `upstream-pr/keytip-row-snapping`
+
+**Bug.** Commit ddaa57fb (2018, "Fixes #572 by adding row snapping in all
+cases") moved the snapping into `KeyTipAdorner.SnapToRowsIfPresent`, which takes
+the position as a `Point`. `Point` is a struct, so the method changed its own
+copy and the callers kept the unsnapped position. Snapping has done nothing
+since then.
+
+**Fix:** the method returns the snapped point, and both callers use it.
+
+| Run | Code | Result |
+|---|---|---|
+| [#27](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678426690) | test only | Fails: *KeyTip center 18.96 should be on one of the rows 0, 14, 28, 47* |
+| [#28](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678474843) | test + fix | 306/306 on each framework |
+
+**Needs a human check:** this moves the KeyTips of all controls inside groups
+(small, middle and large) up or down onto the nearest row line. The left/right
+position doesn't change. That's
+what #572 asked for, but after 8 years people are used to the current spots.
+Run the Showcase, press Alt, then a tab's KeyTip, and look at the group KeyTips.
+
+### Up opens a drop down with the first item focused
+
+Branch to submit: `upstream-pr/dropdown-up-key-focus`
+
+**Bug.** `DropDownButton.OnKeyDown` focuses the last item when Up opens the drop
+down. But opening had already queued a callback that always focuses item 0, and
+it runs afterwards. So Up behaves like Down.
+
+**Fix:** the key handler records which item it wants (`itemIndexToFocusOnOpen`),
+and the callback uses it and then resets it.
+
+| Run | Code | Result |
+|---|---|---|
+| [#30](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678603225) | tests only | Down passes, *Up should focus the last item* fails |
+| [#31](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36679578827) | tests + fix | 307/307 on each framework |
+
+### `ReduceOrder` documentation says the opposite of the code
+
+Branch to submit: `upstream-pr/reduceorder-xml-doc`
+
+**Doc bug.** The XML doc on `RibbonGroupsContainer.ReduceOrder` said entries go
+"from the first to reduce to the last to reduce". The code starts at the last
+entry and steps backwards. The Showcase's own XAML comment already says it
+right. The new doc on both `ReduceOrder` properties says: the last entry is
+reduced first, enlarging goes the other way, each entry is one step, `(Name)`
+entries scale a control, and groups not listed never shrink. Every sentence was
+checked against `RibbonGroupsContainer.cs`. Documentation only, built in
+[run #29](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678547621).
+
 ---
 
 ## Proposals (add public API, so ask the maintainer first)
@@ -187,6 +261,18 @@ default `true`). `SplitButton` inherits it.
   passed after the redesign: 307/307 on each framework, 0 inconclusive. The test
   runs a baseline with the default first, so it can't pass by accident if
   keyboard focus doesn't work on the CI machine.
+
+**Depends on the Up-key fix above.** Both change the same open callback, so
+`upstream-pr/813-focus-first-item` is built on top of
+`upstream-pr/dropdown-up-key-focus`. Submit the Up-key fix first.
+
+**Checked after merging the two:** does `FocusFirstItemOnDropDownOpen="False"`
+stop Down/Up from focusing an item? I expected yes. The test
+`Keyboard_open_focuses_an_item_even_when_FocusFirstItemOnDropDownOpen_is_false`
+passed on the unchanged code ([run #32](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36679860547), 310/310, 0 inconclusive),
+so I was wrong. The key handler focuses the item itself, before the callback
+runs. A guard written for it was reverted, and the test stays as a regression
+guard.
 
 **Found along the way (existing code, not changed):** when every item in the
 drop down is disabled, `DropDownButton` falls back to
@@ -299,6 +385,12 @@ Ask whether it's still needed.
 3. Do the same for `upstream-pr/357-keytip-placement` after the Showcase check,
    and for `upstream-pr/1176-touch-scrolling` after the touch screen check,
    and for `upstream-pr/simplified-state-definition-reset`.
+   The same goes for the architecture review bugs: `upstream-pr/backstage-content-visibility-binding`,
+   `upstream-pr/keytip-row-snapping` (after the Showcase check),
+   `upstream-pr/dropdown-up-key-focus` and `upstream-pr/reduceorder-xml-doc`.
+   These have no issue, so the description is the section above. Review them
+   yourself first, then say in the pull request that an AI found and wrote
+   them and that you reviewed them.
 4. For #813, #1247, #647 and #1265, first comment on each issue with the proposed API (the
    "Adds" line above) and ask if it's wanted. Open the pull request only after
-   a yes.
+   a yes. #813 goes after `upstream-pr/dropdown-up-key-focus` is merged.

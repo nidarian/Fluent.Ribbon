@@ -241,6 +241,24 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
                 }
 
                 break;
+
+            case NotifyCollectionChangedAction.Reset:
+                // Raised by Clear(). It doesn't say which items were removed, so rebuild the menu's
+                // entries from scratch, like OnApplyTemplate does. The template's own menu entries
+                // (header, panel, separator, show above/below) aren't QuickAccessMenuItems, so they stay.
+                foreach (var item in this.MenuDownButton.Items.OfType<QuickAccessMenuItem>().ToList())
+                {
+                    this.MenuDownButton.Items.Remove(item);
+                    item.InvalidateProperty(QuickAccessMenuItem.TargetProperty);
+                }
+
+                for (var i = 0; i < this.QuickAccessItems.Count; i++)
+                {
+                    this.MenuDownButton.Items.Insert(i + 1, this.QuickAccessItems[i]);
+                    this.QuickAccessItems[i].InvalidateProperty(QuickAccessMenuItem.TargetProperty);
+                }
+
+                break;
         }
     }
 

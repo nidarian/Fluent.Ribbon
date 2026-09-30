@@ -42,18 +42,21 @@ You don't need to change any code to get these. Just watch for them.
 | #1251 Quick Access items added from code | If your app adds `QuickAccessMenuItem`s in code with `IsChecked = true`, they should now appear on the Quick Access Toolbar right away, without opening its menu first. |
 | #357 KeyTip placement | If you have your own controls implementing `IKeyTipedControl` (not Fluent controls), press Alt: their KeyTips should sit top-left instead of centered. |
 | #1176 Touch scrolling | On a touch screen, with the window narrow enough that the ribbon groups scroll: dragging a finger across the groups should scroll them. Dragging past the end must not bounce the whole window. |
+| KeyTip row snapping (#572 regression) | Press Alt, then a tab's KeyTip. KeyTips of every control inside a group (small, middle and large buttons) now move up or down onto the nearest of the group's row lines, so they line up. Only the height changes, not the left/right position. **This is the most visible change.** If it looks worse in your app, say so. |
+| Up key on drop downs | Focus a `DropDownButton` or `SplitButton` with Tab and press Up: the drop down opens with the **last** item focused. Before, it focused the first. |
+| Backstage content replaced | Only if your app swaps `Backstage.Content` at runtime and reuses the old element elsewhere: the old element no longer hides when the backstage closes. |
 | Simplified ribbon state | If you use the simplified ribbon and set `SimplifiedStateDefinition` on groups, that setting is now respected. Groups with custom values may look different than before, which is the fix working. |
 
 **Regressions to watch for:** Quick Access Toolbar contents after startup and
 after switching between classic and simplified; KeyTips on normal Fluent
-buttons; mouse-wheel scrolling of the ribbon; group sizes when resizing the
+buttons (none should end up covering the wrong button); mouse-wheel scrolling of the ribbon; group sizes when resizing the
 window.
 
 ### Opt-in additions (nothing changes unless you use them)
 
 | Addition | How to try it |
 |---|---|
-| #813 `FocusFirstItemOnDropDownOpen` | On a `DropDownButton` or `SplitButton`, set `FocusFirstItemOnDropDownOpen="False"`. Open it with the mouse: no item should be highlighted. Press Down: the first item gets focus. |
+| #813 `FocusFirstItemOnDropDownOpen` | On a `DropDownButton` or `SplitButton`, set `FocusFirstItemOnDropDownOpen="False"`. Open it with the mouse: no item should be highlighted. Press Down: the first item gets focus. Opening with Down or Up from the keyboard still focuses the first or last item. |
 | #1247 `Backstage.Closing` | Handle `Closing` on your `Backstage` and set `e.Cancel = true` while you're saving. Escape, clicking outside and the back button should then leave it open. |
 | #647 Spinner accessibility | Screen readers (Narrator) and UI test tools should now see a `Spinner` as a spinner with its value, minimum and maximum, and be able to set the value. |
 | #1265 `Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border` | Override this brush in your resources to recolor the keyboard focus frame of backstage tabs. |
