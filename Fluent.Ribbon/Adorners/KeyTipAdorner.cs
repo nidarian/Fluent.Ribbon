@@ -749,7 +749,7 @@ public class KeyTipAdorner : Adorner
                     var translatedPoint = keyTipInformation.VisualTarget.TranslatePoint(point, this.AdornedElement);
 
                     // Snapping to rows if it present
-                    SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
+                    translatedPoint = SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
 
                     keyTipInformation.Position = translatedPoint;
                 }
@@ -761,7 +761,7 @@ public class KeyTipAdorner : Adorner
                     var translatedPoint = keyTipInformation.VisualTarget.TranslatePoint(point, this.AdornedElement);
 
                     // Snapping to rows if it present
-                    SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
+                    translatedPoint = SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
 
                     keyTipInformation.Position = translatedPoint;
                 }
@@ -804,11 +804,13 @@ public class KeyTipAdorner : Adorner
         return UIHelper.GetParent<QuickAccessToolBar>(element) is not null;
     }
 
-    private static void SnapToRowsIfPresent(double[]? rows, KeyTipInformation keyTipInformation, Point translatedPoint)
+    // Returns the position snapped to the nearest row (or unchanged if there are no rows).
+    // Point is a struct: changing a parameter only changes a local copy, so the result has to be returned.
+    private static Point SnapToRowsIfPresent(double[]? rows, KeyTipInformation keyTipInformation, Point translatedPoint)
     {
         if (rows is null)
         {
-            return;
+            return translatedPoint;
         }
 
         var withinRibbonToolbar = IsWithinRibbonToolbarInTwoLine(keyTipInformation.VisualTarget);
@@ -831,6 +833,8 @@ public class KeyTipAdorner : Adorner
         }
 
         translatedPoint.Y = rows[index] - (keyTipInformation.KeyTip.DesiredSize.Height / 2.0);
+
+        return translatedPoint;
     }
 
     /// <inheritdoc />
