@@ -163,7 +163,7 @@ public class Button : System.Windows.Controls.Button, IRibbonControl, IQuickAcce
     #region IsDefinitive
 
     /// <summary>
-    /// Gets or sets whether ribbon control click must close backstage
+    /// Gets or sets whether a click closes open drop downs and popups (and the backstage). Default is true.
     /// </summary>
     public bool IsDefinitive
     {

@@ -10,7 +10,7 @@ using Fluent.Helpers;
 using Fluent.Internal.KnownBoxes;
 
 /// <summary>
-/// Represents backstage button
+/// Represents the drop down application menu (an alternative to the backstage).
 /// </summary>
 public class ApplicationMenu : DropDownButton
 {

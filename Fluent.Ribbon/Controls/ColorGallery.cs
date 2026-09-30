@@ -374,7 +374,8 @@ public class ColorGallery : Control
     #region Columns
 
     /// <summary>
-    /// Gets or sets number of color gallery columns. It works only when Mode is ThemeColors
+    /// Gets or sets the number of color columns.
+    /// For HighlightColors and StandardColors the template uses 5 unless Columns is set on the control.
     /// </summary>
     public int Columns
     {
@@ -663,7 +664,9 @@ public class ColorGallery : Control
     public static readonly RoutedEvent SelectedColorChangedEvent = EventManager.RegisterRoutedEvent(nameof(SelectedColorChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ColorGallery));
 
     /// <summary>
-    /// Occurs whether more colors menu item is clicked
+    /// Occurs when the More Colors item is clicked.
+    /// If any handler is attached, the built-in color dialog is not shown: set <see cref="MoreColorsExecutingEventArgs.Color"/> to the chosen color,
+    /// or set <see cref="MoreColorsExecutingEventArgs.Canceled"/> to true.
     /// </summary>
     public event EventHandler<MoreColorsExecutingEventArgs>? MoreColorsExecuting;
 

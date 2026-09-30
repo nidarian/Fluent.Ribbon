@@ -33,7 +33,7 @@ public class Gallery : ListBox
     #region MinItemsInRow
 
     /// <summary>
-    /// Min width of the Gallery
+    /// Gets or sets the minimum number of items in one row.
     /// </summary>
     public int MinItemsInRow
     {
@@ -51,7 +51,7 @@ public class Gallery : ListBox
     #region MaxItemsInRow
 
     /// <summary>
-    /// Max width of the Gallery
+    /// Gets or sets the maximum number of items in one row.
     /// </summary>
     public int MaxItemsInRow
     {
@@ -101,8 +101,8 @@ public class Gallery : ListBox
     #region GroupByAdvanced
 
     /// <summary>
-    /// Gets or sets name of property which
-    /// will use to group items in the Gallery.
+    /// Gets or sets a function that returns the group name for an item.
+    /// When set, it is used instead of <see cref="GroupBy"/>.
     /// </summary>
     public Func<object, string>? GroupByAdvanced
     {

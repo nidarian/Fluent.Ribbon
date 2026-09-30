@@ -84,8 +84,8 @@ public class GalleryPanel : StackPanel
     #region GroupByAdvanced
 
     /// <summary>
-    /// Gets or sets name of property which
-    /// will use to group items in the Gallery.
+    /// Gets or sets a function that returns the group name for an item.
+    /// When set, it is used instead of <see cref="GroupBy"/>.
     /// </summary>
     public Func<object?, string>? GroupByAdvanced
     {
@@ -194,7 +194,7 @@ public class GalleryPanel : StackPanel
     #region MinItemsInRow
 
     /// <summary>
-    /// Gets or sets maximum items quantity in row
+    /// Gets or sets the minimum number of items in one row.
     /// </summary>
     public int MinItemsInRow
     {
