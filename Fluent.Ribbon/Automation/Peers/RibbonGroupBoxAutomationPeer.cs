@@ -139,9 +139,11 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
     }
 
     /// <inheritdoc />
-    ExpandCollapseState IExpandCollapseProvider.ExpandCollapseState => this.IsCollapseOrExpandValid
-        ? ExpandCollapseState.Collapsed
-        : ExpandCollapseState.Expanded;
+    // A group that isn't collapsed shows its content, so it counts as expanded.
+    // A collapsed group is expanded while its drop down is open.
+    ExpandCollapseState IExpandCollapseProvider.ExpandCollapseState => this.IsCollapseOrExpandValid == false || this.OwningGroup.IsDropDownOpen
+        ? ExpandCollapseState.Expanded
+        : ExpandCollapseState.Collapsed;
 
     private bool IsCollapseOrExpandValid => this.OwningGroup.State is RibbonGroupBoxState.Collapsed or RibbonGroupBoxState.QuickAccess;
 
