@@ -262,6 +262,112 @@ property calls `SaveTemporary` by itself, so it overwrote the saved state. It
 failed both without the fix (run #36) and with it (run #37). The final test
 leaves that property alone and says why.
 
+### Hidden KeyTips count as a prefix
+
+Branch to submit: `upstream-pr/keytip-hidden-prefix`
+
+**Bug.** An expanded group's own KeyTip (like "ZC") is hidden and can't be pressed: `TryGetKeyTipInformation` only considers visible KeyTips. `ContainsKeyTipStartingWith` didn't check visibility, so typing "Z" counted as the start of "ZC". The service then filtered away every visible KeyTip and swallowed the key. In the Showcase: Alt, K, Z.
+
+**Fix:** the prefix check uses the same conditions as activation (enabled and visible). One line.
+
+| Run | Code | Result |
+|---|---|---|
+| [#44](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687765504) | test only | Fails: *Hidden KeyTip "ZC" must not match the prefix "Z"* |
+| [#45](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687859550) | test + fix | 306/306 on each framework |
+
+With this fix, "Z" is treated like any key that matches nothing. At the tab level that currently closes all KeyTips, because of the dead "beep" branch listed in `FINDINGS.md`.
+
+### "Add Gallery to Quick Access Toolbar" is always disabled
+
+Branch to submit: `upstream-pr/qat-gallery-can-execute`
+
+**Bug.** Right-clicking a `Gallery` shows "Add Gallery to Quick Access Toolbar", and `AddToQuickAccessToolBar` supports galleries by adding the control hosting them. But the command's can-execute check first required the Gallery itself to be an `IQuickAccessItemProvider`, which it isn't, so its Gallery branch never ran and the entry was always disabled.
+
+**Fix:** the redirect (Gallery, or menu item without icon, becomes its host control) moved into one helper that both `AddToQuickAccessToolBar` and the can-execute check use. For an icon-less menu item, can-execute now answers for the control that would really be added.
+
+| Run | Code | Result |
+|---|---|---|
+| [#46](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36687986486) | test only | Fails: *CanExecute expected True, was False* |
+| [#47](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688066693) | test + fix | 306/306 on each framework |
+
+### Quick Access elements added before the template never appear
+
+Branch to submit: `upstream-pr/qat-add-before-template`
+
+**Bug.** Apps often restore their toolbar in the window constructor. The Ribbon has no template yet then, so `AddToQuickAccessToolBar` records the element but `QuickAccessToolBar?.Items.Add(...)` does nothing, and `OnApplyTemplate` never adds recorded copies to the new toolbar. The element never shows, and since it counts as added it can't be added again.
+
+**Fix:** when `OnApplyTemplate` creates the toolbar, it adds the recorded copies. Re-templating is unchanged.
+
+| Run | Code | Result |
+|---|---|---|
+| [#48](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688151084) | test only | Fails: the toolbar is empty |
+| [#49](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688230067) | test + fix | 306/306 on each framework |
+
+### Disabling KeyTip handling leaves KeyTips on screen
+
+Branch to submit: `upstream-pr/keytip-detach-terminates`
+
+**Bug.** `KeyTipService.Detach` (run when `IsKeyTipHandlingEnabled` becomes false, and on unload) removes the keyboard and window handlers but didn't end a KeyTip chain that was showing. Nothing could close those KeyTips anymore.
+
+**Fix:** `Detach` terminates a showing chain first: the same clean-up as Escape. Does nothing when no KeyTips are showing.
+
+| Run | Code | Result |
+|---|---|---|
+| [#50](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688349862) | test only | Fails: KeyTips still visible after `Detach` |
+| [#51](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688418462) | test + fix | 306/306 on each framework |
+
+### Enter clicks a SplitButton's disabled button part
+
+Branch to submit: `upstream-pr/splitbutton-enter-disabled-button`
+
+**Bug.** `SplitButton.OnKeyDown` calls `InvokeClick()` on every Enter, and `InvokeClick` doesn't check `IsEnabled`. With `IsButtonEnabled = false` (or a command that can't execute, which disables only the button part), Enter still raised `Click` and toggled `IsChecked`. A bound `Command` itself was still protected by WPF's can-execute check.
+
+**Fix:** only click when the button part is enabled; otherwise Enter just opens the drop down.
+
+| Run | Code | Result |
+|---|---|---|
+| [#52](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688670103) | test only | Fails: 2 clicks instead of 1 (the enabled baseline clicked once) |
+| [#53](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688741470) | test + fix | 306/306 on each framework |
+
+### Unloading an open backstage leaves the ribbon stuck
+
+Branch to submit: `upstream-pr/backstage-unload-while-open`
+
+**Bug.** `Backstage.OnBackstageUnloaded` destroys the adorner, but `IsOpen` stays true and nothing that `Show()` changed on the ribbon is restored: `IsBackstageOrStartScreenOpen` (which hides the Quick Access Toolbar), the window's Esc handler, the tab control's close request, collapsed WindowsFormsHosts. A later close returns early in `Hide()` because there's no adorner. Happens when an app moves the ribbon or swaps window content while the backstage is open.
+
+**Fix:** on unload while open, restore the ribbon before destroying the adorner, and re-arm the existing delayed show so a reload with `IsOpen` still true shows the backstage again (the same rule as a backstage opened before it was loaded). A StartScreen keeps its own "show once" rule.
+
+| Run | Code | Result |
+|---|---|---|
+| [#54](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688881286) | test only | Fails: *IsBackstageOrStartScreenOpen expected False, was True* after unloading |
+| [#55](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36688992864) | test + fix | 306/306 on each framework (the test also reloads and closes) |
+
+### An expanded group keeps its drop down open
+
+Branch to submit: `upstream-pr/groupbox-close-dropdown-on-expand`
+
+**Bug.** `RibbonGroupBox.CoerceIsDropDownOpen` only allows an open drop down while the group is Collapsed or QuickAccess, but it only runs when `IsDropDownOpen` is set. When a collapsed group with an open drop down goes back to a normal state (the ribbon got wider, a reset), an empty drop down stays open under it.
+
+**Fix:** `OnStateChanged` closes the drop down (`SetCurrentValue`) when leaving those states. Not re-coercing on purpose: that would reopen it by itself on the next collapse. The test checks that too.
+
+| Run | Code | Result |
+|---|---|---|
+| [#56](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689167900) | test only | Fails: *IsDropDownOpen expected False, was True* |
+| [#57](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689246700) | test + fix | 306/306 on each framework |
+
+### A ribbon in an already small window doesn't collapse
+
+Branch to submit: `upstream-pr/ribbon-collapse-on-load`
+
+**Bug.** `Ribbon.MaintainIsCollapsed` only runs on the owner window's `SizeChanged` (subscribed on Loaded) and when `IsAutomaticCollapseEnabled` changes. The window's first size change happens before the ribbon is loaded, so a window that starts (or is restored) below `MinimalVisibleWidth`/`Height` shows a full ribbon until the user resizes it.
+
+**Fix:** `AttachToWindow` runs `MaintainIsCollapsed` once after subscribing. One line.
+
+| Run | Code | Result |
+|---|---|---|
+| [#58](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689585574) | test only | Fails: *IsCollapsed expected True, was False* |
+| [#59](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689653003) | test + fix | 306/306 on each framework |
+
 ### `ReduceOrder` documentation says the opposite of the code
 
 Branch to submit: `upstream-pr/reduceorder-xml-doc`
@@ -432,7 +538,11 @@ Ask whether it's still needed.
    The same goes for the architecture review bugs: `upstream-pr/backstage-content-visibility-binding`,
    `upstream-pr/keytip-row-snapping` (after the Showcase check),
    `upstream-pr/dropdown-up-key-focus`, `upstream-pr/qat-items-clear`,
-   `upstream-pr/state-storage-temporary-truncate` and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/state-storage-temporary-truncate`, `upstream-pr/keytip-hidden-prefix`,
+   `upstream-pr/qat-gallery-can-execute`, `upstream-pr/qat-add-before-template`,
+   `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`,
+   `upstream-pr/backstage-unload-while-open`, `upstream-pr/groupbox-close-dropdown-on-expand`,
+   `upstream-pr/ribbon-collapse-on-load` and `upstream-pr/reduceorder-xml-doc`.
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.
