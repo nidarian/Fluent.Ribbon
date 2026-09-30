@@ -53,6 +53,9 @@ You don't need to change any code to get these. Just watch for them.
 | Backstage open while the ribbon moves | Only if your app moves the ribbon or swaps the window content while the backstage is open: afterwards the Quick Access Toolbar must be back, and Esc must not act on a hidden backstage. |
 | Collapsed group drop downs | Hard to see by hand: resizing the window closes popups anyway. It shows when something else widens the ribbon while a collapsed group's drop down is open (a splitter or docking panel, or content that changes inside the drop down). Then no empty drop down may stay open. |
 | Starting in a small window | Start your app with a window smaller than 300x250 (or restore one): the ribbon is collapsed right away. |
+| Screen reader: File button and groups | With Narrator on (Win+Ctrl+Enter): the File button is read as "File", once. A collapsed group reads "expanded" while its drop down is open. |
+| Screen reader / UI tests: disabled controls | Disabled drop downs, a disabled backstage, and a SplitButton's disabled main part can no longer be opened or clicked through UI Automation (UI test tools get an "element not enabled" error). |
+| Backstage without animations | With `AreAnimationsEnabled="False"` on the backstage: open it, press Esc. Keyboard focus is back on the File button (Tab and Enter work from there). |
 | Clearing Quick Access items | Only if your app calls `QuickAccessItems.Clear()` on a `QuickAccessToolBar`: the entries now also leave the toolbar's customize menu (the small arrow). |
 | Temporary ribbon state | Only if your app calls `RibbonStateStorage.SaveTemporary()` / `LoadTemporary()` itself: the restored state is now always complete. |
 | Simplified ribbon state | If you use the simplified ribbon and set `SimplifiedStateDefinition` on groups, that setting is now respected. Groups with custom values may look different than before, which is the fix working. |

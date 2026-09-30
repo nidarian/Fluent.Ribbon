@@ -368,6 +368,19 @@ Branch to submit: `upstream-pr/ribbon-collapse-on-load`
 | [#58](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689585574) | test only | Fails: *IsCollapsed expected True, was False* |
 | [#59](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36689653003) | test + fix | 306/306 on each framework |
 
+### Accessibility fixes (screen readers and keyboard)
+
+Found by the accessibility review; details and what's left are in
+`.github/architecture/ACCESSIBILITY.md`. Each was proven like the others.
+
+| Fix | Branch to submit | Tests only | With fix |
+|---|---|---|---|
+| A collapsed group reports "collapsed" to UI Automation while its drop down is open: `RibbonGroupBoxAutomationPeer`'s state now reads `IsDropDownOpen`. | `upstream-pr/uia-groupbox-expand-state` | [#72](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36776740350) | [#73](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36776785882) |
+| UI Automation can open a disabled drop down or backstage, or click a SplitButton's disabled part: the peers now throw `ElementNotEnabledException`, like the InRibbonGallery peer. | `upstream-pr/uia-respect-disabled` | [#63](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775121538) | [#67](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775298146) |
+| The backstage ("File") button has no automation name: `RibbonControlAutomationPeer` falls back to a string `Header`. | `upstream-pr/uia-backstage-name` | [#64](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775125648) | [#68](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775301012) |
+| The ribbon lists its menu twice in the automation tree: already-listed peers are skipped. | `upstream-pr/uia-ribbon-menu-once` | [#65](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775128710) | [#69](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775303570) |
+| Closing the backstage without animation leaves focus on hidden content: the non-animated path now focuses the backstage button, like the animated one. | `upstream-pr/backstage-focus-no-animation` | [#70](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775488430) | [#71](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775561237) |
+
 ### `ReduceOrder` documentation says the opposite of the code
 
 Branch to submit: `upstream-pr/reduceorder-xml-doc`
@@ -542,7 +555,8 @@ Ask whether it's still needed.
    `upstream-pr/qat-gallery-can-execute`, `upstream-pr/qat-add-before-template`,
    `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`,
    `upstream-pr/backstage-unload-while-open`, `upstream-pr/groupbox-close-dropdown-on-expand`,
-   `upstream-pr/ribbon-collapse-on-load` and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/ribbon-collapse-on-load`, the five accessibility branches above,
+   and `upstream-pr/reduceorder-xml-doc`.
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.

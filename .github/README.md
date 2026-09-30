@@ -68,3 +68,4 @@ Build (Windows) on it. Or ask Claude to do it.
 | `APP-REVIEW-CHECKLIST.md` | Trying the fixes in my app |
 | `architecture/` | Before changing the library: state diagrams of the 7 main parts, each claim tied to a code line. Run `python3 .github/scripts/check-citations.py` to check they still match the code. |
 | `architecture/FINDINGS.md` | What the diagrams turned up: bugs fixed, rejected, and still unverified |
+| `architecture/ACCESSIBILITY.md` | Screen reader, keyboard and contrast review: what's fixed, what's left, contrast ratios, High Contrast status |
