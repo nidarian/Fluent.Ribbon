@@ -62,12 +62,24 @@ public class RibbonBackstageAutomationPeer : RibbonControlAutomationPeer, IExpan
     /// <inheritdoc />
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwningBackstage.SetIsOpen(false);
     }
 
     /// <inheritdoc />
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwningBackstage.SetIsOpen(true);
     }
 

@@ -90,7 +90,10 @@ public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPee
     /// <inheritdoc />
     public void Invoke()
     {
-        if (this.IsEnabled() == false)
+        // Invoke clicks the button part, which can be disabled on its own
+        // (IsButtonEnabled = false, or a command that can't execute).
+        if (this.IsEnabled() == false
+            || this.SplitButtonOnwer.Button is { IsEnabled: false })
         {
             throw new ElementNotEnabledException();
         }
