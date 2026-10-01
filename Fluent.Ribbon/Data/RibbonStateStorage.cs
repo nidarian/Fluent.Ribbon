@@ -192,7 +192,11 @@ public class RibbonStateStorage : IRibbonStateStorage
         if (this.ribbon.AutomaticStateManagement == false)
         {
             Debug.WriteLine("State not loaded from isolated storage. Because automatic state management is disabled.");
-            this.IsLoaded = true;
+
+            // Don't mark the state as loaded here.
+            // Otherwise enabling AutomaticStateManagement later (Ribbon.LoadInitialState checks IsLoaded) would never load the persisted state,
+            // and the next Save would overwrite it with the current, unloaded state.
+            // Save is still safe while disabled, because it checks AutomaticStateManagement before IsLoaded.
             return;
         }
 
