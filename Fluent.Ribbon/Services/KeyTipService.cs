@@ -323,7 +323,10 @@ public class KeyTipService
                 }
 
                 // KeyTipService should dismiss keytips if the first key does not match any keytips #908
-                if (this.activeAdornerChain.AdornedElement is Ribbon)
+                // Only do this in the root layer. Checking "AdornedElement is Ribbon" does not work for that,
+                // because the chain root is always created on the ribbon (see Show), so it was true in every layer.
+                // The active adorner is the root itself only as long as we did not navigate to a nested layer.
+                if (ReferenceEquals(this.activeAdornerChain.ActiveKeyTipAdorner, this.activeAdornerChain))
                 {
                     this.Terminate();
                     return;
