@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Markup;
 
 /// <summary>
-/// Represents size definition for group box
+/// Represents a row of a <see cref="RibbonToolBarLayoutDefinition"/>
 /// </summary>
 [ContentProperty(nameof(Children))]
 [SuppressMessage("Microsoft.Naming", "CA1702", Justification = "We mean here 'bar row' instead of 'barrow'")]

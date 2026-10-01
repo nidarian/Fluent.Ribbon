@@ -1125,7 +1125,7 @@
                                 </Fluent:RibbonToolBarRow>
                             </Fluent:RibbonToolBarLayoutDefinition>
 
-                            <!-- Large Size of the RibbonToolBar -->
+                            <!-- Middle Size of the RibbonToolBar -->
                             <Fluent:RibbonToolBarLayoutDefinition Size="Middle">
                                 <Fluent:RibbonToolBarRow>
                                     <Fluent:RibbonToolBarControlDefinition Width="90"
@@ -1139,7 +1139,7 @@
                                 </Fluent:RibbonToolBarRow>
                             </Fluent:RibbonToolBarLayoutDefinition>
 
-                            <!-- Middle Size of the RibbonToolBar -->
+                            <!-- Small Size of the RibbonToolBar -->
                             <Fluent:RibbonToolBarLayoutDefinition Size="Small">
                                 <Fluent:RibbonToolBarRow>
                                     <Fluent:RibbonToolBarControlDefinition Width="45"
@@ -2236,7 +2236,7 @@
                         </Fluent:InRibbonGallery.Filters>
                     </Fluent:InRibbonGallery>
 
-                    <!-- To group items in Gallery (or InRibbonGallery) you can use GroupedByAdvanced as an advanced grouping method -->
+                    <!-- To group items in Gallery (or InRibbonGallery) you can use GroupByAdvanced as an advanced grouping method -->
                     <Fluent:InRibbonGallery Header="GroupedByAdvanced"
                                             Icon="Images\Gray.png"
                                             GroupByAdvanced="{Binding GroupByAdvancedSample}"
@@ -2547,7 +2547,7 @@
                     Small State of the group -> Small size of the control
                 -->
 
-                <!-- By default ReduceOrder="Large, Middle, Small" -->
+                <!-- By default SizeDefinition="Large, Middle, Small" -->
                 <Fluent:RibbonGroupBox Name="Default"
                                        Header="Default Behaviour">
                     <!-- To use ScreenTip you have to create it and set to ToolTip property -->

@@ -95,7 +95,7 @@ public class RibbonContextualTabGroup : Control
     public List<RibbonTabItem> Items { get; } = new();
 
     /// <summary>
-    /// Gets or sets the visibility this group for internal use (this enables us to hide this group when all items in this group are hidden)
+    /// Gets the visibility of this group for internal use (this enables us to hide this group when all items in this group are hidden)
     /// </summary>
     public Visibility InnerVisibility
     {
@@ -128,7 +128,7 @@ public class RibbonContextualTabGroup : Control
     public RibbonTabItem? FirstVisibleItem => this.GetFirstVisibleItem();
 
     /// <summary>
-    /// Gets the first visible TabItem in this group
+    /// Gets the first visible and enabled TabItem in this group
     /// </summary>
     public RibbonTabItem? FirstVisibleAndEnabledItem => this.GetFirstVisibleAndEnabledItem();
 

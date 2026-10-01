@@ -70,7 +70,7 @@ public readonly struct RibbonGroupBoxStateDefinition : IEquatable<RibbonGroupBox
     }
 
     /// <summary>
-    /// Gets or sets the transitionable states
+    /// Gets the transitionable states
     /// </summary>
     public IReadOnlyList<RibbonGroupBoxState> States => this.GetStates();
 

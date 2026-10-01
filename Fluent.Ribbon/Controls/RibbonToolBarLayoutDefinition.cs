@@ -8,7 +8,7 @@ using System.Windows.Markup;
 using Fluent.Internal.KnownBoxes;
 
 /// <summary>
-/// Represents size definition for group box
+/// Represents a layout definition for a <see cref="RibbonToolBar"/>
 /// </summary>
 [ContentProperty(nameof(Rows))]
 public class RibbonToolBarLayoutDefinition : DependencyObject
