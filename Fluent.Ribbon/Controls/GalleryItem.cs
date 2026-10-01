@@ -275,6 +275,10 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
 
     #region Overrides
 
+    // True while an Enter key press that started on this item (KeyDown seen here) is still going on.
+    // Only such a press may click the item when Enter is released. See OnKeyUp for why.
+    private bool isEnterKeyDown;
+
     /// <inheritdoc />
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
@@ -329,6 +333,34 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
     }
 
     /// <inheritdoc />
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        // Remember that Enter went down while we had focus. This runs before the event bubbles up to the
+        // gallery (a ListBox), so it doesn't matter whether the gallery handles Enter afterwards.
+        // We don't mark the event as handled, so the default key handling is unchanged.
+        if (e.Key == Key.Enter)
+        {
+            this.isEnterKeyDown = true;
+        }
+
+        base.OnKeyDown(e);
+    }
+
+    /// <inheritdoc />
+    protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnIsKeyboardFocusWithinChanged(e);
+
+        // When focus leaves the item, a pending Enter press no longer belongs to it.
+        // Without this, Enter pressed on the item, focus moved away, and Enter released later after
+        // focus came back would still click.
+        if ((bool)e.NewValue == false)
+        {
+            this.isEnterKeyDown = false;
+        }
+    }
+
+    /// <inheritdoc />
     protected override void OnKeyUp(KeyEventArgs e)
     {
         base.OnKeyUp(e);
@@ -340,8 +372,18 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
 
         if (e.Key == Key.Enter)
         {
-            this.RaiseClick();
-            e.Handled = true;
+            // Only click if Enter also went down on this item.
+            // Example: pressing Enter on an InRibbonGallery's toggle button opens the drop down and moves focus to
+            // the first item while the key is still down. Releasing Enter then arrives here, at the newly focused
+            // item. Clicking on that KeyUp would apply the first item just because the user opened the gallery.
+            var wasEnterKeyDown = this.isEnterKeyDown;
+            this.isEnterKeyDown = false;
+
+            if (wasEnterKeyDown)
+            {
+                this.RaiseClick();
+                e.Handled = true;
+            }
         }
     }
 
