@@ -106,7 +106,7 @@ public static class PopupService
     #region DismissPopup
 
     /// <summary>
-    /// Occurs then popup is dismissed
+    /// Occurs when open popups should be dismissed (raised by <see cref="RaiseDismissPopupEvent"/>)
     /// </summary>
     public static readonly RoutedEvent DismissPopupEvent = EventManager.RegisterRoutedEvent("DismissPopup", RoutingStrategy.Bubble, typeof(EventHandler<DismissPopupEventArgs>), typeof(PopupService));
 

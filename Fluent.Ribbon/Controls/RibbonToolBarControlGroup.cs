@@ -15,7 +15,7 @@ public class RibbonToolBarControlGroup : ItemsControl
     #region Properties
 
     /// <summary>
-    /// Gets whether the group is the fisrt control in the row
+    /// Gets or sets whether the group is the first control in the row. Set by <see cref="RibbonToolBar"/> during layout.
     /// </summary>
     public bool IsFirstInRow
     {
@@ -28,7 +28,7 @@ public class RibbonToolBarControlGroup : ItemsControl
         DependencyProperty.Register(nameof(IsFirstInRow), typeof(bool), typeof(RibbonToolBarControlGroup), new PropertyMetadata(BooleanBoxes.TrueBox));
 
     /// <summary>
-    /// Gets whether the group is the last control in the row
+    /// Gets or sets whether the group is the last control in the row. Set by <see cref="RibbonToolBar"/> during layout.
     /// </summary>
     public bool IsLastInRow
     {

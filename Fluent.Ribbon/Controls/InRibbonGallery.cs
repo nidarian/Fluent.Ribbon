@@ -1005,7 +1005,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     #region IsSimplified
 
     /// <summary>
-    /// Gets or sets whether or not the ribbon is in Simplified mode
+    /// Gets whether the control is in simplified mode (set when the ribbon switches to simplified mode).
     /// </summary>
     public bool IsSimplified
     {
