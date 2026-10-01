@@ -183,6 +183,9 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
     /// <summary>Identifies the <see cref="CanUseSimplified"/> dependency property.</summary>
     public static readonly DependencyProperty CanUseSimplifiedProperty = DependencyProperty.Register(nameof(CanUseSimplified), typeof(bool), typeof(RibbonTabControl), new PropertyMetadata(BooleanBoxes.FalseBox));
 
+    // The public setter intentionally uses SetValue: app code assigning the property sets a local value (WPF convention).
+    // Code inside the library must use SetCurrentValue instead, so an app's binding (e.g. OneWay from a view model) survives user interaction.
+
     /// <inheritdoc />
     public bool IsDropDownOpen
     {
@@ -561,7 +564,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         {
             if (this.IsDropDownOpen)
             {
-                this.IsDropDownOpen = false;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             }
         }
 
@@ -625,7 +628,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             case Key.Escape:
                 if (this.IsDropDownOpen)
                 {
-                    this.IsDropDownOpen = false;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
 
                     if (this.IsKeyboardFocusWithin)
                     {
@@ -869,7 +872,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
         if (tabControl.IsMinimized == false)
         {
-            tabControl.IsDropDownOpen = false;
+            tabControl.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
 
         if ((bool)e.NewValue == false

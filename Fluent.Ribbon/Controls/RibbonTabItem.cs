@@ -598,12 +598,12 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
 
                     if (ReferenceEquals(this.TabControlParent.SelectedItem, newItem))
                     {
-                        this.TabControlParent.IsDropDownOpen = !this.TabControlParent.IsDropDownOpen;
+                        this.TabControlParent.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.Box(!this.TabControlParent.IsDropDownOpen));
                     }
                     else
                     {
                         this.TabControlParent.SelectedItem = newItem;
-                        this.TabControlParent.IsDropDownOpen = true;
+                        this.TabControlParent.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
                     }
 
                     this.TabControlParent.RaiseRequestBackstageClose();
@@ -628,7 +628,7 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
                 if (this.TabControlParent is not null
                     && this.TabControlParent.IsMinimized)
                 {
-                    this.TabControlParent.IsDropDownOpen = true;
+                    this.TabControlParent.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
                     e.Handled = true;
                 }
@@ -749,7 +749,7 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
         if (this.TabControlParent is not null
             && this.TabControlParent.IsMinimized)
         {
-            this.TabControlParent.IsDropDownOpen = true;
+            this.TabControlParent.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
             result = new KeyTipPressedResult(true, true);
         }
@@ -766,7 +766,7 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
         if (this.TabControlParent is not null
             && this.TabControlParent.IsMinimized)
         {
-            this.TabControlParent.IsDropDownOpen = false;
+            this.TabControlParent.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
     }
 

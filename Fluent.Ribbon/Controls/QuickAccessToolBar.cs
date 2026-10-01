@@ -143,7 +143,7 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
         if ((this.Items.Count == 0 || this.cachedNonOverflowItemsCount == this.Items.Count)
             && this.toolBarDownButton is not null)
         {
-            this.toolBarDownButton.IsDropDownOpen = false;
+            this.toolBarDownButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
     }
 

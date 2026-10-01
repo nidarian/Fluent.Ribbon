@@ -374,7 +374,7 @@ public class Gallery : ListBox
 
         if (this.groupsMenuButton is not null)
         {
-            this.groupsMenuButton.IsDropDownOpen = false;
+            this.groupsMenuButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
 
         e.Handled = true;

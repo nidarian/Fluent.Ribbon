@@ -229,6 +229,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     #region IsDropDownOpen
 
+    // The public setter intentionally uses SetValue: app code assigning the property sets a local value (WPF convention).
+    // Code inside the library must use SetCurrentValue instead, so an app's binding (e.g. OneWay from a view model) survives user interaction.
+
     /// <inheritdoc />
     public bool IsDropDownOpen
     {
@@ -564,7 +567,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         switch (e.Key)
         {
             case Key.Escape:
-                this.IsDropDownOpen = false;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                 handled = true;
                 break;
         }
@@ -589,7 +592,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 // We need at least 100 ms of delay. Otherwise there is no way for the routed event to continue...
                 await Task.Delay(Math.Max(100, timespan));
 
-                this.RunInDispatcherAsync(() => this.IsDropDownOpen = false);
+                this.RunInDispatcherAsync(() => this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox));
             });
         }
     }
@@ -599,7 +602,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         e.Handled = true;
 
         this.Focus();
-        this.IsDropDownOpen = !this.IsDropDownOpen;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.Box(!this.IsDropDownOpen));
     }
 
     /// <inheritdoc />
@@ -618,7 +621,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 if (this.HasItems
                     && this.IsDropDownOpen == false) // Only handle this for initial navigation. Further navigation is handled by the dropdown itself
                 {
-                    this.IsDropDownOpen = true;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(0);
 
@@ -633,7 +636,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                 if (this.HasItems
                     && this.IsDropDownOpen == false) // Only handle this for initial navigation. Further navigation is handled by the dropdown itself
                 {
-                    this.IsDropDownOpen = true;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1);
 
@@ -647,7 +650,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             case Key.Escape:
                 if (this.IsDropDownOpen)
                 {
-                    this.IsDropDownOpen = false;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                     handled = true;
                 }
 
@@ -655,7 +658,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
             case Key.Enter:
             case Key.Space:
-                this.IsDropDownOpen = !this.IsDropDownOpen;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.Box(!this.IsDropDownOpen));
                 handled = true;
                 break;
         }
@@ -701,7 +704,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     /// <inheritdoc />
     public virtual KeyTipPressedResult OnKeyTipPressed()
     {
-        this.IsDropDownOpen = true;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
         return new KeyTipPressedResult(true, true);
     }
@@ -709,7 +712,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     /// <inheritdoc />
     public void OnKeyTipBack()
     {
-        this.IsDropDownOpen = false;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     #endregion
@@ -800,7 +803,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             var menuItem = (System.Windows.Controls.MenuItem?)openMenuItem.Target;
             if (menuItem?.IsSubmenuOpen == true)
             {
-                menuItem.IsSubmenuOpen = false;
+                menuItem.SetCurrentValue(System.Windows.Controls.MenuItem.IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
             }
         }
 

@@ -332,7 +332,8 @@ public static class PopupService
     private static void DismisPopupForAlways(IDropDownControl control, DismissPopupEventArgs e)
 #pragma warning restore CA1801 // Review unused parameters
     {
-        control.IsDropDownOpen = false;
+        // Not control.IsDropDownOpen = false: that would call SetValue and replace an app's binding on IsDropDownOpen.
+        DropDownControlHelper.SetIsDropDownOpenCurrentValue(control, false);
     }
 
     private static void DismisPopupForMouseNotOver(IDropDownControl control, DismissPopupEventArgs e)
@@ -351,7 +352,7 @@ public static class PopupService
             // Don't prevent closing if the new target is an ApplicationMenu (#581)
             if (Mouse.Captured is ApplicationMenu)
             {
-                control.IsDropDownOpen = false;
+                DropDownControlHelper.SetIsDropDownOpenCurrentValue(control, false);
                 return;
             }
 
@@ -361,7 +362,7 @@ public static class PopupService
 
         if (IsMousePhysicallyOver(control.DropDownPopup) == false)
         {
-            control.IsDropDownOpen = false;
+            DropDownControlHelper.SetIsDropDownOpenCurrentValue(control, false);
         }
         else
         {
