@@ -375,8 +375,10 @@ public class BackstageTabControl : Selector, ILogicalChildSupport
                         tabItem.SetCurrentValue(TabIndexProperty, IntBoxes.Zero);
                     }
                 }
-                else
+                else if ((e.KeyboardDevice.Modifiers & ModifierKeys.Shift) != ModifierKeys.Shift)
                 {
+                    // Jumping into the content is a forward move, so only plain Tab does it.
+                    // Shift+Tab is left unhandled so normal keyboard navigation moves focus backwards.
                     e.Handled = this.SelectedContentHost?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next)) is true;
                 }
 
