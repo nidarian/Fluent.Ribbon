@@ -370,7 +370,9 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
             return;
         }
 
-        if (e.Key == Key.Enter)
+        // Like a button, both Enter and Space activate the item.
+        if (e.Key == Key.Enter
+            || e.Key == Key.Space)
         {
             // Only click if Enter also went down on this item.
             // Example: pressing Enter on an InRibbonGallery's toggle button opens the drop down and moves focus to
