@@ -29,14 +29,14 @@ public class RibbonDropDownButtonAutomationPeer : RibbonHeaderedControlAutomatio
     /// <inheritdoc />
     protected override AutomationControlType GetAutomationControlTypeCore()
     {
-        return AutomationControlType.Custom;
+        // Button (plus the ExpandCollapse pattern below) is the UIA control type for a button that opens a drop down.
+        // "Custom" told screen readers nothing about how to interact with the control.
+        return AutomationControlType.Button;
     }
 
-    /// <inheritdoc />
-    protected override string GetLocalizedControlTypeCore()
-    {
-        return this.Owner.GetType().Name;
-    }
+    // GetLocalizedControlTypeCore is intentionally not overridden: WPF derives the localized name ("button")
+    // from the control type. Returning the class name made screen readers say "DropDownButton" in every language.
+    // RibbonSplitButtonAutomationPeer overrides the control type with SplitButton and so gets "split button".
 
     /// <inheritdoc />
     public override object GetPattern(PatternInterface patternInterface)
