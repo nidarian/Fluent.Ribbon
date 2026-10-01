@@ -3,6 +3,7 @@ namespace Fluent.Tests.Controls;
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Input;
 using System.Windows.Media;
 using Fluent.Tests.Helper;
@@ -48,6 +49,30 @@ public class CreateQuickAccessItemTests
         source.SetValue(RibbonControl.HeaderProperty, "Changed");
 
         Assert.That(item.GetValue(RibbonControl.HeaderProperty), Is.EqualTo("Changed"));
+    }
+
+    // The Quick Access Toolbar copy is a separate element with its own automation peer.
+    // Screen reader users must hear the same accessible name and help text for it as for the original control.
+    [TestCase(typeof(Button))]
+    [TestCase(typeof(ToggleButton))]
+    [TestCase(typeof(CheckBox))]
+    [TestCase(typeof(RadioButton))]
+    public void ButtonLike_Copies_AutomationProperties_Name_And_HelpText(Type type)
+    {
+        var source = (System.Windows.Controls.Control)Activator.CreateInstance(type);
+        AutomationProperties.SetName(source, "Save");
+        AutomationProperties.SetHelpText(source, "Saves");
+
+        var item = ((IQuickAccessItemProvider)source).CreateQuickAccessItem();
+
+        Assert.That(item, Is.Not.SameAs(source), "Precondition: the quick access item must be a separate copy.");
+
+        Assert.That(AutomationProperties.GetName(item), Is.EqualTo("Save"), "The quick access item must have the same AutomationProperties.Name as its source.");
+        Assert.That(AutomationProperties.GetHelpText(item), Is.EqualTo("Saves"), "The quick access item must have the same AutomationProperties.HelpText as its source.");
+
+        AutomationProperties.SetName(source, "Save all");
+
+        Assert.That(AutomationProperties.GetName(item), Is.EqualTo("Save all"), "Changes to the source's AutomationProperties.Name must flow to the quick access item.");
     }
 
     [TestCase(typeof(Button))]

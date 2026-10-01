@@ -278,6 +278,13 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
 
         Bind(source, target, FocusManager.IsFocusScopeProperty, BindingMode.OneWay);
 
+        // The Quick Access Toolbar copy is a separate element with its own automation peer, so screen readers
+        // would otherwise announce it without the accessible name/help text the app author gave the original.
+        // AutomationId is intentionally NOT copied: it must be unique, and a duplicate would make UI tests
+        // that search by AutomationId find the copy first instead of the original control.
+        Bind(source, target, System.Windows.Automation.AutomationProperties.NameProperty, BindingMode.OneWay);
+        Bind(source, target, System.Windows.Automation.AutomationProperties.HelpTextProperty, BindingMode.OneWay);
+
         Bind(source, target, InputControlProperties.InputMinWidthProperty, BindingMode.OneWay);
         Bind(source, target, InputControlProperties.InputWidthProperty, BindingMode.OneWay);
         Bind(source, target, InputControlProperties.InputHeightProperty, BindingMode.OneWay);
