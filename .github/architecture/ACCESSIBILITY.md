@@ -102,3 +102,9 @@ app's normal Fluent colors. The maintainer said the same in
 does not ship any high contrast themes"). Adding it is design work: a High
 Contrast color scheme based on system colors, or `SystemParameters.HighContrast`
 triggers in the templates.
+
+Update: a basic, opt-in version of the first option now exists. Runtime themes
+generated with `isHighContrast = true` (for example through
+`ThemeSyncMode.SyncWithHighContrast`) take their palette from system colors.
+See [HIGH-CONTRAST.md](HIGH-CONTRAST.md) for how to turn it on and what is
+still missing.
