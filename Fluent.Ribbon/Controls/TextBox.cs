@@ -151,6 +151,23 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
         RibbonControl.Bind(this, element, nameof(this.SelectionBrush), SelectionBrushProperty, BindingMode.TwoWay);
         RibbonControl.Bind(this, element, nameof(this.SelectionOpacity), SelectionOpacityProperty, BindingMode.TwoWay);
         RibbonControl.Bind(this, element, nameof(this.CaretBrush), CaretBrushProperty, BindingMode.TwoWay);
+
+        // The handler lives on the quick access item (which already references this control through its bindings),
+        // so it does not keep the item alive after it was removed from the toolbar.
+        element.LostFocus += this.OnQuickAccessItemLostFocus;
+    }
+
+    private void OnQuickAccessItemLostFocus(object sender, RoutedEventArgs e)
+    {
+        // The quick access item writes into our Text immediately, but an application binding on our Text
+        // usually uses the default UpdateSourceTrigger (LostFocus) and this control never gets/loses focus
+        // while the user types into the quick access item. So we push the pending value when the item loses focus.
+        var bindingExpression = BindingOperations.GetBindingExpressionBase(this, TextProperty);
+
+        if (bindingExpression?.IsDirty == true)
+        {
+            bindingExpression.UpdateSource();
+        }
     }
 
     #endregion
