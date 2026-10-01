@@ -197,6 +197,10 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
     private static void OnMinimumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var spinner = (Spinner)d;
+
+        // Maximum might have been coerced to the old Minimum, so give it a chance to return to its requested value.
+        spinner.CoerceValue(MaximumProperty);
+
         var value = (double)CoerceValue(d, spinner.Value);
 
         if (DoubleUtil.AreClose(value, spinner.Value) == false)
@@ -240,6 +244,10 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
     private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var spinner = (Spinner)d;
+
+        // Minimum might have been coerced to the old Maximum, so give it a chance to return to its requested value.
+        spinner.CoerceValue(MinimumProperty);
+
         var value = (double)CoerceValue(d, spinner.Value);
 
         if (DoubleUtil.AreClose(value, spinner.Value) == false)
