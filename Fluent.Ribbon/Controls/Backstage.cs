@@ -384,7 +384,7 @@ public class Backstage : RibbonControl
         {
             if (this.parentRibbon.TabControl is not null)
             {
-                this.parentRibbon.TabControl.IsDropDownOpen = false;
+                this.parentRibbon.TabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                 this.parentRibbon.TabControl.HighlightSelectedItem = false;
                 this.parentRibbon.TabControl.RequestBackstageClose += this.HandleTabControlRequestBackstageClose;
             }

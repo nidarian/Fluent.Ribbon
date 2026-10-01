@@ -545,6 +545,9 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
 
     #region IsOpen
 
+    // The public setter intentionally uses SetValue: app code assigning the property sets a local value (WPF convention).
+    // Code inside the library must use SetCurrentValue instead, so an app's binding (e.g. OneWay from a view model) survives user interaction.
+
     /// <inheritdoc />
     public bool IsDropDownOpen
     {
@@ -1033,7 +1036,7 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
 
             if (!this.IsDropDownOpen)
             {
-                this.IsDropDownOpen = true;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
             }
             else
             {
@@ -1059,7 +1062,7 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
             case Key.Enter:
                 e.Handled = true;
 
-                this.IsDropDownOpen = true;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
                 break;
 
             case Key.System:
@@ -1067,14 +1070,14 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
                     && e.KeyboardDevice.Modifiers == ModifierKeys.Alt)
                 {
                     e.Handled = true;
-                    this.IsDropDownOpen = true;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
                 }
 
                 break;
 
             case Key.Escape:
                 e.Handled = true;
-                this.IsDropDownOpen = false;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                 break;
         }
 
@@ -1310,7 +1313,7 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
     {
         if (this.State is RibbonGroupBoxState.Collapsed or RibbonGroupBoxState.QuickAccess)
         {
-            this.IsDropDownOpen = true;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
             return new KeyTipPressedResult(true, true);
         }
@@ -1321,7 +1324,7 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
     /// <inheritdoc />
     public void OnKeyTipBack()
     {
-        this.IsDropDownOpen = false;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     #endregion

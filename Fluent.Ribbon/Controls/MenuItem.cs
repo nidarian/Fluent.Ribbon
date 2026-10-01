@@ -106,6 +106,9 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
 
     #region IsDropDownOpen
 
+    // Kept as a plain CLR wrapper for app code. Internal code sets IsSubmenuOpenProperty with SetCurrentValue
+    // (or uses DropDownControlHelper) so a binding on IsSubmenuOpen is not replaced by a local value.
+
     /// <inheritdoc />
     public bool IsDropDownOpen
     {
@@ -396,7 +399,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
         else
         {
             Keyboard.Focus(this);
-            this.IsDropDownOpen = true;
+            this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.TrueBox);
 
             return new KeyTipPressedResult(true, true);
         }
@@ -405,7 +408,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
     /// <inheritdoc />
     public void OnKeyTipBack()
     {
-        this.IsDropDownOpen = false;
+        this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
     }
 
     #endregion
@@ -496,7 +499,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
             if (this.HasItems
                 && this.LogicalParent is DropDownButton)
             {
-                this.IsSubmenuOpen = true;
+                this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.TrueBox);
             }
         }
     }
@@ -513,7 +516,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 && this.LogicalParent is DropDownButton // prevent too slow close on regular DropDown
                 && this.LogicalParent is ApplicationMenu == false) // prevent eager close on ApplicationMenu
             {
-                this.IsSubmenuOpen = false;
+                this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
             }
         }
     }
@@ -527,7 +530,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
         // but only if it should be opened on ourself
         if (ReferenceEquals(this, e.Source))
         {
-            this.IsSubmenuOpen = false;
+            this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
         }
 
         base.OnContextMenuOpening(e);
@@ -625,7 +628,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
         {
             if (this.IsSubmenuOpen)
             {
-                this.IsSubmenuOpen = false;
+                this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
             }
             else
             {
@@ -657,7 +660,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 if (key == Key.Right
                     && this.menuPanel is not null)
                 {
-                    this.IsSubmenuOpen = true;
+                    this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.TrueBox);
                     this.menuPanel.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
                     e.Handled = true;
                 }
@@ -665,14 +668,14 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 {
                     if (this.IsSubmenuOpen)
                     {
-                        this.IsSubmenuOpen = false;
+                        this.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
                     }
                     else
                     {
                         var parentMenuItem = UIHelper.GetParent<System.Windows.Controls.MenuItem>(this);
                         if (parentMenuItem is not null)
                         {
-                            parentMenuItem.IsSubmenuOpen = false;
+                            parentMenuItem.SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
                         }
                     }
 
@@ -702,11 +705,11 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
 
         if (parent is IDropDownControl dropDown)
         {
-            dropDown.IsDropDownOpen = false;
+            DropDownControlHelper.SetIsDropDownOpenCurrentValue(dropDown, false);
         }
         else
         {
-            ((System.Windows.Controls.MenuItem)parent).IsSubmenuOpen = false;
+            ((System.Windows.Controls.MenuItem)parent).SetCurrentValue(IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
         }
     }
 

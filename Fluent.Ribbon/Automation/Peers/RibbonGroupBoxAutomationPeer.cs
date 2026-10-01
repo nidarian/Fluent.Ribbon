@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
+using Fluent.Internal.KnownBoxes;
 
 /// <summary>
 /// Automation peer for <see cref="RibbonGroupBox"/>.
@@ -124,7 +125,7 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
             return;
         }
 
-        this.OwningGroup.IsDropDownOpen = true;
+        this.OwningGroup.SetCurrentValue(RibbonGroupBox.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
     }
 
     /// <inheritdoc />
@@ -135,7 +136,7 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
             return;
         }
 
-        this.OwningGroup.IsDropDownOpen = false;
+        this.OwningGroup.SetCurrentValue(RibbonGroupBox.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     /// <inheritdoc />

@@ -405,7 +405,7 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
         }
         else
         {
-            this.IsDropDownOpen = false;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
     }
 

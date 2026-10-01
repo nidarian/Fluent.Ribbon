@@ -510,7 +510,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
         this.SelectedFilter = senderItem.Tag as GalleryGroupFilter;
         if (this.groupsMenuButton is not null)
         {
-            this.groupsMenuButton.IsDropDownOpen = false;
+            this.groupsMenuButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
 
         e.Handled = true;
@@ -559,6 +559,9 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
     /// <inheritdoc />
     public bool IsContextMenuOpened { get; set; }
+
+    // The public setter intentionally uses SetValue: app code assigning the property sets a local value (WPF convention).
+    // Code inside the library must use SetCurrentValue instead, so an app's binding (e.g. OneWay from a view model) survives user interaction.
 
     /// <inheritdoc />
     public bool IsDropDownOpen
@@ -1131,13 +1134,13 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
         if (e.Key == Key.F4
             && (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == 0)
         {
-            this.IsDropDownOpen = !this.IsDropDownOpen;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.Box(!this.IsDropDownOpen));
             e.Handled = true;
         }
         else if (e.Key == Key.Escape
                  && this.IsDropDownOpen)
         {
-            this.IsDropDownOpen = false;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             e.Handled = true;
         }
     }
@@ -1145,7 +1148,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     /// <inheritdoc />
     public KeyTipPressedResult OnKeyTipPressed()
     {
-        this.IsDropDownOpen = true;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
         return new KeyTipPressedResult(false, true);
     }
@@ -1153,7 +1156,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     /// <inheritdoc />
     public void OnKeyTipBack()
     {
-        this.IsDropDownOpen = false;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     /// <inheritdoc />
@@ -1339,7 +1342,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     {
         if (e.Key == Key.Escape)
         {
-            this.IsDropDownOpen = false;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
         }
 
         base.OnKeyDown(e);

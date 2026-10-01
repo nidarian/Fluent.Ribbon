@@ -237,6 +237,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     #region IsDropDownOpen
 
+    // The public setter intentionally uses SetValue: app code assigning the property sets a local value (WPF convention).
+    // Code inside the library must use SetCurrentValue instead, so an app's binding (e.g. OneWay from a view model) survives user interaction.
+
     /// <inheritdoc />
     public bool IsDropDownOpen
     {
@@ -597,7 +600,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         switch (e.Key)
         {
             case Key.Escape:
-                this.IsDropDownOpen = false;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                 handled = true;
                 break;
         }
@@ -652,7 +655,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         e.Handled = true;
 
         this.Focus();
-        this.IsDropDownOpen = !this.IsDropDownOpen;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.Box(!this.IsDropDownOpen));
     }
 
     /// <inheritdoc />
@@ -674,7 +677,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                     // A keyboard open always focuses an item, even when FocusFirstItemOnDropDownOpen is false (#813):
                     // the focus happens right here, synchronously, not in the queued open callback.
                     this.itemIndexToFocusOnOpen = 0;
-                    this.IsDropDownOpen = true;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(0);
 
@@ -699,7 +702,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                     // Opening queues a callback that focuses an item once the drop down is shown.
                     // Tell it to use the last item, otherwise it would move focus back to the first one.
                     this.itemIndexToFocusOnOpen = this.Items.Count - 1;
-                    this.IsDropDownOpen = true;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
                     var container = this.ItemContainerGenerator.ContainerFromIndex(this.Items.Count - 1);
 
@@ -720,7 +723,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             case Key.Escape:
                 if (this.IsDropDownOpen)
                 {
-                    this.IsDropDownOpen = false;
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                     handled = true;
                 }
 
@@ -743,7 +746,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
             case Key.Enter:
             case Key.Space:
-                this.IsDropDownOpen = !this.IsDropDownOpen;
+                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.Box(!this.IsDropDownOpen));
                 handled = true;
                 break;
         }
@@ -801,7 +804,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     /// <inheritdoc />
     public virtual KeyTipPressedResult OnKeyTipPressed()
     {
-        this.IsDropDownOpen = true;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
         return new KeyTipPressedResult(true, true);
     }
@@ -809,7 +812,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     /// <inheritdoc />
     public void OnKeyTipBack()
     {
-        this.IsDropDownOpen = false;
+        this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     #endregion
@@ -929,7 +932,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             var menuItem = openMenuItemsToClose[i].Target as System.Windows.Controls.MenuItem;
             if (menuItem?.IsSubmenuOpen == true)
             {
-                menuItem.IsSubmenuOpen = false;
+                menuItem.SetCurrentValue(System.Windows.Controls.MenuItem.IsSubmenuOpenProperty, BooleanBoxes.FalseBox);
             }
         }
 

@@ -3,6 +3,7 @@
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
+using Fluent.Internal.KnownBoxes;
 
 /// <summary>
 /// Automation peer for <see cref="DropDownButton"/>.
@@ -61,7 +62,7 @@ public class RibbonDropDownButtonAutomationPeer : RibbonHeaderedControlAutomatio
             throw new ElementNotEnabledException();
         }
 
-        this.OwnerDropDownButton.IsDropDownOpen = false;
+        this.OwnerDropDownButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
     }
 
     /// <inheritdoc />
@@ -73,7 +74,7 @@ public class RibbonDropDownButtonAutomationPeer : RibbonHeaderedControlAutomatio
             throw new ElementNotEnabledException();
         }
 
-        this.OwnerDropDownButton.IsDropDownOpen = true;
+        this.OwnerDropDownButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
     }
 
     /// <inheritdoc />
