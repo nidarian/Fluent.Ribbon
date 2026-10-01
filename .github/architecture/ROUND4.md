@@ -68,7 +68,7 @@ All of them are merged together on `integration/next`.
 | Problem | Branch | Fail → pass | What a screen reader user notices |
 |---|---|---|---|
 | Toolbar **"Customize" and "More controls" buttons had no name**, and "More controls" wasn't in the tree. | `uia-qat-buttons-named` | #135 → #168 | "Customize Quick Access Toolbar, button". |
-| The **toolbar was listed twice** in a RibbonWindow. | `uia-qat-listed-once` | #111 → PENDING | Listed once, under the title bar. |
+| The **toolbar was listed twice** in a RibbonWindow. | `uia-qat-listed-once` | #111 → #188 | Listed once, under the title bar. |
 | **Backstage tabs** were plain list items without "selected". | `uia-backstage-tab-selection` | #96 → #107 | "Info, tab item, selected"; Select() works. |
 | **InRibbonGallery advertised a Scroll pattern** it didn't implement (clients could crash). | `uia-inribbongallery-scroll-pattern` | #84 → #99 | No broken pattern. |
 | A tab's **`AutomationProperties.Name` was overridden by its header**. | `uia-tab-name-respects-automation-name` | #85 → #100 | The name you set wins. |
