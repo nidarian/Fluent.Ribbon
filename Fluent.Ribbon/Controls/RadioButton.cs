@@ -1,8 +1,12 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace Fluent;
 
+using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
@@ -211,9 +215,70 @@ public class RadioButton : System.Windows.Controls.RadioButton, IRibbonControl, 
 
         RibbonControl.BindQuickAccessItem(this, button);
 
+        // All quick access items share the toolbar panel as logical parent.
+        // Without an explicit GroupName WPF would put all of them into one group, so checking one item
+        // would uncheck items (and via the TwoWay IsChecked binding the originals) of unrelated groups.
+        // The item can't simply reuse our GroupName either: it would then be in the same group as this control
+        // and uncheck it as soon as it gets checked through the IsChecked binding.
+        var groupNameBinding = new Binding(nameof(this.GroupName))
+        {
+            Source = this,
+            Mode = BindingMode.OneWay,
+            Converter = new QuickAccessGroupNameConverter(this)
+        };
+        button.SetBinding(GroupNameProperty, groupNameBinding);
+
         button.Click += (sender, e) => this.RaiseEvent(e);
 
         return button;
+    }
+
+    /// <summary>
+    /// Gets the group name for quick access items created from this control.
+    /// Items of controls sharing a group get the same name; items of different groups get different names.
+    /// </summary>
+    private string GetQuickAccessGroupName(string? groupName)
+    {
+        if (string.IsNullOrEmpty(groupName) == false)
+        {
+            return "Fluent.QuickAccess.Group." + groupName;
+        }
+
+        // WPF groups radio buttons without GroupName by their logical parent, so we derive a stable name from that parent.
+        // The ConditionalWeakTable keeps the name per parent without keeping the parent alive.
+        // The parent is captured when the binding evaluates, so moving this control to another parent later is not tracked.
+        var scope = this.Parent
+                    ?? System.Windows.Media.VisualTreeHelper.GetParent(this)
+                    ?? this;
+
+        return QuickAccessGroupNamesByParent.GetValue(scope, _ => "Fluent.QuickAccess.Parent." + Interlocked.Increment(ref quickAccessGroupNameCounter).ToString(CultureInfo.InvariantCulture));
+    }
+
+    private static readonly ConditionalWeakTable<DependencyObject, string> QuickAccessGroupNamesByParent = new();
+
+    private static int quickAccessGroupNameCounter;
+
+    /// <summary>
+    /// Maps the GroupName of the original <see cref="RadioButton"/> to the GroupName of its quick access item.
+    /// </summary>
+    private sealed class QuickAccessGroupNameConverter : IValueConverter
+    {
+        private readonly RadioButton source;
+
+        public QuickAccessGroupNameConverter(RadioButton source)
+        {
+            this.source = source;
+        }
+
+        public object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return this.source.GetQuickAccessGroupName(value as string);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Binding.DoNothing;
+        }
     }
 
     /// <inheritdoc />
