@@ -234,6 +234,32 @@ public class CreateQuickAccessItemTests
         Assert.That(source.Value, Is.EqualTo(30));
     }
 
+    [Test]
+    public void Spinner_Copy_Keeps_Value_Outside_Default_Range()
+    {
+        // The range lies completely below the default range (0..double.MaxValue) of a fresh Spinner,
+        // so the copy must know Minimum/Maximum before it receives Value, otherwise it clamps Value
+        // and pushes the clamped value back to the source through the TwoWay binding.
+        var source = new Spinner
+        {
+            Minimum = -100,
+            Maximum = -10,
+            Value = -50
+        };
+
+        Assert.That(source.Value, Is.EqualTo(-50), "Precondition: source value is inside its own range.");
+
+        var spinner = (Spinner)source.CreateQuickAccessItem();
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(source.Value, Is.EqualTo(-50));
+            Assert.That(spinner.Value, Is.EqualTo(-50));
+            Assert.That(spinner.Minimum, Is.EqualTo(-100));
+            Assert.That(spinner.Maximum, Is.EqualTo(-10));
+        }
+    }
+
     #endregion
 
     #region ComboBox

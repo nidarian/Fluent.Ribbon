@@ -595,11 +595,17 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
         BindQuickAccessItem(this, element);
 
-        Bind(this, spinner, nameof(this.Value), ValueProperty, BindingMode.TwoWay);
-        Bind(this, spinner, nameof(this.Increment), IncrementProperty, BindingMode.OneWay);
+        // Minimum and Maximum must be bound before Value.
+        // Otherwise the copy coerces the incoming Value into its default range (0..double.MaxValue)
+        // and, because Value is bound TwoWay, writes the clamped value back to this spinner.
+        // Minimum goes first because the default Maximum (double.MaxValue) never clamps it.
         Bind(this, spinner, nameof(this.Minimum), MinimumProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.Maximum), MaximumProperty, BindingMode.OneWay);
+        Bind(this, spinner, nameof(this.Increment), IncrementProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.Format), FormatProperty, BindingMode.OneWay);
+        Bind(this, spinner, nameof(this.TextToValueConverter), TextToValueConverterProperty, BindingMode.OneWay);
+        Bind(this, spinner, nameof(this.SelectAllTextOnFocus), SelectAllTextOnFocusProperty, BindingMode.OneWay);
+        Bind(this, spinner, nameof(this.Value), ValueProperty, BindingMode.TwoWay);
         Bind(this, spinner, nameof(this.Delay), DelayProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.Interval), IntervalProperty, BindingMode.OneWay);
     }
