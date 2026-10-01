@@ -653,6 +653,21 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
                 break;
 
+            case Key.Tab:
+                // Tab moves keyboard focus to the next control. If focus is inside the drop down, Tab navigates
+                // between its items and the drop down must stay open. But if focus is still on the button itself
+                // (for example because every item is disabled), Tab takes focus away from the control and the
+                // drop down would otherwise stay open on its own, detached from where the user is typing.
+                if (this.IsDropDownOpen
+                    && this.DropDownPopup?.Child?.IsKeyboardFocusWithin != true)
+                {
+                    // SetCurrentValue keeps a binding on IsDropDownOpen intact.
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
+                }
+
+                // Deliberately not handled: WPF's keyboard navigation still has to move focus to the next control.
+                break;
+
             case Key.Enter:
             case Key.Space:
                 this.IsDropDownOpen = !this.IsDropDownOpen;
