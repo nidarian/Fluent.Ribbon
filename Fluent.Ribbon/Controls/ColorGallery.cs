@@ -690,9 +690,12 @@ public class ColorGallery : Control
     {
         base.OnApplyTemplate();
 
+        // Detach from the button of the previous template (if any) before taking the new one.
+        // Using += here would keep the discarded button wired to this gallery (a leak),
+        // and clicking it would still raise MoreColorsExecuting.
         if (this.moreColorsButton is not null)
         {
-            this.moreColorsButton.Click += this.OnMoreColorsClick;
+            this.moreColorsButton.Click -= this.OnMoreColorsClick;
         }
 
         this.moreColorsButton = this.GetTemplateChild("PART_MoreColors") as MenuItem;
