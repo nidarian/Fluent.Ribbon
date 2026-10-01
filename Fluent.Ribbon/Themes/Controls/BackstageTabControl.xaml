@@ -255,6 +255,8 @@
         <Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.BackstageTabControl.Background}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource Fluent.Ribbon.Styles.FocusVisual.Empty}" />
         <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelText}" />
+        <!-- Only a container: the tab items and the selected content are the tab stops. As a tab stop it was an invisible extra stop (empty focus visual). -->
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="ItemContainerStyleSelector" Value="{x:Static styleSelectors:BackstageTabControlItemContainerStyleSelector.Instance}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
