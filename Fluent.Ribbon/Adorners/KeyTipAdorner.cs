@@ -278,15 +278,18 @@ public class KeyTipAdorner : Adorner
     {
         this.childAdorner?.Detach();
 
+        // Maybe adorner awaiting attaching, cancel it
+        // This has to happen before the attached check: an adorner waiting for Loaded is not attached yet,
+        // and returning early kept it alive (isAttaching) and let it attach later, e.g. to an already terminated chain.
+        this.oneOfAssociatedElements.Loaded -= this.OnDelayAttach;
+        this.isAttaching = false;
+
         if (!this.attached)
         {
             return;
         }
 
         this.LogDebug("Detach Begin");
-
-        // Maybe adorner awaiting attaching, cancel it
-        this.oneOfAssociatedElements.Loaded -= this.OnDelayAttach;
 
         // Show this adorner
         this.adornerLayer?.Remove(this);
