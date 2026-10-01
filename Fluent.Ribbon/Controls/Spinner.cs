@@ -550,6 +550,13 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
     private void TextBoxTextToValue()
     {
+        // If the user didn't change the text it still is the formatted (possibly rounded) Value.
+        // Parsing it back would silently round Value (e.g. 0.25 with format "F1" would become 0.3).
+        if (string.Equals(this.textBox!.Text, this.Text, StringComparison.Ordinal))
+        {
+            return;
+        }
+
         var converterParam = new Tuple<string, double>(this.Format, this.Value);
         var newValue = (double)this.TextToValueConverter.Convert(this.textBox!.Text, typeof(double), converterParam, CultureInfo.CurrentCulture);
 
