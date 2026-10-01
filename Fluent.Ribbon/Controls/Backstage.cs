@@ -532,6 +532,10 @@ public class Backstage : RibbonControl
         target.SetIsOpen(!target.IsOpen);
     }
 
+    // The command binding this backstage added to the AdornerLayer.
+    // The AdornerLayer is shared with other backstages/start screens (and maybe the app), so only this binding may be removed again.
+    private CommandBinding? openBackstageCommandBinding;
+
     private void CreateAndAttachBackstageAdorner()
     {
         // It's possible that we created an adorner but it's parent AdornerLayer got destroyed.
@@ -580,12 +584,19 @@ public class Backstage : RibbonControl
 
         this.AdornerLayer.Add(this.adorner);
 
-        this.AdornerLayer.CommandBindings.Add(new CommandBinding(RibbonCommands.OpenBackstage, HandleOpenBackstageCommandExecuted, HandleOpenBackstageCommandCanExecute));
+        this.openBackstageCommandBinding = new CommandBinding(RibbonCommands.OpenBackstage, HandleOpenBackstageCommandExecuted, HandleOpenBackstageCommandCanExecute);
+        this.AdornerLayer.CommandBindings.Add(this.openBackstageCommandBinding);
     }
 
     private void DestroyAdorner()
     {
-        this.AdornerLayer?.CommandBindings.Clear();
+        // Don't clear all CommandBindings: that would also remove the bindings of other backstages sharing this AdornerLayer.
+        if (this.openBackstageCommandBinding is not null)
+        {
+            this.AdornerLayer?.CommandBindings.Remove(this.openBackstageCommandBinding);
+            this.openBackstageCommandBinding = null;
+        }
+
         if (this.adorner is not null)
         {
             this.AdornerLayer?.Remove(this.adorner);
