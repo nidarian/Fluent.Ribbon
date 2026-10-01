@@ -42,6 +42,11 @@ A candidate can also be **rejected** (the code is fine, or it's intended) or
 
 ## Confirmed, not fixed (reason given)
 
+> **Update 2026-10-01 (round 4):** every row in this table has since been fixed and
+> proven test-first in this fork, at the owner's request. See `ROUND4.md` for the
+> branch, the CI runs and what changes in an app. The reasons below explain why
+> they were first left for the maintainer.
+
 | Finding | Why not fixed |
 |---|---|
 | `DropDownButton`'s "whole drop down is disabled" fallback calls `Keyboard.Focus(DropDownPopup.Child)`, but that child is a `ResizeableContentControl`, which sets `Focusable = false`. So it does nothing. | What should get focus instead is a design choice for the maintainer. |

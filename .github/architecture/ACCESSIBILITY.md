@@ -37,6 +37,9 @@ flags.
 
 ## Screen readers: found, not fixed
 
+> **Update 2026-10-01 (round 4):** all of these are fixed and proven in this fork (the
+> ScreenTip "disabled because" row is documented instead). See `ROUND4.md`.
+
 | Finding | Why not fixed |
 |---|---|
 | The Quick Access Toolbar's "Customize" and "More controls" buttons have no automation name, and "More controls" is missing from the automation tree. *(agent reading)* | Needs localized names in the template. Small, but not proven yet. |
@@ -49,6 +52,9 @@ flags.
 | `DropDownButton` reports control type "Custom" with its class name as the type ("DropDownButton", not localized). *(agent reading)* | Changing it breaks existing UI tests. Maintainer's call. |
 
 ## Keyboard: found, not fixed
+
+> **Update 2026-10-01 (round 4):** all of these are fixed and proven in this fork (the
+> ScreenTip "disabled because" row is documented instead). See `ROUND4.md`.
 
 | Finding | Why not fixed |
 |---|---|
@@ -91,6 +97,10 @@ example Windows 10). Needs a runtime check.
 Nearly all contrast fixes change theme colors, which is the maintainer's
 decision. The placeholder opacity is the only one that doesn't touch a color.
 
+> **Update 2026-10-01 (round 4):** all rows except the "Colorful" title bar are fixed in
+> this fork (`fix/contrast-wcag`), checked in all 46 Light/Dark themes. This changes
+> colors in the app. See `ROUND4.md`.
+
 ## High Contrast mode: not supported
 
 Confirmed in the code: nothing reads `SystemParameters.HighContrast`, no High
@@ -102,3 +112,6 @@ app's normal Fluent colors. The maintainer said the same in
 does not ship any high contrast themes"). Adding it is design work: a High
 Contrast color scheme based on system colors, or `SystemParameters.HighContrast`
 triggers in the templates.
+
+> **Update 2026-10-01 (round 4):** basic, opt-in support exists in this fork
+> (`feature/high-contrast-basic`). What it covers and what it doesn't: `HIGH-CONTRAST.md`.
