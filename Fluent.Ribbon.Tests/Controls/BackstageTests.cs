@@ -221,4 +221,56 @@ public class BackstageTests
             Assert.That(Keyboard.FocusedElement, Is.SameAs(backstage), "Focus must return to the backstage button");
         }
     }
+
+    /// <summary>
+    /// Backstages (and start screens) in one window share the same <see cref="System.Windows.Documents.AdornerLayer"/>.
+    /// Destroying the adorner of one of them must only remove its own command binding, not the ones of the others.
+    /// </summary>
+    [Test]
+    public void Destroying_adorner_keeps_command_bindings_of_other_backstages()
+    {
+        var firstBackstage = new Backstage
+        {
+            Content = new Button()
+        };
+
+        var secondBackstage = new Backstage
+        {
+            Content = new Button()
+        };
+
+        var panel = new System.Windows.Controls.StackPanel
+        {
+            Children =
+            {
+                firstBackstage,
+                secondBackstage
+            }
+        };
+
+        using (new TestRibbonWindow(panel))
+        {
+            firstBackstage.IsOpen = true;
+            firstBackstage.IsOpen = false;
+
+            secondBackstage.IsOpen = true;
+            secondBackstage.IsOpen = false;
+
+            Assert.That(firstBackstage.AdornerLayer, Is.Not.Null.And.SameAs(secondBackstage.AdornerLayer), "Precondition: both backstages must share the adorner layer.");
+
+            var secondAdorner = secondBackstage.GetFieldValue<UIElement>("adorner");
+            Assert.That(secondAdorner, Is.Not.Null, "Precondition: the second backstage must have an adorner.");
+            Assert.That(RibbonCommands.OpenBackstage.CanExecute(null, secondAdorner), Is.True, "Precondition: the back command of the second backstage must be executable.");
+
+            // Unloading the first backstage destroys its adorner.
+            panel.Children.Remove(firstBackstage);
+
+            UIHelper.DoEvents();
+
+            Assert.That(firstBackstage.GetFieldValue<object>("adorner"), Is.Null, "Precondition: the adorner of the removed backstage must be destroyed.");
+            Assert.That(secondBackstage.GetFieldValue<object>("adorner"), Is.SameAs(secondAdorner), "Precondition: the second backstage must keep its adorner.");
+
+            Assert.That(RibbonCommands.OpenBackstage.CanExecute(null, secondAdorner), Is.True, "The back command of the remaining backstage must still be executable.");
+        }
+    }
 }
