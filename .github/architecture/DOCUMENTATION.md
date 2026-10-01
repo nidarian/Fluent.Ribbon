@@ -31,7 +31,8 @@ was only made when **both** of these agreed:
 Windows builds (they compile the XML docs with warnings as errors, so a broken
 `<see cref>` would fail them): batch 1 [#77](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36793793727) passed.
 Batch 2 [#78](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36794258178) and
-integration [#79](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36794299814): running.
+integration [#79](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36794299814) passed
+(352/352 tests on net462, net6.0 and net8.0, same as before the doc changes).
 
 ## The worst ones (a developer would be misled)
 
