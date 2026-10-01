@@ -28,4 +28,18 @@ public class RibbonTextBoxAutomationPeer : System.Windows.Automation.Peers.TextB
 
         return name;
     }
+
+    /// <inheritdoc />
+    protected override string? GetAccessKeyCore()
+    {
+        // Expose the KeyTip so screen readers can announce the keyboard shortcut.
+        return AutomationPeerHelper.GetAccessKey(this.Owner, base.GetAccessKeyCore());
+    }
+
+    /// <inheritdoc />
+    protected override string GetHelpTextCore()
+    {
+        // Expose the ScreenTip text, which the default implementation can't read.
+        return AutomationPeerHelper.GetHelpText(this.Owner, base.GetHelpTextCore());
+    }
 }

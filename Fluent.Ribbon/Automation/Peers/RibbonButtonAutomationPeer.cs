@@ -34,6 +34,8 @@ public class RibbonButtonAutomationPeer : ButtonAutomationPeer
     /// <inheritdoc />
     protected override string? GetAccessKeyCore()
     {
+        // Unlike other peers (see AutomationPeerHelper.GetAccessKey) the KeyTip is preferred here over the base value.
+        // Kept that way to not change the existing behavior of buttons.
         var text = ((Button)this.Owner).KeyTip;
 
         if (string.IsNullOrEmpty(text))
@@ -47,16 +49,7 @@ public class RibbonButtonAutomationPeer : ButtonAutomationPeer
     /// <inheritdoc />
     protected override string GetHelpTextCore()
     {
-        var text = base.GetHelpTextCore();
-
-        if (string.IsNullOrEmpty(text))
-        {
-            if (((Button)this.Owner).ToolTip is ScreenTip ribbonToolTip)
-            {
-                text = ribbonToolTip.Text as string ?? string.Empty;
-            }
-        }
-
-        return text;
+        // Expose the ScreenTip text, which the default implementation can't read.
+        return AutomationPeerHelper.GetHelpText(this.Owner, base.GetHelpTextCore());
     }
 }
