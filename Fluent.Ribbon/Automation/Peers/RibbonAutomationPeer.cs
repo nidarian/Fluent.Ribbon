@@ -88,7 +88,11 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
             return children;
         }
 
-        if (this.OwningRibbon.QuickAccessToolBar is not null)
+        // When the quick access toolbar is shown above the ribbon it is moved into the title bar,
+        // whose peer already exposes it while walking its visual children.
+        // Only list it here when it is really shown inside the ribbon (below it), otherwise it would appear twice in the tree.
+        if (this.OwningRibbon.QuickAccessToolBar is not null
+            && this.OwningRibbon.QuickAccessToolBar.IsDescendantOf(this.OwningRibbon))
         {
             var automationPeer = CreatePeerForElement(this.OwningRibbon.QuickAccessToolBar);
 
