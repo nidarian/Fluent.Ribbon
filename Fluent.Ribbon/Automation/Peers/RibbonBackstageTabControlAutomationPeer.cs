@@ -30,6 +30,15 @@ public class RibbonBackstageTabControlAutomationPeer : SelectorAutomationPeer, I
     /// <inheritdoc />
     protected override ItemAutomationPeer CreateItemAutomationPeer(object item)
     {
+        // Tabs (and data items, which get a generated BackstageTabItem as container) must be selectable tab items for UI Automation.
+        // Other items that are their own container (Button, Separator, SeparatorTabItem) are not tabs,
+        // so they keep the generic peer that forwards to the container's own peer.
+        if (item is BackstageTabItem
+            || this.OwningBackstageTabControl.IsItemItsOwnContainer(item) == false)
+        {
+            return new RibbonBackstageTabItemDataAutomationPeer(item, this);
+        }
+
         return new RibbonControlDataAutomationPeer(item, this);
     }
 
