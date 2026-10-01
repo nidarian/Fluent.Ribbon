@@ -54,13 +54,19 @@ public class KeyTip : Label
     /// <summary>
     /// Using a DependencyProperty as the backing store for AutoPlacement.
     /// This enables animation, styling, binding, etc...
+    /// Defines whether the key tip is placed automatically (<c>true</c>, the default)
+    /// or by <see cref="HorizontalAlignmentProperty"/> and <see cref="VerticalAlignmentProperty"/> (<c>false</c>;
+    /// inside the <see cref="QuickAccessToolBar"/> only the horizontal alignment is used).
+    /// <see cref="MarginProperty"/> is applied in both cases.
     /// </summary>
     public static readonly DependencyProperty AutoPlacementProperty =
         DependencyProperty.RegisterAttached("AutoPlacement", typeof(bool), typeof(KeyTip), new PropertyMetadata(BooleanBoxes.TrueBox));
 
     /// <summary>
-    /// Sets whether key tip placement is auto
-    /// or defined by alignment and margin properties
+    /// Sets whether the key tip is placed automatically (<c>true</c>)
+    /// or by <see cref="GetHorizontalAlignment"/> and <see cref="GetVerticalAlignment"/> (<c>false</c>).
+    /// Inside the <see cref="QuickAccessToolBar"/> only the horizontal alignment is used.
+    /// <see cref="GetMargin"/> is applied in both cases.
     /// </summary>
     /// <param name="element">The given element</param>
     /// <param name="value">Value</param>
@@ -70,14 +76,16 @@ public class KeyTip : Label
     }
 
     /// <summary>
-    /// Gets whether key tip placement is auto
-    /// or defined by alignment and margin properties
+    /// Gets whether the key tip is placed automatically (<c>true</c>)
+    /// or by <see cref="GetHorizontalAlignment"/> and <see cref="GetVerticalAlignment"/> (<c>false</c>).
+    /// Inside the <see cref="QuickAccessToolBar"/> only the horizontal alignment is used.
+    /// <see cref="GetMargin"/> is applied in both cases.
     /// </summary>
     /// <param name="element">The given element</param>
     [System.ComponentModel.DisplayName("AutoPlacement")]
     [AttachedPropertyBrowsableForChildren(IncludeDescendants = true)]
     [System.ComponentModel.Category("KeyTips")]
-    [System.ComponentModel.Description("Whether key tip placement is auto or defined by alignment and margin properties")]
+    [System.ComponentModel.Description("Whether the key tip is placed automatically (true) or by the KeyTip.HorizontalAlignment and KeyTip.VerticalAlignment properties (false; only horizontal alignment inside the Quick Access Toolbar). KeyTip.Margin is applied in both cases.")]
     public static bool GetAutoPlacement(DependencyObject element)
     {
         return (bool)element.GetValue(AutoPlacementProperty);
