@@ -27,18 +27,28 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     /// <inheritdoc />
     protected override string GetNameCore()
     {
-        var nameCore = base.GetNameCore();
+        var wrapper = this.GetWrapper() as RibbonTabItem;
 
-        if (string.IsNullOrEmpty(nameCore) == false)
+        if (wrapper is not null)
         {
-            var wrapper = this.GetWrapper() as RibbonTabItem;
-            if (wrapper?.Header is string headerString)
+            // An explicit AutomationProperties.Name is the app author's deliberate choice
+            // (e.g. "Home tab" or a localized name), so it must win over the visible Header text.
+            var automationName = AutomationProperties.GetName(wrapper);
+            if (string.IsNullOrEmpty(automationName) == false)
+            {
+                return automationName;
+            }
+
+            // Otherwise a string Header is the best name: base can fall back to item.ToString(),
+            // which for a RibbonTabItem is not meaningful to a user.
+            if (wrapper.Header is string headerString
+                && string.IsNullOrEmpty(headerString) == false)
             {
                 return headerString;
             }
         }
 
-        return nameCore;
+        return base.GetNameCore();
     }
 
     /// <inheritdoc />
