@@ -96,6 +96,24 @@ public class RibbonInRibbonGalleryAutomationPeerTests
         Assert.That(expandCollapsePattern.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Collapsed));
     }
 
+    // Regression test: GetPattern(Scroll) used to return the peer itself while the drop down was closed,
+    // although the peer does not implement IScrollProvider. UIA clients cast the returned object to the
+    // provider interface, so returning an object that is not one breaks them (InvalidCastException in the client).
+    [Test]
+    public void GetPatternScrollShouldReturnNullOrScrollProvider()
+    {
+        var control = new InRibbonGallery();
+
+        var peer = UIElementAutomationPeer.CreatePeerForElement(control);
+
+        Assert.That(peer, Is.InstanceOf<RibbonInRibbonGalleryAutomationPeer>(), "Precondition: InRibbonGallery must create a RibbonInRibbonGalleryAutomationPeer.");
+        Assert.That(control.IsDropDownOpen, Is.False, "Precondition: the drop down must be closed, because the faulty code path only applied then.");
+
+        var scrollPattern = peer.GetPattern(PatternInterface.Scroll);
+
+        Assert.That(scrollPattern, Is.Null.Or.InstanceOf<IScrollProvider>(), "GetPattern(Scroll) must return null or an IScrollProvider.");
+    }
+
     //ISelectionItemProvider
     [Test]
     public void SelectionShouldWorkCorrectly()
