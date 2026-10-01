@@ -24,6 +24,18 @@ public class CollectionSyncHelper<TItem>
     }
 
     /// <summary>
+    /// Stops synchronizing <see cref="Target"/> with <see cref="Source"/>.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="Source"/> usually lives longer than <see cref="Target"/> (for example when a control is re-templated),
+    /// so without this the old helper would keep forwarding changes to a target that's no longer used.
+    /// </remarks>
+    internal void Detach()
+    {
+        this.Source.CollectionChanged -= this.SourceOnCollectionChanged;
+    }
+
+    /// <summary>
     /// The source collection.
     /// </summary>
     public ObservableCollection<TItem> Source { get; }
