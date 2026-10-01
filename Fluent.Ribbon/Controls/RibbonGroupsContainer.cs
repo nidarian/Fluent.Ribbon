@@ -70,6 +70,10 @@ public class RibbonGroupsContainer : Panel, IScrollInfo
         var newReduceOrderIndex = ribbonPanel.reduceOrder.Length - 1;
         ribbonPanel.reduceOrderIndex = newReduceOrderIndex;
 
+        // The cache only describes the old order. Without resetting it, MeasureOverride sees the same
+        // available and desired size, returns early and never applies the new order.
+        ribbonPanel.measureCache = MeasureCache.Empty;
+
         ribbonPanel.InvalidateMeasureAndArrange();
     }
 
