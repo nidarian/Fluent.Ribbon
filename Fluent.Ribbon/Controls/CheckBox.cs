@@ -214,6 +214,9 @@ public class CheckBox : System.Windows.Controls.CheckBox, IRibbonControl, IQuick
         button.Click += (sender, e) => this.RaiseEvent(e);
         RibbonControl.BindQuickAccessItem(this, button);
 
+        // IsChecked is synced TwoWay, so the copy must toggle through the same states (incl. indeterminate) as this control.
+        RibbonControl.Bind(this, button, nameof(this.IsThreeState), IsThreeStateProperty, BindingMode.OneWay);
+
         return button;
     }
 
