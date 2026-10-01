@@ -131,7 +131,9 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
             || parameter is int
             || parameter is string)
         {
-            var size = System.Convert.ToDouble(parameter);
+            // Converter parameters are usually string literals from XAML, which are always written in invariant format.
+            // Using the current culture would turn "16.5" into 165 in cultures that use '.' as group separator (e.g. de-DE).
+            var size = System.Convert.ToDouble(parameter, CultureInfo.InvariantCulture);
             desiredSize = new Size(size, size);
         }
         else if (parameter is Size size)
