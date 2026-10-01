@@ -115,8 +115,6 @@ public class KeyTipService
             return;
         }
 
-        this.attached = true;
-
         // KeyTip service must not work in design mode
         if (DesignerProperties.GetIsInDesignMode(this.ribbon))
         {
@@ -128,6 +126,11 @@ public class KeyTipService
         {
             return;
         }
+
+        // Only mark as attached once we actually hooked a window.
+        // Setting this earlier (e.g. when IsKeyTipHandlingEnabled is toggled before the ribbon is in a window)
+        // made every later Attach (like the one from Ribbon.OnLoaded) return early, leaving key tips permanently off.
+        this.attached = true;
 
         this.window.PreviewKeyDown += this.OnWindowPreviewKeyDown;
         this.window.KeyUp += this.OnWindowKeyUp;
