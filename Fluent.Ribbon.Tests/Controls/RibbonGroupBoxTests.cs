@@ -154,6 +154,24 @@ public class RibbonGroupBoxTests
         }
     }
 
+    /// <summary>
+    /// A state definition with more than four parts (here because of a duplicate) must still be read part by part.
+    /// The last part must not swallow the rest of the text, because "Small,Collapsed" would be parsed as one combined enum value.
+    /// </summary>
+    [Test]
+    public void StateDefinition_with_more_than_four_parts_keeps_all_states()
+    {
+        var stateDefinition = RibbonGroupBoxStateDefinition.FromString("Large,Large,Middle,Small,Collapsed");
+
+        Assert.That(stateDefinition.States, Is.EqualTo(new[]
+        {
+            RibbonGroupBoxState.Large,
+            RibbonGroupBoxState.Middle,
+            RibbonGroupBoxState.Small,
+            RibbonGroupBoxState.Collapsed
+        }));
+    }
+
     private static DataTemplate CreateDataTemplateForItemViewModel()
     {
         var dataTemplate = new DataTemplate(typeof(ItemViewModel));
