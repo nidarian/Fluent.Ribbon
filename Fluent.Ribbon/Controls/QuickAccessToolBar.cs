@@ -77,6 +77,10 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
     private double cachedMenuDownButtonWidth;
     private double cachedOverflowDownButtonWidth;
 
+    // Items whose SizeChanged we subscribed to.
+    // Needed because a Reset (Items.Clear()) doesn't tell which items were removed.
+    private readonly List<FrameworkElement> sizeChangedSubscribedItems = new();
+
     #endregion
 
     #region Properties
@@ -117,6 +121,7 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
             foreach (var item in e.OldItems.OfType<FrameworkElement>())
             {
                 item.SizeChanged -= this.OnChildSizeChanged;
+                this.sizeChangedSubscribedItems.Remove(item);
             }
         }
 
@@ -126,15 +131,19 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
             {
                 item.Margin = new Thickness(1, 0, 1, 0);
                 item.SizeChanged += this.OnChildSizeChanged;
+                this.sizeChangedSubscribedItems.Add(item);
             }
         }
 
         if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            foreach (var item in this.Items.OfType<FrameworkElement>())
+            // Items is already empty here, so unsubscribe from the items we remembered instead.
+            foreach (var item in this.sizeChangedSubscribedItems)
             {
                 item.SizeChanged -= this.OnChildSizeChanged;
             }
+
+            this.sizeChangedSubscribedItems.Clear();
         }
 
         // Raise items changed event
