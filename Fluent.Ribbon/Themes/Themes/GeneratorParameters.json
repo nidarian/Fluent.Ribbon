@@ -19,7 +19,7 @@
     "Fluent.Ribbon.Brushes.Backstage.BackButton.Foreground": "{StaticResource Fluent.Ribbon.Colors.Black}",
     "Fluent.Ribbon.Brushes.BackstageTabItem.Header.Foreground": "{StaticResource Fluent.Ribbon.Colors.Black}",
     "Fluent.Ribbon.Brushes.BackstageTabItem.MouseOver.Background": "{StaticResource Fluent.Ribbon.Colors.AccentBase}",
-    "Fluent.Ribbon.Brushes.BackstageTabItem.Selected.Background": "{StaticResource Fluent.Ribbon.Colors.AccentBase}",
+    "Fluent.Ribbon.Brushes.BackstageTabItem.Selected.Background": "{StaticResource Fluent.Ribbon.Colors.AccentDark3}",
     "Fluent.Ribbon.Brushes.LabelText": "{StaticResource Fluent.Ribbon.Colors.Black}",
     "Fluent.Ribbon.Brushes.RibbonTabControl.Content.Foreground": "{StaticResource Fluent.Ribbon.Colors.Black}",
     "Fluent.Ribbon.Brushes.RibbonTabControl.Content.Border": "Transparent",
@@ -647,7 +647,7 @@
         "AccentDark1.Foreground": "#FF000000",
         "AccentDark2": "#FFCAB004",
         "AccentDark2.Foreground": "#FF000000",
-        "AccentDark3": "#FFB19802",
+        "AccentDark3": "#FF9F8902",
         "AccentDark3.Foreground": "#FF000000"
       }
     }
