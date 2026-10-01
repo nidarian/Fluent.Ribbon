@@ -153,10 +153,16 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Button.MouseOver.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray2}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Button.Pressed.Background" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight3}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Button.Pressed.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray3}" options:Freeze="True" />
+    <!-- Text on the accent colored hover and pressed fills uses the palette's own contrast color for that fill.
+         Plain black or white text fell to 2.16:1 (Dark.Yellow hover) and 4.03:1 (Light.Crimson hover); these reach at least 4.65:1 in every accent. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Button.MouseOver.Foreground" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight2.Foreground}" options:Freeze="True" />
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Button.Pressed.Foreground" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight3.Foreground}" options:Freeze="True" />
 
     <!-- ToggleButton -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ToggleButton.Checked.Background" Color="{StaticResource Fluent.Ribbon.Colors.Accent20}" options:Freeze="True" />
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ToggleButton.Checked.Border" Color="{StaticResource Fluent.Ribbon.Colors.Highlight}" options:Freeze="True" />
+    <!-- AccentDark3 instead of Highlight: Highlight was as low as 1.20:1 on the Dark ribbon background (Dark.Crimson).
+         AccentDark3 is the light end of the palette in Dark and the dark end in Light, so it reaches at least 3.2:1 on the ribbon background in every theme. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ToggleButton.Checked.Border" Color="{StaticResource Fluent.Ribbon.Colors.AccentDark3}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ToggleButton.CheckedMouseOver.Background" Color="{StaticResource Fluent.Ribbon.Colors.Accent40}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ToggleButton.CheckedMouseOver.Border" Color="{StaticResource Fluent.Ribbon.Colors.Accent60}" options:Freeze="True" />
 
@@ -166,6 +172,8 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.CheckBox.MouseOver.Background" Color="Transparent" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.CheckBox.MouseOver.Stroke" Color="{StaticResource Fluent.Ribbon.Colors.Gray1}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.CheckBox.Pressed.Stroke" Color="{StaticResource Fluent.Ribbon.Colors.Black}" options:Freeze="True" />
+    <!-- The check mark is the only sign that a check box is checked. AccentBase fell to 1.25:1 (Light.Yellow), AccentDark3 reaches at least 3.2:1. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.CheckBox.CheckMark" Color="{StaticResource Fluent.Ribbon.Colors.AccentDark3}" options:Freeze="True" />
 
     <!-- ColorGallery -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ColorGallery.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
@@ -179,6 +187,12 @@
 
     <!-- Gallery -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.Background" Color="{StaticResource Fluent.Ribbon.Colors.Gray3}" options:Freeze="True" />
+    <!-- Fixed black, not Colors.Black (which is white in Dark): Gray3 (#9D9D9D) is the same in both themes.
+         Black on it is 7.74:1; the old white text (Light) was 2.71:1, and the old #FFD232 mouse over text 1.87:1.
+         On mouse over the background turns #FFD232 instead, with black text at 14.5:1. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.Foreground" Color="#FF000000" options:Freeze="True" />
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Background" Color="{StaticResource Fluent.Ribbon.Colors.ExtremeHighlight}" options:Freeze="True" />
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Foreground" Color="#FF000000" options:Freeze="True" />
 
     <!-- InRibbonGallery -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.InRibbonGallery.Content.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
@@ -190,6 +204,8 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.GalleryItem.MouseOver" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight3}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.GalleryItem.Selected" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight2}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.GalleryItem.Pressed" Color="{StaticResource Fluent.Ribbon.Colors.AccentLight1}" options:Freeze="True" />
+    <!-- Outline of a selected item. The selected fill alone fell to 1.18:1 against the drop down background (Light.Yellow); this reaches at least 3.2:1. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.GalleryItem.Selected.Border" Color="{StaticResource Fluent.Ribbon.Colors.AccentDark3}" options:Freeze="True" />
 
     <!-- Images -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Images.QuickAccessToolbarDropDown" Color="{{Fluent.Ribbon.Colors.Images.Default}}" options:Freeze="True" />
@@ -278,14 +294,16 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ScrollViewer.Button.Background" Color="{StaticResource Fluent.Ribbon.Colors.Gray8}" options:Freeze="True" />
 
     <!-- TextBox -->
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray6}" options:Freeze="True" />
+    <!-- Gray2 instead of Gray6: Gray6 (#CCCCCC) was 1.50:1 on the Light ribbon background (#F7F7F7), Gray2 (#7F7F7F) is 3.7:1 there (Dark: 3.5:1 on #2C2C2C). -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray2}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Caret" Color="{StaticResource Fluent.Ribbon.Colors.Black}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Selection" Color="{x:Static SystemColors.HighlightColor}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.MouseOver.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.MouseOver.Border" Color="{StaticResource Fluent.Ribbon.Colors.Accent40}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Focus.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Focus.Border" Color="{StaticResource Fluent.Ribbon.Colors.AccentBase}" options:Freeze="True" />
+    <!-- Focus is shown only by this border. AccentBase fell to 1.25:1 (Light.Yellow) and 1.70:1 (Dark.Crimson), AccentDark3 reaches at least 3.2:1. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Focus.Border" Color="{StaticResource Fluent.Ribbon.Colors.AccentDark3}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Disabled.Background" Color="{StaticResource Fluent.Ribbon.Colors.Gray10}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Disabled.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray8}" options:Freeze="True" />
 

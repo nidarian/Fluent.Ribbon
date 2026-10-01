@@ -131,6 +131,7 @@
                                       Margin="1"
                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
 
+                        <!-- Placeholder opacity 0.6 instead of 0.5: black at 0.5 on white is #808080 (3.95:1), at 0.6 it is #666666 (5.74:1), above the 4.5:1 needed for text. -->
                         <ContentControl x:Name="PART_Watermark"
                                         Width="{Binding ActualWidth, ElementName=PART_ContentHost}"
                                         Padding="2 0"
@@ -140,7 +141,7 @@
                                         ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
                                         Focusable="False"
                                         Visibility="Collapsed"
-                                        Opacity="0.5" />
+                                        Opacity="0.6" />
                     </Grid>
                 </Border>
             </Grid>
