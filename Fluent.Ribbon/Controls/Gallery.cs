@@ -336,10 +336,30 @@ public class Gallery : ListBox
     private static void OnSelectedFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var gallery = (Gallery)d;
+
+        // Keep the check mark in the filter menu in sync when SelectedFilter is set from code or a binding,
+        // not only when it's changed by clicking a menu item (same as InRibbonGallery).
+        if (e.OldValue is GalleryGroupFilter oldFilter)
+        {
+            var menuItem = gallery.GetFilterMenuItem(oldFilter);
+
+            if (menuItem is not null)
+            {
+                menuItem.IsChecked = false;
+            }
+        }
+
         if (e.NewValue is GalleryGroupFilter filter)
         {
             gallery.SelectedFilterTitle = filter.Title;
             gallery.SelectedFilterGroups = filter.Groups;
+
+            var menuItem = gallery.GetFilterMenuItem(filter);
+
+            if (menuItem is not null)
+            {
+                menuItem.IsChecked = true;
+            }
         }
         else
         {
