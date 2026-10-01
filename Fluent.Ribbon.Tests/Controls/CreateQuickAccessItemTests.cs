@@ -113,6 +113,45 @@ public class CreateQuickAccessItemTests
         Assert.That(source.IsChecked, Is.True);
     }
 
+    [TestCase(null, null)]
+    [TestCase("GroupA", "GroupB")]
+    public void RadioButton_Quick_Access_Items_From_Different_Groups_Do_Not_Uncheck_Each_Other(string groupNameA, string groupNameB)
+    {
+        // Without a GroupName, WPF groups radio buttons by their logical parent.
+        // So the sources live in different panels (= different groups), but all quick access items share one panel (like the toolbar).
+        var sourceA = new RadioButton { GroupName = groupNameA };
+        var sourceB = new RadioButton { GroupName = groupNameB, IsChecked = true };
+
+        var panelA = new System.Windows.Controls.StackPanel();
+        panelA.Children.Add(sourceA);
+
+        var panelB = new System.Windows.Controls.StackPanel();
+        panelB.Children.Add(sourceB);
+
+        var itemA = (RadioButton)sourceA.CreateQuickAccessItem();
+        var itemB = (RadioButton)sourceB.CreateQuickAccessItem();
+
+        var quickAccessPanel = new System.Windows.Controls.StackPanel();
+        quickAccessPanel.Children.Add(itemA);
+        quickAccessPanel.Children.Add(itemB);
+
+        using (CreateWindow(panelA, panelB, quickAccessPanel))
+        {
+            Assert.That(sourceB.IsChecked, Is.True, "Precondition: source B is checked.");
+            Assert.That(itemB.IsChecked, Is.True, "Precondition: item B mirrors source B.");
+
+            itemA.IsChecked = true;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(sourceA.IsChecked, Is.True);
+                Assert.That(itemA.IsChecked, Is.True);
+                Assert.That(sourceB.IsChecked, Is.True);
+                Assert.That(itemB.IsChecked, Is.True);
+            }
+        }
+    }
+
     #endregion
 
     #region TextBox
