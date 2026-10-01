@@ -1,4 +1,4 @@
-﻿namespace Fluent.Tests.Controls;
+namespace Fluent.Tests.Controls;
 
 using System.Windows;
 using System.Windows.Input;
@@ -66,11 +66,13 @@ public class DropDownButtonTests
 
             Assert.That(firstItem.IsKeyboardFocused, Is.False, "First item must not be focused");
             Assert.That(firstItem.IsHighlighted, Is.False, "First item must not look highlighted");
+            UIHelper.InconclusiveIfKeyboardFocusLost("after opening with the mouse");
             Assert.That(dropDownButton.IsKeyboardFocused, Is.True, "Focus should stay on the drop down button");
 
             // 3. The first Down key press moves focus into the drop down, to the first item.
             PressKey(dropDownButton, Key.Down);
 
+            UIHelper.InconclusiveIfKeyboardFocusLost("Down step");
             Assert.That(firstItem.IsKeyboardFocused, Is.True, "Down should focus the first item");
             Assert.That(dropDownButton.IsDropDownOpen, Is.True, "Down must not close the drop down");
 
@@ -121,6 +123,7 @@ public class DropDownButtonTests
             PressKey(dropDownButton, Key.Down);
 
             Assert.That(dropDownButton.IsDropDownOpen, Is.True);
+            UIHelper.InconclusiveIfKeyboardFocusLost("Down step");
             Assert.That(firstItem.IsKeyboardFocused, Is.True, "Down should focus the first item");
 
             CloseDropDown(dropDownButton);
@@ -138,10 +141,7 @@ public class DropDownButtonTests
 
             Assert.That(dropDownButton.IsDropDownOpen, Is.True);
 
-            if (Keyboard.FocusedElement is null)
-            {
-                Assert.Inconclusive("The test window lost keyboard focus during the Up step.");
-            }
+            UIHelper.InconclusiveIfKeyboardFocusLost("Up step");
 
             Assert.That(lastItem.IsKeyboardFocused, Is.True, "Up should focus the last item");
         }

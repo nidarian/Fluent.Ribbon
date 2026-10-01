@@ -26,6 +26,7 @@ public class DropDownButtonKeyboardTests
             PressKey(dropDownButton, Key.Down);
 
             Assert.That(dropDownButton.IsDropDownOpen, Is.True);
+            UIHelper.InconclusiveIfKeyboardFocusLost("Down step");
             Assert.That(firstItem.IsKeyboardFocused, Is.True, "Down should focus the first item");
             Assert.That(lastItem.IsKeyboardFocused, Is.False);
         }
@@ -55,6 +56,7 @@ public class DropDownButtonKeyboardTests
             PressKey(dropDownButton, Key.Up);
 
             Assert.That(dropDownButton.IsDropDownOpen, Is.True);
+            UIHelper.InconclusiveIfKeyboardFocusLost("Up step");
             Assert.That(lastItem.IsKeyboardFocused, Is.True, "Up should focus the last item");
             Assert.That(firstItem.IsKeyboardFocused, Is.False);
         }

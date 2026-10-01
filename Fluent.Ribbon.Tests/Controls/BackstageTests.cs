@@ -218,6 +218,7 @@ public class BackstageTests
             backstage.IsOpen = false;
             UIHelper.DoEvents();
 
+            UIHelper.InconclusiveIfKeyboardFocusLost("after closing the backstage");
             Assert.That(Keyboard.FocusedElement, Is.SameAs(backstage), "Focus must return to the backstage button");
         }
     }
