@@ -250,4 +250,42 @@ public class ItemViewModel
             RibbonGroupBoxState.Collapsed
         }));
     }
+
+    /// <summary>
+    /// <see cref="RibbonGroupsContainer"/> skips measuring when available and desired size match the previous measure.
+    /// After <see cref="RibbonGroupsContainer.ReduceOrder"/> changed it must measure again, otherwise the new order is never applied.
+    /// </summary>
+    [Test]
+    public void Changing_ReduceOrder_applies_the_new_order_for_the_same_size()
+    {
+        var panel = new RibbonGroupsContainer
+        {
+            // Only scales the (non existing) scalable items, so the group size doesn't change.
+            ReduceOrder = "(MyGroup)"
+        };
+
+        var ribbonGroupBox = new RibbonGroupBox { Name = "MyGroup" };
+        ribbonGroupBox.Items.Add(new Fluent.Button { Width = 200 });
+
+        panel.Children.Add(ribbonGroupBox);
+
+        using (new TestRibbonWindow(panel))
+        {
+            // ReduceOrder only invalidates the measure of a loaded panel.
+            Assert.That(panel.IsLoaded, Is.True, "Precondition: the panel must be loaded.");
+
+            // Measure directly (no DoEvents) so only these measure passes, with exactly this size, happen.
+            var narrowSize = new Size(10, 100);
+
+            panel.Measure(narrowSize);
+
+            Assert.That(ribbonGroupBox.DesiredSize.Width, Is.GreaterThan(narrowSize.Width), "Precondition: the group must not fit.");
+            Assert.That(ribbonGroupBox.State, Is.EqualTo(RibbonGroupBoxState.Large), "Precondition: the old order must not change the group state.");
+
+            panel.ReduceOrder = "MyGroup";
+            panel.Measure(narrowSize);
+
+            Assert.That(ribbonGroupBox.State, Is.EqualTo(RibbonGroupBoxState.Middle), "The new order must reduce the group.");
+        }
+    }
 }
