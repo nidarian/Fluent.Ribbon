@@ -36,7 +36,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     private ResizeableContentControl? popupContentControl;
 
-    private readonly Stack<WeakReference> openMenuItems = new();
+    // Submenus opened inside this drop down, oldest first.
+    // WeakReference so a menu item removed from the drop down while its submenu is open can still be collected.
+    private readonly List<WeakReference> openMenuItems = new();
 
     // Incremented every time IsDropDownOpen changes.
     // A delayed close (see OnDropDownPopupMouseDown) remembers the value it saw when it was scheduled
@@ -900,21 +902,21 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     /// </summary>
     protected virtual void OnDropDownClosed()
     {
-        foreach (var openMenuItem in this.openMenuItems.ToArray())
-        {
-            if (openMenuItem.IsAlive == false)
-            {
-                continue;
-            }
+        // Take a copy and clear the list first: closing a submenu raises SubmenuClosed, which ends up in
+        // OnSubmenuClosed and would otherwise change the list while we are still walking over it.
+        // Clearing here also makes sure we never keep references to items of a closed drop down.
+        var openMenuItemsToClose = this.openMenuItems.ToArray();
+        this.openMenuItems.Clear();
 
-            var menuItem = (System.Windows.Controls.MenuItem?)openMenuItem.Target;
+        // Newest first, so nested submenus are closed before the submenus that contain them.
+        for (var i = openMenuItemsToClose.Length - 1; i >= 0; i--)
+        {
+            var menuItem = openMenuItemsToClose[i].Target as System.Windows.Controls.MenuItem;
             if (menuItem?.IsSubmenuOpen == true)
             {
                 menuItem.IsSubmenuOpen = false;
             }
         }
-
-        this.openMenuItems.Clear();
 
         this.DropDownClosed?.Invoke(this, EventArgs.Empty);
     }
@@ -1026,19 +1028,26 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     private void OnSubmenuOpened(object sender, RoutedEventArgs e)
     {
-        var menuItem = e.OriginalSource as MenuItem;
-        if (menuItem is not null)
+        // Track every kind of menu item, not just Fluent ones. Plain WPF menu items inside a drop down
+        // have the same problem (their submenu stays open when the drop down closes), and tracking only
+        // some items is what made opens and closes go out of sync before.
+        if (e.OriginalSource is System.Windows.Controls.MenuItem menuItem)
         {
-            this.openMenuItems.Push(new WeakReference(menuItem));
+            this.openMenuItems.Add(new WeakReference(menuItem));
         }
     }
 
     private void OnSubmenuClosed(object sender, RoutedEventArgs e)
     {
-        if (this.openMenuItems.Count > 0)
+        if (e.OriginalSource is not System.Windows.Controls.MenuItem menuItem)
         {
-            this.openMenuItems.Pop();
+            return;
         }
+
+        // Remove exactly the item that closed. Submenus don't always close in the reverse order they were
+        // opened in, so blindly removing the newest entry could drop a submenu that is still open, which
+        // would then not be closed in OnDropDownClosed. Entries whose item was garbage collected go too.
+        this.openMenuItems.RemoveAll(x => x.Target is null || ReferenceEquals(x.Target, menuItem));
     }
 
     #endregion MenuItem workarounds
