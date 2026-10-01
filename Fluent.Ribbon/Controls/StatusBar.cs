@@ -156,7 +156,9 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
                 for (var i = 0; i < e.NewItems?.Count; i++)
                 {
                     var menuItem = this.contextMenu.Items[e.OldStartingIndex + 1];
-                    this.contextMenu.Items.Remove(e.OldStartingIndex + 1);
+                    // Must be RemoveAt: Remove(object) would look for the boxed index as an item, remove nothing
+                    // and the following Insert would then duplicate the menu item.
+                    this.contextMenu.Items.RemoveAt(e.OldStartingIndex + 1);
                     this.contextMenu.Items.Insert(e.NewStartingIndex + i + 1, menuItem);
                 }
 
