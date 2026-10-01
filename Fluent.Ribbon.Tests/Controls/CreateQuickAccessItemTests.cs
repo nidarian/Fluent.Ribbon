@@ -1,6 +1,7 @@
 namespace Fluent.Tests.Controls;
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
@@ -175,6 +176,29 @@ public class CreateQuickAccessItemTests
 
         textBox.Text = "FromQuickAccessItem";
         Assert.That(source.Text, Is.EqualTo("FromQuickAccessItem"));
+    }
+
+    [Test]
+    public void TextBox_Updates_Source_Binding_Of_Original_When_Quick_Access_Item_Loses_Focus()
+    {
+        var viewModel = new NameViewModel { Name = "Initial" };
+
+        // Default binding for Text: TwoWay with UpdateSourceTrigger.LostFocus.
+        // The original never gets/loses focus while the user types into the quick access item.
+        var source = new TextBox();
+        source.SetBinding(System.Windows.Controls.TextBox.TextProperty, new System.Windows.Data.Binding(nameof(NameViewModel.Name)) { Source = viewModel });
+
+        Assert.That(source.Text, Is.EqualTo("Initial"), "Precondition: original is bound to the view model.");
+
+        var textBox = (TextBox)source.CreateQuickAccessItem();
+
+        textBox.Text = "Typed";
+
+        Assert.That(source.Text, Is.EqualTo("Typed"), "Precondition: quick access item writes into the original.");
+
+        textBox.RaiseEvent(new RoutedEventArgs(UIElement.LostFocusEvent, textBox));
+
+        Assert.That(viewModel.Name, Is.EqualTo("Typed"));
     }
 
     #endregion
@@ -896,5 +920,22 @@ public class CreateQuickAccessItemTests
         UIHelper.DoEvents();
 
         return window;
+    }
+
+    private sealed class NameViewModel : INotifyPropertyChanged
+    {
+        private string name;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Name
+        {
+            get => this.name;
+            set
+            {
+                this.name = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Name)));
+            }
+        }
     }
 }
