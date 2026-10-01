@@ -140,6 +140,8 @@
         <Setter Property="Template" Value="{DynamicResource Fluent.Ribbon.Templates.QuickAccessToolbar}" />
     </Style>
 
+    <!-- PART_MenuDownButton and PART_ToolbarDownButton only show an icon, so they get the same localized text as their ToolTip
+         as AutomationProperties.Name. Without it screen readers announce them as unnamed buttons. -->
     <ControlTemplate x:Key="Fluent.Ribbon.Templates.QuickAccessToolbar"
                      TargetType="{x:Type Fluent:QuickAccessToolBar}">
         <DockPanel x:Name="PART_RootPanel"
@@ -153,6 +155,7 @@
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Stretch"
                                        Icon="{DynamicResource Fluent.Ribbon.Images.QuickAccessToolbarDropDown}"
+                                       AutomationProperties.Name="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.QuickAccessToolBarDropDownButtonTooltip, Mode=OneWay}"
                                        CanAddToQuickAccessToolBar="False"
                                        DockPanel.Dock="Right"
                                        IsEnabled="{TemplateBinding IsEnabled}"
@@ -180,6 +183,7 @@
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Stretch"
                                    Icon="{DynamicResource Fluent.Ribbon.Images.QuickAccessToolbarExtender}"
+                                   AutomationProperties.Name="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.QuickAccessToolBarMoreControlsButtonTooltip, Mode=OneWay}"
                                    Fluent:KeyTip.Keys="00"
                                    DockPanel.Dock="Right"
                                    IsEnabled="{TemplateBinding IsEnabled}"
