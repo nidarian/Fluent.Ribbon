@@ -338,7 +338,9 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
             return;
         }
 
-        if (e.Key == Key.Enter)
+        // Like a button, both Enter and Space activate the item.
+        if (e.Key == Key.Enter
+            || e.Key == Key.Space)
         {
             this.RaiseClick();
             e.Handled = true;

@@ -1036,7 +1036,9 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
 
         switch (e.Key)
         {
+            // A collapsed group behaves like a drop down button, and buttons are activated with Space and Enter.
             case Key.Space:
+            case Key.Enter:
                 e.Handled = true;
 
                 this.IsDropDownOpen = true;
