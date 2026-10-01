@@ -154,6 +154,30 @@ public class RibbonGroupBoxTests
         }
     }
 
+    /// <summary>
+    /// Changing <see cref="RibbonGroupsContainer.ReduceOrder"/> first undoes the reductions of the old order.
+    /// Only the entries that were really applied may be undone, otherwise the group ends up larger than its default.
+    /// </summary>
+    [Test]
+    public void Changing_ReduceOrder_only_undoes_applied_reductions()
+    {
+        var panel = new RibbonGroupsContainer();
+
+        var ribbonGroupBox = new RibbonGroupBox { Name = "MyGroup" };
+        ribbonGroupBox.Items.Add(new Fluent.Button());
+
+        panel.Children.Add(ribbonGroupBox);
+
+        // Never measured, so like in a wide window nothing of this order gets applied.
+        panel.ReduceOrder = "(MyGroup)";
+
+        Assert.That(ribbonGroupBox.ScaleIntermediate, Is.EqualTo(0), "Precondition: the group must not be scaled.");
+
+        panel.ReduceOrder = "MyGroup";
+
+        Assert.That(ribbonGroupBox.ScaleIntermediate, Is.EqualTo(0), "Nothing was reduced, so changing the order must not enlarge the group.");
+    }
+
     private static DataTemplate CreateDataTemplateForItemViewModel()
     {
         var dataTemplate = new DataTemplate(typeof(ItemViewModel));
