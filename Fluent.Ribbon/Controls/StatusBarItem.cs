@@ -71,7 +71,7 @@ public class StatusBarItem : System.Windows.Controls.Primitives.StatusBarItem
     #region IsChecked
 
     /// <summary>
-    /// Gets or sets whether status bar item is checked in menu
+    /// Gets or sets whether the item is shown in the status bar (and checked in its menu). False hides the item.
     /// </summary>
     public bool IsChecked
     {

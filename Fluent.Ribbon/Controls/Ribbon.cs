@@ -478,12 +478,12 @@ public class Ribbon : Control, ILogicalChildSupport
     public event EventHandler? CustomizeQuickAccessToolbar;
 
     /// <summary>
-    /// Occurs when IsMinimized property is changing
+    /// Occurs when IsMinimized property has changed
     /// </summary>
     public event DependencyPropertyChangedEventHandler? IsMinimizedChanged;
 
     /// <summary>
-    /// Occurs when IsCollapsed property is changing
+    /// Occurs when IsCollapsed property has changed
     /// </summary>
     public event DependencyPropertyChangedEventHandler? IsCollapsedChanged;
 
@@ -838,7 +838,7 @@ public class Ribbon : Control, ILogicalChildSupport
     }
 
     /// <summary>
-    /// Gets or sets the height which is used to render the window title.
+    /// Gets or sets the height of the Quick Access Toolbar when it is shown below the ribbon.
     /// </summary>
     public double QuickAccessToolBarHeight
     {
@@ -1070,7 +1070,8 @@ public class Ribbon : Control, ILogicalChildSupport
     }
 
     /// <summary>
-    /// Gets or sets whether ribbon can be switched
+    /// Gets or sets whether the user can switch between classic and simplified mode.
+    /// Setting <see cref="IsSimplified"/> from code still works.
     /// </summary>
     public bool CanUseSimplified
     {
@@ -1124,7 +1125,8 @@ public class Ribbon : Control, ILogicalChildSupport
     // todo check if IsCollapsed and IsAutomaticCollapseEnabled should be reduced to one shared property for RibbonWindow and Ribbon
 
     /// <summary>
-    /// Gets whether ribbon is collapsed
+    /// Gets or sets whether ribbon is collapsed.
+    /// Set automatically for small windows when <see cref="IsAutomaticCollapseEnabled"/> is true.
     /// </summary>
     public bool IsCollapsed
     {
@@ -1268,7 +1270,9 @@ public class Ribbon : Control, ILogicalChildSupport
     }
 
     /// <summary>
-    /// Defines the keys that are used to activate the key tips.
+    /// Defines the keys that activate key tips.
+    /// Until this collection is changed, the defaults (Alt and F10) are used.
+    /// Any change replaces the defaults with exactly the keys in this collection, so clearing it leaves no keys.
     /// </summary>
     public ObservableCollection<Key> KeyTipKeys
     {

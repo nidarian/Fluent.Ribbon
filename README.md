@@ -57,7 +57,7 @@ You can access preview versions through the [AppVeyor nuget feed](https://ci.app
 
 ## Development requirements
 
-- .NET SDK 10.0.100 or later
+- .NET SDK 10.0.400 or a later 10.0 SDK (see `global.json`)
 - An IDE that supports the required .NET SDK
 
 ## Designer issues

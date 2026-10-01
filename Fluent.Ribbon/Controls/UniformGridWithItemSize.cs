@@ -36,7 +36,8 @@ public class UniformGridWithItemSize : Panel
                 FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
     /// <summary>
-    /// Specifies the number of maximum columns in the grid
+    /// Specifies the minimum number of columns in the grid (0 means no minimum).
+    /// Always 1 when Orientation is Vertical.
     /// </summary>
     public int MinColumns
     {
