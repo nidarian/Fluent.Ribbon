@@ -858,9 +858,14 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
                         NavigateToContainer(container, index == 0 ? FocusNavigationDirection.Down : FocusNavigationDirection.Up);
 
                         // Edge case: Whole dropdown content is disabled
+                        // No item could take focus. We used to focus DropDownPopup.Child here, but that is a
+                        // ResizeableContentControl, which is not focusable, so the call did nothing and focus
+                        // stayed wherever it was before (for example a TextBox). Keys like Escape or Tab then went
+                        // to that element instead of to the open drop down. Focusing the button itself keeps
+                        // keyboard handling (OnKeyDown) working while the drop down is open.
                         if (this.IsKeyboardFocusWithin == false)
                         {
-                            Keyboard.Focus(this.DropDownPopup.Child);
+                            this.Focus();
                         }
                     });
             }
