@@ -37,7 +37,9 @@ public readonly struct RibbonGroupBoxStateDefinition : IEquatable<RibbonGroupBox
             return;
         }
 
-        var stateDefinitionParts = stateDefinition!.Split(stateDefinitionSeparators, MaxStateDefinitionParts, StringSplitOptions.RemoveEmptyEntries);
+        // Split into all parts. With a count, the last part keeps the rest of the text (like "Small,Collapsed"),
+        // which Enum.TryParse reads as a combined value. The loop below already stops after MaxStateDefinitionParts unique states.
+        var stateDefinitionParts = stateDefinition!.Split(stateDefinitionSeparators, StringSplitOptions.RemoveEmptyEntries);
 
         if (stateDefinitionParts.Length == 0)
         {
