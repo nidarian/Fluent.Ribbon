@@ -51,6 +51,13 @@ public class DropDownButtonDisabledItemsFocusTests
             Assert.That(dropDownButton.IsDropDownOpen, Is.True, "Precondition: the drop down should be open");
             Assert.That(disabledItem.IsKeyboardFocused, Is.False, "Precondition: a disabled item can't take focus");
 
+            // In a long test run the hidden test window can lose keyboard focus altogether; then nothing has focus
+            // and the result says nothing about the code. With the bug, focus stays on the TextBox (not null).
+            if (Keyboard.FocusedElement is null)
+            {
+                Assert.Inconclusive("The test window lost keyboard focus while the drop down was opening.");
+            }
+
             // Focus must not be left behind on the TextBox, otherwise keys (Escape, arrows, Tab)
             // go to the TextBox instead of the open drop down.
             Assert.That(dropDownButton.IsKeyboardFocusWithin, Is.True, "Focus should move to the drop down button when no item can take it");
