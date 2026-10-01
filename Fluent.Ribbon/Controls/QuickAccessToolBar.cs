@@ -47,6 +47,10 @@ public class QuickAccessToolBar : Control, ILogicalChildSupport
 
     internal DropDownButton? MenuDownButton { get; private set; }
 
+    // The "More controls" (overflow) button. Exposed so the automation peer can list it,
+    // otherwise screen readers can't reach the items that didn't fit into the toolbar.
+    internal DropDownButton? ToolBarDownButton => this.toolBarDownButton;
+
     // Show above menu item
     private MenuItem? showAbove;
 

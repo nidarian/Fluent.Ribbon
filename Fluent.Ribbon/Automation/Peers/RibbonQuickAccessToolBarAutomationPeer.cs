@@ -1,6 +1,7 @@
 ﻿namespace Fluent.Automation.Peers;
 
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Automation.Peers;
 
 /// <summary>
@@ -44,6 +45,20 @@ public class RibbonQuickAccessToolBarAutomationPeer : FrameworkElementAutomation
             //}
 
             var automationPeer = CreatePeerForElement(quickAccessMenuItem);
+
+            if (automationPeer is not null)
+            {
+                children.Add(automationPeer);
+            }
+        }
+
+        // The overflow button is only shown when not all items fit. Listing it while collapsed
+        // would expose an invisible element, so it's only added when the template shows it.
+        var overflowButton = this.OwningQuickAccessToolBar.ToolBarDownButton;
+        if (overflowButton is not null
+            && overflowButton.Visibility == Visibility.Visible)
+        {
+            var automationPeer = CreatePeerForElement(overflowButton);
 
             if (automationPeer is not null)
             {
