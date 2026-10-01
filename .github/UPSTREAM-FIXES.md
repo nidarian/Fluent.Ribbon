@@ -556,7 +556,8 @@ Ask whether it's still needed.
    `upstream-pr/keytip-detach-terminates`, `upstream-pr/splitbutton-enter-disabled-button`,
    `upstream-pr/backstage-unload-while-open`, `upstream-pr/groupbox-close-dropdown-on-expand`,
    `upstream-pr/ribbon-collapse-on-load`, the five accessibility branches above,
-   and `upstream-pr/reduceorder-xml-doc`.
+   `upstream-pr/reduceorder-xml-doc`, and `upstream-pr/xml-doc-corrections`
+   (41 doc comment fixes and the README SDK line; see `architecture/DOCUMENTATION.md`).
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.

@@ -15,7 +15,7 @@ original project README is still here: [README.md](../README.md).
 | `develop` (default) | The original project's `develop`, plus this fork's workflows and notes (`.github/`). **No code fixes.** | Yes, the weekly sync merges upstream in |
 | `master` | Exact copy of the original's `master` | Yes, the weekly sync |
 | `integration/all-fixes` | **All fixes together.** The NuGet package for my own app is built from this. | No, see "Keeping the fixes current" |
-| `fix/...`, `feature/...` | One fix each, with tests | No |
+| `fix/...`, `feature/...`, `docs/...` | One fix each, with tests (`docs/` = doc comment fixes, no code) | No |
 | `upstream-pr/...` | The same fixes, cleaned up for sending to the original project | No |
 | `archive` | Copies of the original's issues, pull requests and wiki | Yes, monthly |
 | `fix/issue-357-keytip-placement` | My own fix from Feb 2026 (its fork PR #1 was closed on 2026-09-30 without merging: the fix is in `integration/all-fixes` and `upstream-pr/357-keytip-placement`) | No |
@@ -69,3 +69,4 @@ Build (Windows) on it. Or ask Claude to do it.
 | `architecture/` | Before changing the library: state diagrams of the 7 main parts, each claim tied to a code line. Run `python3 .github/scripts/check-citations.py` to check they still match the code. |
 | `architecture/FINDINGS.md` | What the diagrams turned up: bugs fixed, rejected, and still unverified |
 | `architecture/ACCESSIBILITY.md` | Screen reader, keyboard and contrast review: what's fixed, what's left, contrast ratios, High Contrast status |
+| `architecture/DOCUMENTATION.md` | Doc comment audit: 41 corrected tooltips (blind-checked), the README SDK line, the outdated 2012 Walkthrough, what's left |
