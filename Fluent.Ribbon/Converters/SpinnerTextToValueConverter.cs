@@ -37,17 +37,29 @@ public class SpinnerTextToValueConverter : IValueConverter
     /// <returns>The <see cref="double"/> value converted from <paramref name="text"/> or <paramref name="previousValue"/> if the conversion fails.</returns>
     public virtual double TextToDouble(string text, string format, double previousValue, CultureInfo culture)
     {
+        // Some cultures (e.g. sv-SE, nb-NO, fi-FI with ICU data) use U+2212 MINUS SIGN as negative sign.
+        // A plain '-' check would drop that sign and turn "−5,0" into 5.
+        var negativeSign = NumberFormatInfo.GetInstance(culture).NegativeSign;
+
         // Remove all except digits, signs and commas
         var stringBuilder = new StringBuilder();
+        var isNegative = false;
 
         foreach (var symbol in text)
         {
             if (char.IsDigit(symbol)
                 || symbol == ','
-                || symbol == '.'
-                || (symbol == '-' && stringBuilder.Length == 0))
+                || symbol == '.')
             {
                 stringBuilder.Append(symbol);
+            }
+            else if (stringBuilder.Length == 0
+                     && isNegative == false
+                     && IsNegativeSign(symbol, negativeSign))
+            {
+                // The sign is remembered instead of appended, because double.TryParse on .NET Framework
+                // does not accept ASCII '-' for a culture whose NegativeSign is U+2212 (and vice versa).
+                isNegative = true;
             }
         }
 
@@ -55,10 +67,12 @@ public class SpinnerTextToValueConverter : IValueConverter
 
         if (double.TryParse(text, NumberStyles.Any, culture, out var doubleValue) == false)
         {
-            doubleValue = previousValue;
+            return previousValue;
         }
 
-        return doubleValue;
+        return isNegative
+            ? -doubleValue
+            : doubleValue;
     }
 
     /// <summary>
@@ -68,5 +82,12 @@ public class SpinnerTextToValueConverter : IValueConverter
     public virtual string DoubleToText(double value, string format, CultureInfo culture)
     {
         return value.ToString(format, culture);
+    }
+
+    private static bool IsNegativeSign(char symbol, string negativeSign)
+    {
+        return symbol == '-'
+               || symbol == '\u2212' // MINUS SIGN
+               || (negativeSign.Length == 1 && symbol == negativeSign[0]);
     }
 }
