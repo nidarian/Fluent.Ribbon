@@ -117,6 +117,8 @@
            TargetType="{x:Type Fluent:ColorGallery}">
         <Setter Property="ChipHeight" Value="13" />
         <Setter Property="ChipWidth" Value="13" />
+        <!-- The gallery is only a wrapper; its menu items and color items are the tab stops. Focused, it showed nothing and did nothing. -->
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:ColorGallery}">

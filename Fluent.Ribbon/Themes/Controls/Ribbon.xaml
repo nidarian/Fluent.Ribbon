@@ -30,10 +30,13 @@
                                          IsToolBarVisible="{TemplateBinding IsToolBarVisible}"
                                          Menu="{TemplateBinding Menu}" />
 
+                <!-- Only hosts the quick access toolbar below the ribbon; as a focusable ContentControl it was an empty tab stop. -->
                 <ContentControl x:Name="quickAccessToolBarHolder"
                                 Grid.Row="1"
                                 Height="{TemplateBinding QuickAccessToolBarHeight}"
-                                HorizontalAlignment="Left">
+                                HorizontalAlignment="Left"
+                                Focusable="False"
+                                IsTabStop="False">
                     <Fluent:QuickAccessToolBar x:Name="PART_QuickAccessToolBar"
                                                HorizontalAlignment="Left"
                                                Focusable="False"
