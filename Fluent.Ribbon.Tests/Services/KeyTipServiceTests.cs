@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
@@ -52,5 +53,24 @@ public class KeyTipServiceTests
             });
 
         Assert.That(keytipService.AreAnyKeyTipsVisible, Is.False);
+    }
+
+    [Test(Description = "Enabling key tip handling before the ribbon is inside a window must not prevent the service from attaching to the window later")]
+    public void TestAttachAfterIsKeyTipHandlingEnabledToggledBeforeWindow()
+    {
+        var ribbon = new Ribbon();
+
+        // Toggling false -> true calls KeyTipService.Detach and then KeyTipService.Attach while Window.GetWindow(ribbon) is still null.
+        ribbon.IsKeyTipHandlingEnabled = false;
+        ribbon.IsKeyTipHandlingEnabled = true;
+
+        using var testWindow = new TestRibbonWindow(ribbon);
+
+        Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon must be loaded, so Ribbon.OnLoaded has called KeyTipService.Attach again.");
+
+        var keyTipService = ribbon.GetFieldValue<KeyTipService>("keyTipService");
+
+        // Without a window the service never sees Alt/F10, i.e. key tips would be permanently off.
+        Assert.That(keyTipService.GetFieldValue<Window>("window"), Is.SameAs(testWindow), "KeyTipService should be attached to the window hosting the ribbon.");
     }
 }
