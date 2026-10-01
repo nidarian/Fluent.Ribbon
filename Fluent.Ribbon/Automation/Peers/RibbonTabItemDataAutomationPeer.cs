@@ -4,6 +4,7 @@ using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using Fluent.Extensions;
+using Fluent.Internal.KnownBoxes;
 
 /// <summary>
 /// Automation peer for <see cref="RibbonTabItem"/>.
@@ -73,7 +74,7 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
             if (tabControl is not null &&
                 tabControl.IsMinimized)
             {
-                tabControl.IsDropDownOpen = false;
+                tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             }
         }
     }
@@ -93,7 +94,7 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
                 tabControl.IsMinimized)
             {
                 wrapperTab.IsSelected = true;
-                tabControl.IsDropDownOpen = true;
+                tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
             }
         }
     }

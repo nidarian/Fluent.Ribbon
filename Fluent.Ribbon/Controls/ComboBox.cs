@@ -749,7 +749,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
             && ((e.Key == Key.Down) || (e.Key == Key.Up))
             && !this.IsDropDownOpen)
         {
-            this.IsDropDownOpen = true;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
             e.Handled = true;
             return;
         }
@@ -817,7 +817,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
 
         if (this.IsEditable == false)
         {
-            this.IsDropDownOpen = true;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
 
             return new KeyTipPressedResult(true, true);
         }
@@ -839,7 +839,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
     {
         if (this.IsDropDownOpen)
         {
-            this.IsDropDownOpen = false;
+            this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             e.Handled = true;
         }
     }
