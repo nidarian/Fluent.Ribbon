@@ -522,6 +522,11 @@ public class KeyTipService
         if (this.activeAdornerChain is not null)
         {
             this.activeAdornerChain.Terminated -= this.OnAdornerChainTerminated;
+
+            // Terminate the previous chain instead of just forgetting it, otherwise a level which is still attached
+            // or waiting for Loaded would show its key tips later, next to the new chain.
+            // We unsubscribed first, so OnAdornerChainTerminated does not clear the new chain or restore focus.
+            this.activeAdornerChain.Terminate(KeyTipPressedResult.Empty);
         }
 
         // to mimik the Office behavior we always attach the adorner to the ribbon
