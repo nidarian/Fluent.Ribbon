@@ -340,15 +340,18 @@ public class RibbonTitleBar : HeaderedItemsControl
                 this.quickAccessToolbarHolder.Measure(this.quickAccessToolbarRect.Size);
             }
 
-            if (this.quickAccessToolbarHolder is not null
-                && this.headerHolder is not null
-                && constraint.Width > this.quickAccessToolbarHolder.DesiredSize.Width + 50)
+            // Custom templates may omit the quick access toolbar holder (see isAtLeastOneRequiredControlPresent).
+            // Treat it as zero sized so the header still gets its normal position instead of the 50px fallback.
+            var quickAccessToolbarHolderSize = this.quickAccessToolbarHolder?.DesiredSize ?? default;
+
+            if (this.headerHolder is not null
+                && constraint.Width > quickAccessToolbarHolderSize.Width + 50)
             {
-                this.quickAccessToolbarRect = new Rect(0, 0, this.quickAccessToolbarHolder.DesiredSize.Width, this.quickAccessToolbarHolder.DesiredSize.Height);
+                this.quickAccessToolbarRect = new Rect(0, 0, quickAccessToolbarHolderSize.Width, quickAccessToolbarHolderSize.Height);
                 this.headerHolder.Measure(SizeConstants.Infinite);
 
-                var left = this.quickAccessToolbarHolder.DesiredSize.Width;
-                var allTextWidth = constraint.Width - this.quickAccessToolbarHolder.DesiredSize.Width;
+                var left = quickAccessToolbarHolderSize.Width;
+                var allTextWidth = constraint.Width - quickAccessToolbarHolderSize.Width;
                 var headerHolderWidth = this.headerHolder.DesiredSize.Width;
 
                 this.headerRect = this.GetHeaderRect(constraint, left, allTextWidth, headerHolderWidth);
@@ -414,53 +417,57 @@ public class RibbonTitleBar : HeaderedItemsControl
             // Set header
             this.headerHolder?.Measure(SizeConstants.Infinite);
 
+            // Missing template parts count as zero width. Every alignment must assign headerRect here,
+            // otherwise the previous value is kept and the "+= 2" below makes it grow with every layout pass.
+            var headerHolderWidth = this.headerHolder?.DesiredSize.Width ?? default;
+
             switch (this.HeaderAlignment)
             {
-                case HorizontalAlignment.Left when this.headerHolder is not null:
+                case HorizontalAlignment.Left:
                 {
                     if (startX - quickAccessToolbarWidth > 150)
                     {
                         var allTextWidth = startX - quickAccessToolbarWidth;
-                        this.headerRect = new Rect(this.quickAccessToolbarRect.Width, 0, Math.Min(allTextWidth, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(this.quickAccessToolbarRect.Width, 0, Math.Min(allTextWidth, headerHolderWidth), constraint.Height);
                     }
                     else
                     {
                         var allTextWidth = Math.Max(0, constraint.Width - endX);
-                        this.headerRect = new Rect(Math.Min(endX, constraint.Width), 0, Math.Min(allTextWidth, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(Math.Min(endX, constraint.Width), 0, Math.Min(allTextWidth, headerHolderWidth), constraint.Height);
                     }
                 }
 
                     break;
 
-                case HorizontalAlignment.Center when this.headerHolder is not null && this.quickAccessToolbarHolder is not null:
+                case HorizontalAlignment.Center:
                 {
                     var allTextWidthRight = Math.Max(0, constraint.Width - endX);
                     var allTextWidthLeft = Math.Max(0, startX - quickAccessToolbarWidth);
-                    var fitsRightButNotLeft = allTextWidthRight >= this.headerHolder.DesiredSize.Width && allTextWidthLeft < this.headerHolder.DesiredSize.Width;
+                    var fitsRightButNotLeft = allTextWidthRight >= headerHolderWidth && allTextWidthLeft < headerHolderWidth;
 
                     if (((startX - quickAccessToolbarWidth < 150 || fitsRightButNotLeft) && (startX - quickAccessToolbarWidth > 0) && (startX - quickAccessToolbarWidth < constraint.Width - endX)) || (endX < constraint.Width / 2))
                     {
-                        this.headerRect = new Rect(Math.Min(Math.Max(endX, (constraint.Width / 2) - (this.headerHolder.DesiredSize.Width / 2)), constraint.Width), 0, Math.Min(allTextWidthRight, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(Math.Min(Math.Max(endX, (constraint.Width / 2) - (headerHolderWidth / 2)), constraint.Width), 0, Math.Min(allTextWidthRight, headerHolderWidth), constraint.Height);
                     }
                     else
                     {
-                        this.headerRect = new Rect(this.quickAccessToolbarHolder.DesiredSize.Width + Math.Max(0, (allTextWidthLeft / 2) - (this.headerHolder.DesiredSize.Width / 2)), 0, Math.Min(allTextWidthLeft, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(quickAccessToolbarWidth + Math.Max(0, (allTextWidthLeft / 2) - (headerHolderWidth / 2)), 0, Math.Min(allTextWidthLeft, headerHolderWidth), constraint.Height);
                     }
                 }
 
                     break;
 
-                case HorizontalAlignment.Right when this.headerHolder is not null && this.quickAccessToolbarHolder is not null:
+                case HorizontalAlignment.Right:
                 {
                     if (startX - quickAccessToolbarWidth > 150)
                     {
                         var allTextWidth = Math.Max(0, startX - quickAccessToolbarWidth);
-                        this.headerRect = new Rect(this.quickAccessToolbarHolder.DesiredSize.Width + Math.Max(0, allTextWidth - this.headerHolder.DesiredSize.Width), 0, Math.Min(allTextWidth, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(quickAccessToolbarWidth + Math.Max(0, allTextWidth - headerHolderWidth), 0, Math.Min(allTextWidth, headerHolderWidth), constraint.Height);
                     }
                     else
                     {
                         var allTextWidth = Math.Max(0, constraint.Width - endX);
-                        this.headerRect = new Rect(Math.Min(Math.Max(endX, constraint.Width - this.headerHolder.DesiredSize.Width), constraint.Width), 0, Math.Min(allTextWidth, this.headerHolder.DesiredSize.Width), constraint.Height);
+                        this.headerRect = new Rect(Math.Min(Math.Max(endX, constraint.Width - headerHolderWidth), constraint.Width), 0, Math.Min(allTextWidth, headerHolderWidth), constraint.Height);
                     }
                 }
 
