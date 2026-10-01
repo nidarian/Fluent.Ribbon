@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -250,6 +251,11 @@ public class ColorGallery : Control
     private readonly List<ListBox> listBoxes = new();
 
     private bool isSelectionChanging;
+
+    // True while a navigation key (arrows, Home, End, PageUp, PageDown) is being processed.
+    // A single-select ListBox selects the item it navigates to, so without this flag
+    // the first arrow key would commit a color and close the popup instead of just moving the highlight.
+    private bool isKeyboardBrowsing;
 
     private bool isTemplateApplied;
 
@@ -682,6 +688,9 @@ public class ColorGallery : Control
         var type = typeof(ColorGallery);
         DefaultStyleKeyProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(type));
         ContextMenuService.Attach(type);
+
+        // handledEventsToo: the ListBox marks navigation keys as handled, but we still have to end the browse.
+        EventManager.RegisterClassHandler(type, Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDownHandledEventsToo), true);
     }
 
     #endregion
@@ -797,6 +806,73 @@ public class ColorGallery : Control
         this.isTemplateApplied = true;
 
         this.UpdateSelectedColor(this.SelectedColor);
+    }
+
+    /// <inheritdoc />
+    protected override void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        base.OnPreviewKeyDown(e);
+
+        if (e.Handled)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.Up:
+            case Key.Down:
+            case Key.Left:
+            case Key.Right:
+            case Key.Home:
+            case Key.End:
+            case Key.PageUp:
+            case Key.PageDown:
+                // The ListBox moves focus and selection while handling KeyDown, which runs after this preview.
+                // The flag is cleared again in OnKeyDownHandledEventsToo once KeyDown has bubbled up to us.
+                this.isKeyboardBrowsing = true;
+                break;
+
+            case Key.Enter:
+            case Key.Space:
+                // Browsing only moves the highlight, so Enter/Space are the keys that commit the focused color.
+                if (e.OriginalSource is ListBoxItem { Content: Color color } item
+                    && ItemsControl.ItemsControlFromItemContainer(item) is ListBox listBox
+                    && this.listBoxes.Contains(listBox))
+                {
+                    // Handled, so the ListBox does not also process Space (which would select via SelectionChanged).
+                    e.Handled = true;
+
+                    // default(Color) entries are invisible filler cells in the gradient grids (see the item container style),
+                    // they can be reached with the keyboard but must not be picked, just like they can't be clicked.
+                    if (color == default)
+                    {
+                        break;
+                    }
+
+                    // Usually already selected by browsing; make sure the highlight follows the committed item.
+                    this.isSelectionChanging = true;
+                    item.IsSelected = true;
+                    this.isSelectionChanging = false;
+
+                    this.CommitColor(listBox, color);
+                }
+
+                break;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnIsKeyboardFocusWithinChanged(e);
+
+        // Browsing leaves the ListBox selection on the last highlighted color without committing it.
+        // When focus leaves the gallery (e.g. Esc closed the popup) show the actually selected color again.
+        if (e.NewValue is false)
+        {
+            this.UpdateSelectedColor(this.SelectedColor);
+        }
     }
 
     #endregion
@@ -924,6 +1000,12 @@ public class ColorGallery : Control
         this.isSelectionChanging = false;
     }
 
+    private static void OnKeyDownHandledEventsToo(object sender, KeyEventArgs e)
+    {
+        // KeyDown has been processed by the ListBox (it bubbles from the item up to us), so the browse is over.
+        ((ColorGallery)sender).isKeyboardBrowsing = false;
+    }
+
     private void OnListBoxSelectedChanged(object sender, SelectionChangedEventArgs e)
     {
         if (this.isSelectionChanging)
@@ -931,33 +1013,45 @@ public class ColorGallery : Control
             return;
         }
 
-        this.isSelectionChanging = true;
+        // Keyboard navigation only moves the highlight; Enter/Space commit (see OnPreviewKeyDown).
+        if (this.isKeyboardBrowsing)
+        {
+            return;
+        }
 
         if (e.AddedItems is not null
             && e.AddedItems.Count > 0)
         {
-            // Remove selection from others
-            if (this.noColorButton is not null)
-            {
-                this.noColorButton.IsChecked = false;
-            }
-
-            if (this.automaticButton is not null)
-            {
-                this.automaticButton.IsChecked = false;
-            }
-
-            foreach (var listBox in this.listBoxes)
-            {
-                if (ReferenceEquals(listBox, sender) == false)
-                {
-                    listBox.SelectedItem = null;
-                }
-            }
-
-            this.SelectedColor = (Color)e.AddedItems[0]!;
-            PopupService.RaiseDismissPopupEvent(this, DismissPopupMode.Always);
+            this.CommitColor(sender, (Color)e.AddedItems[0]!);
         }
+    }
+
+    // Shared by mouse selection (SelectionChanged) and Enter/Space: makes the color the SelectedColor and closes the popup.
+    private void CommitColor(object sourceListBox, Color color)
+    {
+        this.isSelectionChanging = true;
+
+        // Remove selection from others
+        if (this.noColorButton is not null)
+        {
+            this.noColorButton.IsChecked = false;
+        }
+
+        if (this.automaticButton is not null)
+        {
+            this.automaticButton.IsChecked = false;
+        }
+
+        foreach (var listBox in this.listBoxes)
+        {
+            if (ReferenceEquals(listBox, sourceListBox) == false)
+            {
+                listBox.SelectedItem = null;
+            }
+        }
+
+        this.SelectedColor = color;
+        PopupService.RaiseDismissPopupEvent(this, DismissPopupMode.Always);
 
         this.isSelectionChanging = false;
     }
