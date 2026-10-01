@@ -107,6 +107,7 @@
             <Trigger Property="IsEnabled" Value="False">
                 <Setter TargetName="PART_HeaderContentHost" Property="Opacity" Value="0.5" />
             </Trigger>
+            <!-- On the accent colored hover and pressed fills the header text uses the palette contrast color of that fill (at least 4.65:1); the normal text color fell to 2.16:1 (Dark.Yellow). -->
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsMouseOver" Value="True" />
@@ -115,6 +116,7 @@
                 </MultiTrigger.Conditions>
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Border}" />
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -128,6 +130,7 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Border}" />
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -218,6 +221,7 @@
                 </MultiTrigger.Conditions>
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Border}" />
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -231,6 +235,7 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Border}" />
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

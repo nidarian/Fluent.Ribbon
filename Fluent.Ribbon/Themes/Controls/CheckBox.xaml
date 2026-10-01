@@ -20,6 +20,7 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                     <Grid>
+                        <!-- The check mark is the only sign of the checked state, so it uses CheckBox.CheckMark (AccentDark3, at least 3:1) instead of AccentBase (down to 1.25:1). -->
                         <Path x:Name="CheckIcon"
                               Width="7.5"
                               Height="6.9"
@@ -28,7 +29,7 @@
                               Fluent:FrameworkHelper.UseLayoutRounding="False"
                               Data="M48.4375,110.4375 L51.4995,112.812 L56.3745,107.24883"
                               Stretch="Fill"
-                              Stroke="{DynamicResource Fluent.Ribbon.Brushes.AccentBase}"
+                              Stroke="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.CheckMark}"
                               StrokeEndLineCap="Triangle"
                               StrokeStartLineCap="Triangle"
                               StrokeThickness="1.5"
@@ -102,6 +103,7 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                     <Grid>
+                        <!-- The check mark is the only sign of the checked state, so it uses CheckBox.CheckMark (AccentDark3, at least 3:1) instead of AccentBase (down to 1.25:1). -->
                         <Path x:Name="CheckIcon"
                               Width="7.5"
                               Height="6.9"
@@ -110,7 +112,7 @@
                               Fluent:FrameworkHelper.UseLayoutRounding="False"
                               Data="M48.4375,110.4375 L51.4995,112.812 L56.3745,107.24883"
                               Stretch="Fill"
-                              Stroke="{DynamicResource Fluent.Ribbon.Brushes.AccentBase}"
+                              Stroke="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.CheckMark}"
                               StrokeEndLineCap="Triangle"
                               StrokeStartLineCap="Triangle"
                               StrokeThickness="1.5"

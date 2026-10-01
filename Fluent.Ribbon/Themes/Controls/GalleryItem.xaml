@@ -6,9 +6,23 @@
                     mc:Ignorable="d">
     <ControlTemplate x:Key="Fluent.Ribbon.Templates.GalleryItem"
                      TargetType="{x:Type Fluent:GalleryItem}">
-        <Border Background="{TemplateBinding Background}">
-            <ContentPresenter Margin="{TemplateBinding Padding}" />
-        </Border>
+        <Grid>
+            <Border Background="{TemplateBinding Background}">
+                <ContentPresenter Margin="{TemplateBinding Padding}" />
+            </Border>
+            <!-- A selected item was marked only by its fill (AccentLight2), down to 1.18:1 against the drop down background.
+                 This 1px outline (AccentDark3) reaches at least 3:1 in every theme. It is drawn over the item's default 1px padding, so the item size does not change. -->
+            <Border x:Name="selectedBorder"
+                    BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.Selected.Border}"
+                    BorderThickness="1"
+                    IsHitTestVisible="False"
+                    Visibility="Collapsed" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="selectedBorder" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="Fluent.Ribbon.Styles.GalleryItem"
