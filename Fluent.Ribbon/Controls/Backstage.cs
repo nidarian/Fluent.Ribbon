@@ -136,6 +136,18 @@ public class Backstage : RibbonControl
         this.Closing?.Invoke(this, e);
     }
 
+    /// <summary>
+    /// Gets whether the <see cref="Backstage"/> is open and its content is actually displayed.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="IsOpen"/> alone is not enough, because <see cref="Show"/> can return early (e.g. <see cref="StartScreen"/> when it was already shown,
+    /// or while waiting for Loaded) and then nothing is displayed although <see cref="IsOpen"/> is <c>true</c>.
+    /// The adorner is created on the first real show and collapsed on hide, so only an existing, visible adorner means something is on screen.
+    /// </remarks>
+    internal bool IsOpenAndDisplayed => this.IsOpen
+                                        && this.adorner is not null
+                                        && this.adorner.Visibility == Visibility.Visible;
+
     #endregion
 
     /// <summary>

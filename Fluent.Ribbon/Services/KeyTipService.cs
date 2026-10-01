@@ -595,7 +595,9 @@ public class KeyTipService
             return null;
         }
 
-        return control.IsOpen
+        // A start screen can be open without being displayed (StartScreen.Show returns early once Shown is true).
+        // Forwarding key tips to such an invisible start screen would hide the ribbon key tips, so require it to be displayed.
+        return control.IsOpenAndDisplayed
             ? control
             : null;
     }
