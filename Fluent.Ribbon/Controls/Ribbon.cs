@@ -927,7 +927,7 @@ public class Ribbon : Control, ILogicalChildSupport
         {
             if (this.quickAccessItems is null)
             {
-                this.quickAccessItems = new ObservableCollection<QuickAccessMenuItem>();
+                this.quickAccessItems = new QuickAccessMenuItemCollection();
                 this.quickAccessItems.CollectionChanged += this.OnQuickAccessItemsCollectionChanged;
             }
 
@@ -972,6 +972,32 @@ public class Ribbon : Control, ILogicalChildSupport
                 }
 
                 break;
+
+            // Reset (raised by Clear()) carries no OldItems, so QuickAccessMenuItemCollection.ClearItems detaches them instead.
+        }
+    }
+
+    /// <summary>
+    /// Collection used for <see cref="QuickAccessItems"/>.
+    /// </summary>
+    /// <remarks>
+    /// Clear() only raises a Reset, which doesn't contain the removed items.
+    /// This is the last moment the items are still known, so detach them from the ribbon here.
+    /// </remarks>
+    private sealed class QuickAccessMenuItemCollection : ObservableCollection<QuickAccessMenuItem>
+    {
+        /// <inheritdoc />
+        protected override void ClearItems()
+        {
+            foreach (var item in this.Items)
+            {
+                if (item is not null)
+                {
+                    item.Ribbon = null;
+                }
+            }
+
+            base.ClearItems();
         }
     }
 
