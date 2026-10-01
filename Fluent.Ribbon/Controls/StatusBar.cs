@@ -248,7 +248,8 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
 
         if (target is not null)
         {
-            RibbonControl.Bind(RibbonLocalization.Current.Localization, target, nameof(RibbonLocalizationBase.CustomizeStatusBar), HeaderedItemsControl.HeaderProperty, BindingMode.OneWay);
+            // Bind via RibbonLocalization.Current so the header follows a runtime switch of Culture/Localization.
+            RibbonControl.Bind(RibbonLocalization.Current, target, $"{nameof(RibbonLocalization.Localization)}.{nameof(RibbonLocalizationBase.CustomizeStatusBar)}", HeaderedItemsControl.HeaderProperty, BindingMode.OneWay);
         }
 
         for (var i = 0; i < this.Items.Count; i++)
