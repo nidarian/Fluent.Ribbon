@@ -94,6 +94,10 @@ public class StartScreen : Backstage
             if (this.originalTitleBarIsCollapsed.HasValue)
             {
                 parentRibbon?.TitleBar?.SetCurrentValue(RibbonTitleBar.IsCollapsedProperty, this.originalTitleBarIsCollapsed.Value);
+
+                // Shown stays true forever, so without clearing the saved value every later close
+                // (where Show returned early and never touched the title bar) would overwrite IsCollapsed again.
+                this.originalTitleBarIsCollapsed = null;
             }
         }
     }
