@@ -99,6 +99,13 @@ public class RibbonTabItemAutomationPeer : FrameworkElementAutomationPeer
         return text;
     }
 
+    /// <inheritdoc />
+    protected override string GetHelpTextCore()
+    {
+        // Expose the ScreenTip text, which the default implementation can't read.
+        return AutomationPeerHelper.GetHelpText(this.Owner, base.GetHelpTextCore());
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     internal void RaiseTabExpandCollapseAutomationEvent(bool oldValue, bool newValue)
     {
