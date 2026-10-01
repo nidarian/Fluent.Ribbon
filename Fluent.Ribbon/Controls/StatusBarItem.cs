@@ -14,7 +14,7 @@ public class StatusBarItem : System.Windows.Controls.Primitives.StatusBarItem
     #region Title
 
     /// <summary>
-    /// Gets or sets ribbon status bar item
+    /// Gets or sets the title of the item, shown in the status bar's context menu
     /// </summary>
     public string? Title
     {

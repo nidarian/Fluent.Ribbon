@@ -31,7 +31,7 @@ public class RibbonToolBarControlGroupDefinition : DependencyObject
     #region Children Property
 
     /// <summary>
-    /// Gets rows
+    /// Gets the control definitions in this group
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public ObservableCollection<RibbonToolBarControlDefinition> Children { get; } = new();

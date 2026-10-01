@@ -13,7 +13,7 @@ public interface IRibbonStateStorage : IDisposable
     bool IsLoading { get; }
 
     /// <summary>
-    /// Gets or sets whether state is loaded.
+    /// Gets whether state is loaded.
     /// </summary>
     bool IsLoaded { get; }
 

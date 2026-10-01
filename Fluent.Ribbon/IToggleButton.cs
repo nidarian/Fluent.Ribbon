@@ -18,7 +18,7 @@ public interface IToggleButton
     string? GroupName { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether SplitButton is checked
+    /// Gets or sets a value indicating whether the button is checked
     /// </summary>
     bool? IsChecked { get; set; }
 

@@ -23,7 +23,7 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
     #region IsSimplified
 
     /// <summary>
-    /// Gets or sets whether or not the ribbon is in Simplified mode
+    /// Gets whether the control is in simplified mode (set when the ribbon switches to simplified mode).
     /// </summary>
     public bool IsSimplified
     {
@@ -132,7 +132,8 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
     public static readonly DependencyProperty CanAddToQuickAccessToolBarProperty = RibbonControl.CanAddToQuickAccessToolBarProperty.AddOwner(typeof(TextBox), new PropertyMetadata(BooleanBoxes.TrueBox, RibbonControl.OnCanAddToQuickAccessToolBarChanged));
 
     /// <summary>
-    /// This method must be overridden to bind properties to use in quick access creating
+    /// Binds this control's properties to its Quick Access Toolbar copy.
+    /// Override it to bind more properties, and call the base method.
     /// </summary>
     /// <param name="element">Toolbar item</param>
     protected virtual void BindQuickAccessItem(FrameworkElement element)

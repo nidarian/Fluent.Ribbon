@@ -11,7 +11,7 @@ public interface ISimplifiedRibbonControl : ISimplifiedStateControl
     RibbonControlSizeDefinition SimplifiedSizeDefinition { get; set; }
 
     /// <summary>
-    /// Gets or sets whether or not the ribbon is in Simplified mode
+    /// Gets whether the control is in simplified mode (set when the ribbon switches to simplified mode).
     /// </summary>
     bool IsSimplified { get; }
 }

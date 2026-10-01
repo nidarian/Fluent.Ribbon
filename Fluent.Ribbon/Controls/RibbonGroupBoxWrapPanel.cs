@@ -25,7 +25,7 @@ public class RibbonGroupBoxWrapPanel : Panel
             new(default(string)));
 
     /// <summary>
-    /// Attached <see cref="DependencyProperty" /> for <c>SharedSizeGroupName</c>.
+    /// Attached <see cref="DependencyProperty" /> for <c>ExcludeFromSharedSize</c>.
     /// </summary>
     public static readonly DependencyProperty ExcludeFromSharedSizeProperty =
         DependencyProperty.RegisterAttached(

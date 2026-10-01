@@ -251,7 +251,9 @@ public class ScreenTip : ToolTip, ILogicalChildSupport
     #region DisableReason Property
 
     /// <summary>
-    /// Gets or sets disable reason of the associated screen tip's control
+    /// Gets or sets why the associated control is disabled.
+    /// It is only shown while that control is disabled (and when it is not empty), for example on mouse hover.
+    /// Disabled controls can't take keyboard focus, so keyboard users can't open it.
     /// </summary>
     [System.ComponentModel.DisplayName("Disable Reason")]
     [System.ComponentModel.Category("Screen Tip")]

@@ -436,7 +436,7 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
         DependencyProperty.Register(nameof(CanAddToQuickAccessToolBar), typeof(bool), typeof(RibbonControl), new PropertyMetadata(BooleanBoxes.TrueBox, OnCanAddToQuickAccessToolBarChanged));
 
     /// <summary>
-    /// Occurs then CanAddToQuickAccessToolBar property changed
+    /// Handles changes of <see cref="CanAddToQuickAccessToolBar"/> by re-coercing the context menu
     /// </summary>
     public static void OnCanAddToQuickAccessToolBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
