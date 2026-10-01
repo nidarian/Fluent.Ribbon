@@ -379,7 +379,7 @@ Found by the accessibility review; details and what's left are in
 | UI Automation can open a disabled drop down or backstage, or click a SplitButton's disabled part: the peers now throw `ElementNotEnabledException`, like the InRibbonGallery peer. | `upstream-pr/uia-respect-disabled` | [#63](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775121538) | [#67](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775298146) |
 | The backstage ("File") button has no automation name: `RibbonControlAutomationPeer` falls back to a string `Header`. | `upstream-pr/uia-backstage-name` | [#64](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775125648) | [#68](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775301012) |
 | The ribbon lists its menu twice in the automation tree: already-listed peers are skipped. | `upstream-pr/uia-ribbon-menu-once` | [#65](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775128710) | [#69](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775303570) |
-| Closing the backstage without animation leaves focus on hidden content: the non-animated path now focuses the backstage button, like the animated one. | `upstream-pr/backstage-focus-no-animation` | [#70](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775488430) | [#71](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775561237) |
+| Closing the backstage without animation loses keyboard focus to the window (the focused content is hidden, so WPF moves focus away; failing run: focus was on the window): the non-animated path now focuses the backstage button, like the animated one. | `upstream-pr/backstage-focus-no-animation` | [#70](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775488430) | [#71](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36775561237) |
 
 ### `ReduceOrder` documentation says the opposite of the code
 
@@ -395,6 +395,33 @@ checked against `RibbonGroupsContainer.cs`. Documentation only, built in
 [run #29](https://github.com/nidarian/Fluent.Ribbon/actions/runs/36678547621).
 
 ---
+
+## Round 4 (2026-10-01): 51 more branches
+
+Every row in `architecture/ROUND4.md` has an `upstream-pr/<name>` branch
+(the "Branch" column). Each one was proven like the fixes above: the test fails
+on Windows CI before the fix and passes after it (run numbers in ROUND4.md).
+The table there is also the description to paste into the pull request.
+
+Two groups need more care before sending:
+
+- **They change behaviour or looks**, so ask the maintainer first, like the
+  proposals below: `contrast-wcag` (theme colors), `colorgallery-arrow-keys-browse`
+  (arrows no longer pick a color), `keytip-wrong-key-nested-level-keeps-keytips`
+  (beep instead of closing), `uia-dropdownbutton-control-type` (UI tests that
+  search for "Custom" break), `dropdown-tab-closes`, `high-contrast-basic`
+  (new opt-in API, `HIGH-CONTRAST.md`) and `gallery-islastitem-key-obsolete`
+  (a new compiler warning for apps using that key).
+- **Two pairs touch the same code.** Send `gallery-item-enter-keyup-only` and
+  `groupbox-enter-gallery-space` together or one after the other: merged
+  as-is, Space stops clicking gallery items (see ROUND4.md, "Two fixes that
+  only broke when combined"; `integration/next` has the combined version).
+  `dropdown-keeps-oneway-binding` and `dropdown-disabled-items-focus` both edit
+  `DropDownButton`; the second one sent will need a merge.
+
+Not on an `upstream-pr/` branch of its own: the doc comment batch 3 is on
+`upstream-pr/xml-doc-corrections` with the earlier doc fixes, and
+`docs/keytip-autoplacement` is a doc-only change.
 
 ## Proposals (add public API, so ask the maintainer first)
 
@@ -557,7 +584,8 @@ Ask whether it's still needed.
    `upstream-pr/backstage-unload-while-open`, `upstream-pr/groupbox-close-dropdown-on-expand`,
    `upstream-pr/ribbon-collapse-on-load`, the five accessibility branches above,
    `upstream-pr/reduceorder-xml-doc`, and `upstream-pr/xml-doc-corrections`
-   (41 doc comment fixes and the README SDK line; see `architecture/DOCUMENTATION.md`).
+   (41 doc comment fixes and the README SDK line; see `architecture/DOCUMENTATION.md`),
+   and the round 4 branches (see "Round 4" above).
    These have no issue, so the description is the section above. Review them
    yourself first, then say in the pull request that an AI found and wrote
    them and that you reviewed them.

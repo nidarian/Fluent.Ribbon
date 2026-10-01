@@ -15,6 +15,7 @@ original project README is still here: [README.md](../README.md).
 | `develop` (default) | The original project's `develop`, plus this fork's workflows and notes (`.github/`). **No code fixes.** | Yes, the weekly sync merges upstream in |
 | `master` | Exact copy of the original's `master` | Yes, the weekly sync |
 | `integration/all-fixes` | **All fixes together.** The NuGet package for my own app is built from this. | No, see "Keeping the fixes current" |
+| `integration/next` | Where a new round of fixes is merged and built first. When its build passes, `integration/all-fixes` is moved up to it. Round 4 (2026-10-01) went this way. | No |
 | `fix/...`, `feature/...`, `docs/...` | One fix each, with tests (`docs/` = doc comment fixes, no code) | No |
 | `upstream-pr/...` | The same fixes, cleaned up for sending to the original project | No |
 | `archive` | Copies of the original's issues, pull requests and wiki | Yes, monthly |
@@ -48,13 +49,14 @@ GitHub emails me if a run fails. `.github/FORK-BACKUP.md` explains what to do.
 project has moved on, merge `develop` into `integration/all-fixes` and re-run
 Build (Windows) on it. Or ask Claude to do it.
 
-## Status of the fixes (as of 2026-09-30)
+## Status of the fixes (as of 2026-10-01)
 
 - **Not sent to the original project.** I asked the maintainer for permission in
   [#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284). Nothing is
   posted there until he agrees.
 - The full list, the evidence (test runs), and what's still to check by hand are
-  in `.github/UPSTREAM-FIXES.md`.
+  in `.github/UPSTREAM-FIXES.md`. Round 4 (51 more fixes, including the items
+  that used to be "maintainer's call") is in `.github/architecture/ROUND4.md`.
 - Before sending anything: check whether the original project already fixed it
   in the meantime (see its Changelog.md).
 
@@ -70,3 +72,5 @@ Build (Windows) on it. Or ask Claude to do it.
 | `architecture/FINDINGS.md` | What the diagrams turned up: bugs fixed, rejected, and still unverified |
 | `architecture/ACCESSIBILITY.md` | Screen reader, keyboard and contrast review: what's fixed, what's left, contrast ratios, High Contrast status |
 | `architecture/DOCUMENTATION.md` | Doc comment audit: 41 corrected tooltips (blind-checked), the README SDK line, the outdated 2012 Walkthrough, what's left |
+| `architecture/ROUND4.md` | Round 4: the 51 fixes of 2026-10-01 (the former "maintainer's call" items, keyboard, contrast, screen readers, a new bug hunt), each with its fail and pass build |
+| `architecture/HIGH-CONTRAST.md` | Turning on Windows High Contrast support, and what it doesn't cover yet |

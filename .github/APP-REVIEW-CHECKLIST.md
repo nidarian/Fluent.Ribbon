@@ -65,6 +65,27 @@ after switching between classic and simplified; KeyTips on normal Fluent
 buttons (none should end up covering the wrong button); mouse-wheel scrolling of the ribbon; group sizes when resizing the
 window.
 
+### Round 4 changes you can see (added 2026-10-01)
+
+The full list of 51 round 4 fixes, with what each changes, is in
+`architecture/ROUND4.md`. Most are invisible unless your app hit the bug. These
+are the ones you will notice anyway:
+
+| Change | What to check in your app |
+|---|---|
+| **Theme colors** (contrast) | Text box borders are a mid gray (#7F7F7F) in both themes: darker in Light, lighter in Dark. Checked toggles, text box focus frames, check marks and the backstage selection use a darker shade of the accent. Gallery filter headers have black text and a yellow background on mouse over. The selected gallery item has a 1px outline. Button text on hover/pressed uses the palette's matching foreground. If your app overrides Fluent brushes, check that your colors still win. |
+| **ColorGallery keyboard** | Arrow keys now only move between colors. **Enter or Space** picks one and closes the drop down. Before, the first arrow key picked a color. The mouse works as before. |
+| **Wrong key inside KeyTips** | Press Alt, a tab's KeyTip, then a key that matches nothing: Windows beeps and the KeyTips stay. At the first level (right after Alt) a wrong key still closes them. |
+| **Tab on an open drop down** | Only when keyboard focus stayed on the button while the drop down is open (every item disabled, or `FocusFirstItemOnDropDownOpen="False"` and opened with the mouse): Tab now closes the drop down as focus moves on. Tab inside the drop down still moves between its items. |
+| **Enter and Space on galleries** | Opening an `InRibbonGallery` with Enter no longer applies its first item. In a collapsed group, both Enter and Space open it. Space now activates a focused gallery item. |
+| **Tab order** | One Tab stop fewer on a ColorGallery, the toolbar below the ribbon, and the backstage tab list. In the backstage, Shift+Tab now goes back. |
+| **Bindings on `IsDropDownOpen`** | If your app binds `IsDropDownOpen` OneWay, the binding now keeps working after the user opens or closes the drop down. |
+| **Spinner values** | Leaving a Spinner without typing keeps its exact value (0.25 stays 0.25 with format F1). Negative numbers keep their sign under Swedish, Norwegian or Finnish Windows. |
+| **Language switch at runtime** | If your app changes `RibbonLocalization.Current.Culture` while running: the ribbon's right-click menu and "Customize Status Bar" now switch language too. |
+| **Drop-down height at 150%/200% scaling** | Long drop downs are at most a third of the screen tall at any display scaling. Before, at 200% they could run off the screen. |
+| **UI tests and screen readers** | A `DropDownButton` is reported as "button" (SplitButton: "split button") instead of "Custom". UI tests that search for "Custom" need updating. Toolbar buttons and copies now have names. |
+| **Compiler warning** | If your code uses `Gallery.IsLastItemPropertyKey`, it now gets an `[Obsolete]` warning. |
+
 ### Opt-in additions (nothing changes unless you use them)
 
 | Addition | How to try it |
@@ -74,6 +95,7 @@ window.
 | #647 Spinner accessibility | Screen readers (Narrator) and UI test tools should now see a `Spinner` as a spinner with its value, minimum and maximum, and be able to set the value. |
 | #1265 `Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border` | Override this brush in your resources to recolor the keyboard focus frame of backstage tabs. |
 | #1233 "..." overflow group | A last group with `Header="..."` and `SimplifiedStateDefinition="Collapsed"` shows as a single "..." button in the simplified ribbon. See the Showcase's Simplified Ribbon window, tab 1. |
+| High Contrast (round 4) | Set `ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithHighContrast` at startup, then turn on a Windows High Contrast theme (Settings, Accessibility, Contrast themes). The ribbon should use the High Contrast colors. Known gaps are in `architecture/HIGH-CONTRAST.md`. |
 
 ## 4. Reporting back
 

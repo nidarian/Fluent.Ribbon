@@ -25,7 +25,7 @@ Actions tab; the branch filter there shows them.
 
 Each fix is on `fix/<name>` (proof history) and `upstream-pr/<name>` (the same
 change on top of upstream `develop`, ready to send if that ever happens).
-All of them are merged together on `integration/next`.
+All of them are merged together on `integration/next`, and `integration/all-fixes` (the app package) was moved up to it once the combined build passed.
 
 ## Drop downs and menus
 
@@ -91,7 +91,7 @@ All of them are merged together on `integration/next`.
 
 | Problem | Branch | Fail → pass | What changes |
 |---|---|---|---|
-| Text box border 1.5:1, placeholder 3.95:1, checked toggle border, focus border, check mark, backstage selection, gallery header text and selection, button hover text below WCAG in some or all of the 46 themes. | `contrast-wcag` | #131 → #157 | **Colors change**: darker text box border, darker accents for indicators, black gallery header text, a 1px outline on the selected gallery item. Checked in all 46 Light/Dark themes. The "Colorful" title bar was left alone (brand decision). |
+| Text box border 1.5:1, placeholder 3.95:1, checked toggle border, focus border, check mark, backstage selection, gallery header text and selection, button hover text below WCAG in some or all of the 46 themes. | `contrast-wcag` | #131 → #157 | **Colors change**: text box border #7F7F7F in both themes (darker in Light, lighter in Dark), a darker accent shade for indicators, black gallery header text with a yellow mouse-over background, a 1px outline on the selected gallery item, palette foregrounds for button hover text. Checked in all 46 Light/Dark themes. The "Colorful" title bar was left alone (brand decision). |
 | **No Windows High Contrast support** (#1018). | `high-contrast-basic` | #132 → #163 | **Opt-in**: with `ThemeManager.Current.ThemeSyncMode = SyncWithHighContrast` the ribbon uses the user's High Contrast colors. Limits are listed in `HIGH-CONTRAST.md`; needs a manual check under the Windows High Contrast themes. |
 
 ## New bugs found by the round 3 bug hunt
@@ -109,9 +109,37 @@ All of them are merged together on `integration/next`.
 | Setting `Gallery.SelectedFilter` from code left the wrong checkmark. | `gallery-selectedfilter-checkmark` | #147 → #176 | Right checkmark. |
 | An icon size string like "16.5" was read as 165 under German culture. | `image-converter-invariant-size` | #150 → #179 | Invariant parsing. |
 
-Not fixed: opening an InRibbonGallery's toolbar copy can push `SelectedItem = null`
-into an app's binding. A safe fix needs a redesign of how the copy borrows the
-items; a coerce guard (like ComboBox's) would probably not stop the binding.
+Not fixed:
+
+- Opening an InRibbonGallery's toolbar copy can push `SelectedItem = null`
+  into an app's binding. A safe fix needs a redesign of how the copy borrows the
+  items; a coerce guard (like ComboBox's) would probably not stop the binding.
+- `StatusBar`'s Add branch inserts the new menu entry at the item's index,
+  while Move and Remove use index + 1 (entry 0 is the menu's header), so an
+  added entry lands one place too early. Reading the code, the menu is rebuilt
+  (`RecreateMenu`) once the new container is generated, which should put it
+  right again; that was not tested, so it stays open.
+- `ApplicationMenu`'s default KeyTip comes from the localization only once
+  (`CoerceKeys`, in the constructor), so it doesn't follow a runtime language
+  switch like the menu headers now do (`localization-runtime-switch`).
+
+## Window, theme and localization
+
+| Problem | Branch | Fail → pass | What changes |
+|---|---|---|---|
+| **Moving an item in a StatusBar's `ItemsSource`** (`ObservableCollection.Move`) threw "Element already has a logical parent": the code called `Items.Remove(index)`, which looks for the boxed number as an item and removes nothing. | `statusbar-move-keeps-menu-in-sync` | #192 → #196 | Moving works; the right-click menu follows the new order. |
+| **Switching `RibbonLocalization.Current.Culture` at runtime** left the ribbon's right-click menu and the StatusBar's "Customize Status Bar" header in the old language (they were bound to the old localization object). | `localization-runtime-switch` | #193 → #197 | Those headers follow a runtime language switch. |
+| On a display with **more than 100% scaling**, the default maximum drop-down height used physical pixels as WPF units (200% scaling: twice too high, the drop down could run off screen). | `dropdown-max-height-dpi` | #194 → #198 | A third of the screen height at any scaling. |
+| A **custom RibbonWindow template without `PART_QuickAccessToolbarHolder`** gave the title a 50px fallback width, and with contextual groups visible the title grew by 2px on every layout pass. | `titlebar-without-qat-holder` | #195 → #199 | The title is laid out normally. Only affects custom templates. |
+
+## All of it together
+
+`integration/next` at `6828bf41` (all round 4 branches plus everything that was
+already on `integration/all-fixes`) passed **Build (Windows) #201**:
+net6.0 902/902, net8.0 902/902, net462 901/901 with one test inconclusive
+(its keyboard focus precondition didn't hold on that run, see below).
+`integration/all-fixes` was then moved up to that commit (a fast-forward,
+nothing on it was lost), so the app package now contains round 4.
 
 ## Two fixes that only broke when combined
 
@@ -133,3 +161,12 @@ down. This is why the combined branch gets its own full build.
 - One new test **leaked saved ribbon state** into a later test (toolbar
   position saved to isolated storage). It now turns state saving off.
 - One test **didn't run** (group box state reset on load) until rewritten.
+- **Focus tests failed at random in the long combined build.** The full
+  builds #186, #187, #191 and #200 each had one or two keyboard focus tests
+  fail on one framework (a different test almost every time), with nothing
+  focused at all, while they passed on the other frameworks.
+  The test window had stopped being the active window. All tests that assert
+  "this element has focus" now first check that *something* has focus and
+  report "inconclusive" if not. This can't hide the bugs they test: in those,
+  focus lands on another element (the original backstage bug put it on the
+  window, run #70).
