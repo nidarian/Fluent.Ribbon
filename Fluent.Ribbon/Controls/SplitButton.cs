@@ -303,12 +303,12 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
     }
 
     /// <summary>
-    /// Occurs when button is unchecked
+    /// Occurs when button becomes indeterminate (IsChecked is null)
     /// </summary>
     public static readonly RoutedEvent IndeterminateEvent = System.Windows.Controls.Primitives.ToggleButton.IndeterminateEvent.AddOwner(typeof(SplitButton));
 
     /// <summary>
-    /// Occurs when button is unchecked
+    /// Occurs when button becomes indeterminate (IsChecked is null)
     /// </summary>
     public event RoutedEventHandler Indeterminate
     {

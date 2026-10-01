@@ -96,7 +96,8 @@ public class RibbonTitleBar : HeaderedItemsControl
         DependencyProperty.Register(nameof(HideContextTabs), typeof(bool), typeof(RibbonTitleBar), new FrameworkPropertyMetadata(BooleanBoxes.TrueBox, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
     /// <summary>
-    ///  Gets or sets whether context tabs are hidden.
+    /// Gets or sets whether contextual group headers are hidden in the title bar. Default is true.
+    /// The contextual tabs themselves are still shown.
     /// </summary>
     public bool HideContextTabs
     {

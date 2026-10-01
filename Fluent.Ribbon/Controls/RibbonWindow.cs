@@ -144,7 +144,8 @@ public class RibbonWindow : WindowChromeWindow, IRibbonWindow
     // todo check if IsCollapsed and IsAutomaticCollapseEnabled should be reduced to one shared property for RibbonWindow and Ribbon
 
     /// <summary>
-    /// Gets whether window is collapsed
+    /// Gets or sets whether the title bar is collapsed (its contextual groups and Quick Access Toolbar are hidden).
+    /// Set automatically for small windows when <see cref="IsAutomaticCollapseEnabled"/> is true.
     /// </summary>
     public bool IsCollapsed
     {

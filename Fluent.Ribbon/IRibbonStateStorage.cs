@@ -29,6 +29,7 @@ public interface IRibbonStateStorage : IDisposable
 
     /// <summary>
     /// Load state from a temporary storage.
+    /// Fluent.Ribbon never calls this itself.
     /// </summary>
     void LoadTemporary();
 
@@ -36,7 +37,8 @@ public interface IRibbonStateStorage : IDisposable
     /// Loads the state from a persistent storage.
     /// </summary>
     /// <remarks>
-    /// Sets <see cref="RibbonStateStorage.IsLoaded" /> after it's finished to prevent a race condition with saving the state to the temporary storage.
+    /// Sets <see cref="IsLoaded" /> when finished, also when loading fails or is disabled,
+    /// so that <see cref="Save" /> does not overwrite stored state before it was loaded.
     /// </remarks>
     void Load();
 

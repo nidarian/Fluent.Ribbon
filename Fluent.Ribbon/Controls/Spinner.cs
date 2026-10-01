@@ -131,7 +131,7 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
     #region Text
 
     /// <summary>
-    /// Gets current text from the spinner
+    /// Gets the formatted text of Value. It is not updated while the user is typing.
     /// </summary>
     public string? Text
     {

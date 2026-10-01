@@ -534,7 +534,7 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
     /// Returns monitor in witch control is placed
     /// </summary>
     /// <param name="control">Control</param>
-    /// <returns>Workarea in witch control is placed</returns>
+    /// <returns>Bounds of the whole monitor on which the control is placed (including the taskbar)</returns>
     public static unsafe Rect GetControlMonitor(FrameworkElement control)
     {
         if (PresentationSource.FromVisual(control) is null)

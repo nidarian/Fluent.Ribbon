@@ -104,7 +104,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
     public Popup? DropDownPopup { get; private set; }
 
     /// <summary>
-    /// Gets the <see cref="Panel"/> responsible for displaying the selected tabs content.
+    /// Gets the <see cref="Panel"/> that hosts the tab headers.
     /// </summary>
     public Panel? TabsContainer { get; private set; }
 
@@ -369,7 +369,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
     public static readonly DependencyProperty IsToolBarVisibleProperty = DependencyProperty.Register(nameof(IsToolBarVisible), typeof(bool), typeof(RibbonTabControl), new PropertyMetadata(BooleanBoxes.TrueBox));
 
     /// <summary>
-    /// Defines whether tab headers are visible or not.
+    /// Defines whether the toolbar (<see cref="ToolBarItems"/>) is visible or not.
     /// </summary>
     public bool IsToolBarVisible
     {
