@@ -126,7 +126,7 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
     public static readonly DependencyProperty CommandTargetProperty = DependencyProperty.Register(nameof(CommandTarget), typeof(IInputElement), typeof(GalleryItem), new PropertyMetadata());
 
     /// <summary>
-    /// Gets or sets the command to invoke when mouse enters or leaves this button. The commandparameter will be the <see cref="GalleryItem"/> instance.
+    /// Gets or sets the command to invoke when the mouse enters this item. The command parameter is the <see cref="GalleryItem"/>.
     /// This is a dependency property.
     /// </summary>
     [Bindable(true)]
@@ -142,7 +142,7 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
         DependencyProperty.Register(nameof(PreviewCommand), typeof(ICommand), typeof(GalleryItem), new PropertyMetadata());
 
     /// <summary>
-    /// Gets or sets the command to invoke when mouse enters or leaves this button. The commandparameter will be the <see cref="GalleryItem"/> instance.
+    /// Gets or sets the command to invoke when the mouse leaves this item. The command parameter is the <see cref="GalleryItem"/>.
     /// This is a dependency property.
     /// </summary>
     [Bindable(true)]

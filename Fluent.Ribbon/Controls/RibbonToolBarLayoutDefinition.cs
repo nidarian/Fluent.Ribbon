@@ -48,7 +48,8 @@ public class RibbonToolBarLayoutDefinition : DependencyObject
     #region Row Count
 
     /// <summary>
-    /// Gets or sets count of rows in the ribbon toolbar
+    /// Gets or sets the maximum number of rows stacked in one column of the ribbon toolbar.
+    /// Further rows start a new column.
     /// </summary>
     public int RowCount
     {
@@ -68,6 +69,7 @@ public class RibbonToolBarLayoutDefinition : DependencyObject
 
     /// <summary>
     /// Gets or sets whether the layout definition should be used in simplified state.
+    /// Ignored when the toolbar has only one layout definition.
     /// </summary>
     public bool ForSimplified
     {

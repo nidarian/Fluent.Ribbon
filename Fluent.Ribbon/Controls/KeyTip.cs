@@ -158,7 +158,7 @@ public class KeyTip : Label
     /// <summary>
     /// Gets margin of the key tip
     /// </summary>
-    /// <param name="obj">The key tip</param>
+    /// <param name="obj">The element that owns the key tip</param>
     /// <returns>Margin</returns>
     [System.ComponentModel.DisplayName("Margin")]
     [AttachedPropertyBrowsableForChildren(IncludeDescendants = true)]
@@ -172,7 +172,7 @@ public class KeyTip : Label
     /// <summary>
     /// Sets margin of the key tip
     /// </summary>
-    /// <param name="obj">The key tip</param>
+    /// <param name="obj">The element that owns the key tip</param>
     /// <param name="value">Value</param>
     public static void SetMargin(DependencyObject obj, Thickness value)
     {

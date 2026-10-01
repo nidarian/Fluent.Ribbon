@@ -320,7 +320,8 @@ public class RibbonStateStorage : IRibbonStateStorage
     }
 
     /// <summary>
-    /// Resets saved state.
+    /// Deletes all saved ribbon states in the isolated storage (for every ribbon, not only this one).
+    /// The current state is not changed.
     /// </summary>
     public virtual void Reset()
     {
