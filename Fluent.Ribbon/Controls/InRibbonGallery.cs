@@ -408,13 +408,20 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     private static object? CoerceSelectedFilter(DependencyObject d, object? basevalue)
     {
         var gallery = (InRibbonGallery)d;
-        if (basevalue is null
-            && gallery.Filters.Count > 0)
+
+        // Only filters which are part of Filters can be selected.
+        // A filter that was removed (or cleared) must not keep filtering the items.
+        // The base value is kept by WPF, so it becomes effective again if that filter is added back
+        // (OnFilterCollectionChanged re-coerces on every change).
+        if (basevalue is GalleryGroupFilter filter
+            && gallery.Filters.Contains(filter))
         {
-            return gallery.Filters[0];
+            return filter;
         }
 
-        return basevalue;
+        return gallery.Filters.Count > 0
+            ? gallery.Filters[0]
+            : null;
     }
 
     // Handles filter property changed
