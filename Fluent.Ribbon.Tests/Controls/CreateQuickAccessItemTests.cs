@@ -87,6 +87,21 @@ public class CreateQuickAccessItemTests
         Assert.That(source.IsChecked, Is.True);
     }
 
+    [Test]
+    public void CheckBox_Binds_IsThreeState()
+    {
+        var source = new CheckBox { IsThreeState = true };
+
+        var item = (CheckBox)source.CreateQuickAccessItem();
+
+        // Without IsThreeState the copy would never cycle through the indeterminate state when clicked.
+        Assert.That(item.IsThreeState, Is.True);
+
+        source.IsThreeState = false;
+
+        Assert.That(item.IsThreeState, Is.False);
+    }
+
     #endregion
 
     #region TextBox
