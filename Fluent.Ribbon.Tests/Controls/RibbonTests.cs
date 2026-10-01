@@ -209,4 +209,31 @@ public class RibbonTests
             Key.A
         }));
     }
+
+    /// <summary>
+    /// <see cref="Ribbon.QuickAccessItems"/>.Clear() raises a Reset without the removed items.
+    /// The removed menu items must still forget the ribbon, otherwise checking them later pins their target to a ribbon they no longer belong to.
+    /// </summary>
+    [Test]
+    public void Clearing_QuickAccessItems_detaches_them_from_the_ribbon()
+    {
+        var ribbon = new Ribbon();
+        var target = new Button();
+        var item = new QuickAccessMenuItem
+        {
+            Target = target
+        };
+
+        ribbon.QuickAccessItems.Add(item);
+
+        Assert.That(item.Ribbon, Is.SameAs(ribbon), "Precondition: adding the item must attach it to the ribbon.");
+        Assert.That(item.IsChecked, Is.False, "Precondition: the item must start unchecked.");
+
+        ribbon.QuickAccessItems.Clear();
+
+        item.IsChecked = true;
+
+        Assert.That(ribbon.IsInQuickAccessToolBar(target), Is.False, "Checking a removed item must not pin its target.");
+        Assert.That(item.Ribbon, Is.Null, "A removed item must not reference the ribbon.");
+    }
 }
