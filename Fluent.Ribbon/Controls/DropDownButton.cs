@@ -38,6 +38,12 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     private readonly Stack<WeakReference> openMenuItems = new();
 
+    // Incremented every time IsDropDownOpen changes.
+    // A delayed close (see OnDropDownPopupMouseDown) remembers the value it saw when it was scheduled
+    // and only closes the drop down if the value is still the same when it runs. That way a close that
+    // was meant for an earlier open can't close a drop down the user has reopened in the meantime.
+    private int dropDownOpenGeneration;
+
     #endregion
 
     #region Properties
@@ -608,13 +614,28 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             // Note: get outside thread to prevent exceptions (it's a dependency property after all)
             var timespan = this.ClosePopupOnMouseDownDelay;
 
+            // Remember which "open" this close belongs to. Read here, on the UI thread, like the delay above.
+            var generation = this.dropDownOpenGeneration;
+
             // Ugly workaround, but use a task to allow routed event to continue
             Task.Factory.StartNew(async () =>
             {
                 // We need at least 100 ms of delay. Otherwise there is no way for the routed event to continue...
                 await Task.Delay(Math.Max(100, timespan));
 
-                this.RunInDispatcherAsync(() => this.IsDropDownOpen = false);
+                this.RunInDispatcherAsync(() =>
+                {
+                    // The task can't be cancelled, so check on arrival instead: if IsDropDownOpen changed
+                    // since the mouse down (closed, and maybe reopened), this close is stale and must not
+                    // touch the current drop down.
+                    if (generation != this.dropDownOpenGeneration)
+                    {
+                        return;
+                    }
+
+                    // SetCurrentValue instead of assigning the property so a binding on IsDropDownOpen survives.
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.FalseBox);
+                });
             });
         }
     }
@@ -797,6 +818,9 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
     private void OnIsDropDownOpenChanged(bool newValue)
     {
+        // Any open or close invalidates delayed closes that were scheduled before it.
+        this.dropDownOpenGeneration++;
+
         this.SetValue(System.Windows.Controls.ToolTipService.IsEnabledProperty, BooleanBoxes.Box(!newValue));
 
         Debug.WriteLine($"{this.Header} IsDropDownOpen: {newValue.ToString()}");
