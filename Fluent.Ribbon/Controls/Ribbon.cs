@@ -1606,8 +1606,12 @@ public class Ribbon : Control, ILogicalChildSupport
             this.TabControl.SelectionChanged -= this.OnTabControlSelectionChanged;
             selectedTab = this.TabControl.SelectedItem as RibbonTabItem;
 
+            // Detach the old helpers before clearing their targets, otherwise they keep forwarding
+            // changes of Tabs/ToolBarItems to the old (now empty) tab control and throw.
+            this.tabsSync?.Detach();
             this.tabsSync?.Target.Clear();
 
+            this.toolBarItemsSync?.Detach();
             this.toolBarItemsSync?.Target.Clear();
         }
 
@@ -1624,10 +1628,14 @@ public class Ribbon : Control, ILogicalChildSupport
             this.toolBarItemsSync = new CollectionSyncHelper<UIElement>(this.ToolBarItems, this.TabControl.ToolBarItems);
         }
 
+        // Elements pinned to the old toolbar. They are pinned again below, so re-templating doesn't empty the toolbar.
+        var pinnedElements = this.QuickAccessElements.Keys.ToList();
+
         if (this.QuickAccessToolBar is not null)
         {
             this.ClearQuickAccessToolBar();
 
+            this.quickAccessItemsSync?.Detach();
             this.quickAccessItemsSync?.Target.Clear();
         }
 
@@ -1644,6 +1652,16 @@ public class Ribbon : Control, ILogicalChildSupport
                     Mode = BindingMode.OneWay
                 };
                 this.QuickAccessToolBar.SetBinding(QuickAccessToolBar.CanQuickAccessLocationChangingProperty, binding);
+            }
+        }
+
+        // Pin them again through AddToQuickAccessToolBar, so each gets a fresh copy.
+        // The old copies can't be moved: they are still children of the old toolbar's panel.
+        foreach (var element in pinnedElements)
+        {
+            if (this.IsInQuickAccessToolBar(element) == false)
+            {
+                this.AddToQuickAccessToolBar(element);
             }
         }
 
