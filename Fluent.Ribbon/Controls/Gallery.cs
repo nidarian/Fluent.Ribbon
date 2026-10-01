@@ -266,6 +266,35 @@ public class Gallery : ListBox
                 }
 
                 break;
+
+            case NotifyCollectionChangedAction.Reset:
+                // Raised by Filters.Clear(). Without this the menu would keep items for filters that no longer exist.
+                if (this.groupsMenuButton is not null)
+                {
+                    foreach (var menuItem in this.groupsMenuButton.Items.OfType<MenuItem>())
+                    {
+                        menuItem.Click -= this.OnFilterMenuItemClick;
+                    }
+
+                    this.groupsMenuButton.Items.Clear();
+
+                    // A Reset does not tell us what is left, so rebuild from the current filters (empty after Clear).
+                    foreach (var filter in this.Filters)
+                    {
+                        var menuItem = new MenuItem
+                        {
+                            Header = filter.Title,
+                            Tag = filter,
+                            IsDefinitive = false,
+                            IsChecked = ReferenceEquals(filter, this.SelectedFilter)
+                        };
+
+                        menuItem.Click += this.OnFilterMenuItemClick;
+                        this.groupsMenuButton.Items.Add(menuItem);
+                    }
+                }
+
+                break;
         }
     }
 
@@ -287,13 +316,20 @@ public class Gallery : ListBox
     private static object? CoerceSelectedFilter(DependencyObject d, object? basevalue)
     {
         var gallery = (Gallery)d;
-        if (basevalue is null
-            && gallery.Filters.Count > 0)
+
+        // Only filters which are part of Filters can be selected.
+        // A filter that was removed (or cleared) must not keep filtering the items.
+        // The base value is kept by WPF, so it becomes effective again if that filter is added back
+        // (OnFilterCollectionChanged re-coerces on every change).
+        if (basevalue is GalleryGroupFilter filter
+            && gallery.Filters.Contains(filter))
         {
-            return gallery.Filters[0];
+            return filter;
         }
 
-        return basevalue;
+        return gallery.Filters.Count > 0
+            ? gallery.Filters[0]
+            : null;
     }
 
     // Handles filter property changed
