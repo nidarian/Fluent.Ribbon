@@ -484,14 +484,25 @@ public class Gallery : ListBox
     public bool IsLastItem
     {
         get => (bool)this.GetValue(IsLastItemProperty);
-        private set => this.SetValue(IsLastItemPropertyKey, BooleanBoxes.Box(value));
+        private set => this.SetValue(isLastItemPropertyKey, BooleanBoxes.Box(value));
     }
 
-    /// <summary>Identifies the <see cref="IsLastItem"/> dependency property.</summary>
-    public static readonly DependencyPropertyKey IsLastItemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsLastItem), typeof(bool), typeof(Gallery), new PropertyMetadata(BooleanBoxes.FalseBox));
+    // Whoever has the key can set the read only property, so it must stay private.
+    // Declared before the public fields below, because static fields are initialized in declaration order.
+    // WPF0002 wants the key field to be named IsLastItemPropertyKey, but that name belongs to the public (obsolete) field kept for compatibility.
+#pragma warning disable WPF0002
+    private static readonly DependencyPropertyKey isLastItemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsLastItem), typeof(bool), typeof(Gallery), new PropertyMetadata(BooleanBoxes.FalseBox));
+#pragma warning restore WPF0002
+
+    // Public by mistake: it lets any code set the read only IsLastItem.
+    // Kept (as the same instance) for compatibility; don't use it inside the library, CS0618 is an error here.
+
+    /// <summary>The key of the read only <see cref="IsLastItem"/> dependency property.</summary>
+    [Obsolete("IsLastItemPropertyKey will become private. IsLastItem is read only, use IsLastItemProperty to read it.")]
+    public static readonly DependencyPropertyKey IsLastItemPropertyKey = isLastItemPropertyKey;
 
     /// <summary>Identifies the <see cref="IsLastItem"/> dependency property.</summary>
-    public static readonly DependencyProperty IsLastItemProperty = IsLastItemPropertyKey.DependencyProperty;
+    public static readonly DependencyProperty IsLastItemProperty = isLastItemPropertyKey.DependencyProperty;
 
     #endregion
 
