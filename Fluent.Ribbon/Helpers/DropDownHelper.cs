@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 /// <summary>
 /// Helper class for drop downs.
@@ -35,7 +36,10 @@ public static class DropDownHelper
             return double.NaN;
         }
 
-        var workingAreaHeight = Screen.FromHandle(new WindowInteropHelper(window).Handle).WorkingArea.Height;
+        // WinForms reports the working area in physical pixels, but WPF sizes are device independent units.
+        // Without converting, the drop down would be too high on displays with more than 100% scaling.
+        var workingAreaHeightInPixels = Screen.FromHandle(new WindowInteropHelper(window).Handle).WorkingArea.Height;
+        var workingAreaHeight = workingAreaHeightInPixels / VisualTreeHelper.GetDpi(window).DpiScaleY;
         return Math.Floor(workingAreaHeight / 3D);
     }
 }
