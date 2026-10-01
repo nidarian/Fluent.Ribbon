@@ -275,9 +275,9 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
 
     #region Overrides
 
-    // True while an Enter key press that started on this item (KeyDown seen here) is still going on.
-    // Only such a press may click the item when Enter is released. See OnKeyUp for why.
-    private bool isEnterKeyDown;
+    // The activation key (Enter or Space) whose press started on this item (KeyDown seen here), while it is still held.
+    // Only releasing that same key may click the item. See OnKeyUp for why.
+    private Key? activationKeyDown;
 
     /// <inheritdoc />
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -335,12 +335,13 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
     /// <inheritdoc />
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        // Remember that Enter went down while we had focus. This runs before the event bubbles up to the
-        // gallery (a ListBox), so it doesn't matter whether the gallery handles Enter afterwards.
+        // Remember that Enter or Space went down while we had focus. This runs before the event bubbles up to the
+        // gallery (a ListBox), so it doesn't matter whether the gallery handles the key afterwards.
         // We don't mark the event as handled, so the default key handling is unchanged.
-        if (e.Key == Key.Enter)
+        if (e.Key == Key.Enter
+            || e.Key == Key.Space)
         {
-            this.isEnterKeyDown = true;
+            this.activationKeyDown = e.Key;
         }
 
         base.OnKeyDown(e);
@@ -351,12 +352,12 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
     {
         base.OnIsKeyboardFocusWithinChanged(e);
 
-        // When focus leaves the item, a pending Enter press no longer belongs to it.
+        // When focus leaves the item, a pending key press no longer belongs to it.
         // Without this, Enter pressed on the item, focus moved away, and Enter released later after
         // focus came back would still click.
         if ((bool)e.NewValue == false)
         {
-            this.isEnterKeyDown = false;
+            this.activationKeyDown = null;
         }
     }
 
@@ -374,14 +375,14 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
         if (e.Key == Key.Enter
             || e.Key == Key.Space)
         {
-            // Only click if Enter also went down on this item.
+            // Only click if the same key also went down on this item.
             // Example: pressing Enter on an InRibbonGallery's toggle button opens the drop down and moves focus to
             // the first item while the key is still down. Releasing Enter then arrives here, at the newly focused
             // item. Clicking on that KeyUp would apply the first item just because the user opened the gallery.
-            var wasEnterKeyDown = this.isEnterKeyDown;
-            this.isEnterKeyDown = false;
+            var keyWentDownHere = this.activationKeyDown == e.Key;
+            this.activationKeyDown = null;
 
-            if (wasEnterKeyDown)
+            if (keyWentDownHere)
             {
                 this.RaiseClick();
                 e.Handled = true;
