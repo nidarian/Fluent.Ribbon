@@ -209,4 +209,55 @@ public class RibbonTests
             Key.A
         }));
     }
+
+    /// <summary>
+    /// Re-templating a ribbon at runtime (for example after a theme switch) creates a new tab control and a new quick access toolbar.
+    /// Pinned elements must survive that, and the old collection sync helpers must stop forwarding changes to the old parts.
+    /// </summary>
+    [Test]
+    public void Retemplating_keeps_quick_access_elements_and_stops_syncing_old_parts()
+    {
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem()
+            }
+        };
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            ribbon.ApplyTemplate();
+
+            var button = new Button();
+            ribbon.AddToQuickAccessToolBar(button);
+
+            var oldToolBar = ribbon.QuickAccessToolBar;
+            Assert.That(oldToolBar, Is.Not.Null, "Precondition: the ribbon must have a quick access toolbar.");
+            Assert.That(ribbon.IsInQuickAccessToolBar(button), Is.True, "Precondition: the button must be pinned.");
+            Assert.That(oldToolBar.Items.Count, Is.EqualTo(1), "Precondition: the toolbar must show the pinned button.");
+
+            var template = ribbon.Template;
+            ribbon.Template = null;
+            ribbon.ApplyTemplate();
+            ribbon.Template = template;
+            ribbon.ApplyTemplate();
+
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null.And.Not.SameAs(oldToolBar), "Precondition: re-templating must create a new quick access toolbar.");
+
+            Assert.That(ribbon.IsInQuickAccessToolBar(button), Is.True, "The button must still be pinned after re-templating.");
+            Assert.That(ribbon.QuickAccessToolBar.Items.Count, Is.EqualTo(1), "The new toolbar must show the pinned button.");
+
+            // The old sync helpers would still forward these changes to the cleared old parts and throw.
+            var newTab = new RibbonTabItem();
+            Assert.DoesNotThrow(() => ribbon.Tabs.Add(newTab));
+            Assert.That(ribbon.TabControl.Items.Contains(newTab), Is.True, "The new tab must reach the new tab control.");
+
+            Assert.DoesNotThrow(() => ribbon.QuickAccessItems.Add(new QuickAccessMenuItem()));
+            Assert.That(ribbon.QuickAccessToolBar.QuickAccessItems.Count, Is.EqualTo(1), "The new menu item must reach the new toolbar.");
+
+            Assert.DoesNotThrow(() => ribbon.ToolBarItems.Add(new Button()));
+            Assert.That(ribbon.TabControl.ToolBarItems.Count, Is.EqualTo(1), "The new toolbar item must reach the new tab control.");
+        }
+    }
 }
