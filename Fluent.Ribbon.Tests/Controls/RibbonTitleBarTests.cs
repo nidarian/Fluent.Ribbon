@@ -139,6 +139,81 @@ public sealed class RibbonTitleBarTests
             yield return new RibbonTitleBarSizeData(10, new Size(10, DefaultTitleBarHeight), new Size(0, DefaultTitleBarHeight - 1), new Size(52, DefaultTitleBarHeight), zeroSize);
         }
 
+        [Test]
+        public void Without_QuickAccessToolbarHolder_Header_Should_Get_Its_Desired_Width()
+        {
+            var titlebar = CreateTitlebarWithOnlyHeaderHolder();
+            titlebar.HeaderAlignment = HorizontalAlignment.Left;
+
+            using (new TestRibbonWindow(titlebar))
+            {
+                titlebar.InvalidateMeasure();
+                titlebar.Measure(new Size(800, 30));
+                titlebar.Arrange(new Rect(0, 0, 800, 30));
+
+                Assert.That(titlebar.Template.FindName("PART_HeaderHolder", titlebar), Is.Not.Null, "Precondition: template should contain the header holder.");
+                Assert.That(titlebar.Template.FindName("PART_QuickAccessToolbarHolder", titlebar), Is.Null, "Precondition: template should not contain a quick access toolbar holder.");
+
+                var headerRect = titlebar.GetFieldValue<Rect>(HeaderRect);
+
+                // Header holder is 300 wide, plus the 2 pixels Update always adds.
+                Assert.That(headerRect.Width, Is.EqualTo(302));
+                Assert.That(headerRect.X, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void Without_QuickAccessToolbarHolder_Header_Should_Not_Grow_With_Every_Layout_Pass_When_Contextual_Groups_Are_Visible()
+        {
+            var titlebar = CreateTitlebarWithOnlyHeaderHolder();
+            titlebar.HeaderAlignment = HorizontalAlignment.Right;
+
+            // The tab item has to share a visual root with the titlebar because Update translates its position.
+            var tabItem = new RibbonTabItem { Header = "Contextual" };
+            var group = new RibbonContextualTabGroup();
+            group.Items.Add(tabItem);
+            group.Visibility = Visibility.Visible;
+            titlebar.Items.Add(group);
+
+            var content = new StackPanel();
+            content.Children.Add(titlebar);
+            content.Children.Add(tabItem);
+
+            using (new TestRibbonWindow(content))
+            {
+                Assert.That(group.InnerVisibility, Is.EqualTo(Visibility.Visible), "Precondition: contextual group should be visible.");
+
+                var constraint = new Size(800, 30);
+
+                titlebar.InvalidateMeasure();
+                titlebar.Measure(constraint);
+                var firstHeaderRect = titlebar.GetFieldValue<Rect>(HeaderRect);
+
+                titlebar.InvalidateMeasure();
+                titlebar.Measure(constraint);
+                var secondHeaderRect = titlebar.GetFieldValue<Rect>(HeaderRect);
+
+                Assert.That(secondHeaderRect, Is.EqualTo(firstHeaderRect));
+            }
+        }
+
+        // Custom templates are allowed to omit PART_QuickAccessToolbarHolder and PART_ItemsContainer.
+        private static RibbonTitleBar CreateTitlebarWithOnlyHeaderHolder()
+        {
+            var headerHolder = new FrameworkElementFactory(typeof(Border), "PART_HeaderHolder");
+            headerHolder.SetValue(FrameworkElement.WidthProperty, 300D);
+
+            return new RibbonTitleBar
+            {
+                Template = new ControlTemplate(typeof(RibbonTitleBar))
+                {
+                    VisualTree = headerHolder
+                },
+                UseLayoutRounding = true,
+                SnapsToDevicePixels = true
+            };
+        }
+
 #pragma warning disable CA1815 // Override equals and operator equals on value types
         public struct RibbonTitleBarSizeData
 #pragma warning restore CA1815 // Override equals and operator equals on value types
