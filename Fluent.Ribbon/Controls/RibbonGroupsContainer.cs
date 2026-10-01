@@ -63,7 +63,9 @@ public class RibbonGroupsContainer : Panel, IScrollInfo
     {
         var ribbonPanel = (RibbonGroupsContainer)d;
 
-        var toIncrease = ribbonPanel.reduceOrder.Skip(ribbonPanel.reduceOrderIndex).ToArray();
+        // reduceOrderIndex points at the next entry to reduce, so only the entries after it have been applied.
+        // Skipping just reduceOrderIndex entries would also "undo" the not yet applied entry and enlarge that group too much.
+        var toIncrease = ribbonPanel.reduceOrder.Skip(ribbonPanel.reduceOrderIndex + 1).ToArray();
 
         foreach (var reduceOrderItem in toIncrease)
         {
