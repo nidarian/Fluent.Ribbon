@@ -1115,9 +1115,15 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
                         DropDownButton.NavigateToContainer(container);
 
                         // Edge case: Whole dropdown content is disabled
-                        if (groupBox.IsKeyboardFocusWithin == false)
+                        // No item could take focus. The popup child is a plain Border, which is not focusable,
+                        // so focusing it (as we used to) did nothing and focus stayed outside the open drop down.
+                        // Focus the group box itself instead. It is only focusable while it is collapsed to a
+                        // button (see IsInButtonState), which is the state in which it shows a drop down, but
+                        // check anyway so we never try to focus something that can't take focus.
+                        if (groupBox.IsKeyboardFocusWithin == false
+                            && groupBox.Focusable)
                         {
-                            Keyboard.Focus(groupBox.DropDownPopup.Child);
+                            Keyboard.Focus(groupBox);
                         }
                     });
             }
