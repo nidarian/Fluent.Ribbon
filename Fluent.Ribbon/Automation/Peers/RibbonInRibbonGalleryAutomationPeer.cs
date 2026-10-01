@@ -59,7 +59,10 @@ public class RibbonInRibbonGalleryAutomationPeer : SelectorAutomationPeer, IExpa
         return patternInterface switch
         {
             PatternInterface.ExpandCollapse => this,
-            PatternInterface.Scroll when this.owner.IsDropDownOpen == false => this,
+
+            // Scroll is intentionally not handled here: this peer does not implement IScrollProvider,
+            // so returning "this" made UIA clients fail when they cast it to the provider interface.
+            // The base (ItemsControlAutomationPeer) returns the ScrollViewer's IScrollProvider when there is one, otherwise null.
             _ => base.GetPattern(patternInterface)
         };
     }
