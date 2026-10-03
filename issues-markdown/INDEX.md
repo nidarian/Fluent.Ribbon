@@ -1239,4 +1239,4 @@
 | [1281](issues/01281.md) | Issue | closed | SplitButton will not apply ItemTemplateSelector within QuickAccess |
 | [1282](issues/01282.md) | PR | closed | General purpose fix for missing/untransfered ItemsControl QAT properties |
 | [1283](issues/01283.md) | Issue | open | How to achieve mixed arrangement of size icons in RibbonGroupBox |
-| [1284](issues/01284.md) | Issue | open | Requesting permission to try and help |
+| [1284](issues/01284.md) | Issue | closed | Requesting permission to try and help |
