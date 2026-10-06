@@ -1,10 +1,15 @@
-# Fixes ready for the original project
+# Fixes for the original project's open issues (kept in this fork)
 
 Fixes built and tested in this fork for open issues on
 [fluentribbon/Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon).
-**Nothing has been posted upstream.** You asked for permission in
-[#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284), which had no
-reply yet as of 2026-09-28.
+
+> **These will not be sent upstream (decided 2026-10-06).** You asked for
+> permission in [#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284),
+> which was closed on 2026-09-30. The maintainer doesn't want AI-assisted
+> contributions, so nothing here is posted there. The fixes are used through
+> `integration/all-fixes` only. The `upstream-pr/...` branches are retired: kept
+> as a record, not deleted, and not to be submitted. The "Branch to submit"
+> lines and the "How to submit" steps below are kept only as history.
 
 Each fix has two branches:
 
@@ -566,7 +571,10 @@ Ask whether it's still needed.
 | #803, #962 | Documentation / logo, not code. |
 | #1283 | Support question, the maintainer already answered. |
 
-## How to submit once you have permission
+## How to submit once you have permission (retired, don't use)
+
+Permission wasn't given (see the top of this file). These steps are kept only
+as a record of the plan.
 
 1. On GitHub, open a pull request **from** `nidarian/Fluent.Ribbon`, branch
    `upstream-pr/1251-qat-ischecked`, **to** `fluentribbon/Fluent.Ribbon`, branch `develop`.
