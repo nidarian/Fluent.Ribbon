@@ -657,7 +657,7 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
             case Key.Space:
                 // Keys pressed inside the open drop down bubble up to here too (the popup's content routes its events
                 // through the button). Only a key pressed on the button itself opens or closes the drop down;
-                // otherwise typing a space into a text box inside the drop down would close it.
+                // otherwise pressing Enter in a text box inside the drop down would close it.
                 if (this.IsKeyFromButton(e.OriginalSource))
                 {
                     this.IsDropDownOpen = !this.IsDropDownOpen;
