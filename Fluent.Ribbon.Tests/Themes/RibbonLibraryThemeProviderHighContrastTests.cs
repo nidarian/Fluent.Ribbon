@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using ControlzEx.Theming;
+using Fluent.Tests.Helper;
 using Fluent.Theming;
 using NUnit.Framework;
 
@@ -68,6 +69,38 @@ public class RibbonLibraryThemeProviderHighContrastTests
         }
     }
 
+    [Test]
+    [TestCase("Light")]
+    [TestCase("Dark")]
+    public void GenerateRuntimeLibraryTheme_HighContrast_GalleryHeaderText_Has_Text_Contrast(string baseColorScheme)
+    {
+        // The gallery filter label ("All" etc.) sits on Gallery.Header.Background, which is Gray3 (= WindowText) in High Contrast.
+        // With a fixed black text the label disappears in every High Contrast theme with black or dark WindowText
+        // (High Contrast White, Desert, and also the normal Windows colors the build machine has): black on black is 1:1.
+        var libraryTheme = RuntimeThemeGenerator.Current.GenerateRuntimeLibraryTheme(baseColorScheme, GetAccentColor(), true, RibbonLibraryThemeProvider.DefaultInstance);
+
+        Assert.That(libraryTheme, Is.Not.Null);
+
+        AssertTextContrast(libraryTheme, "Gallery.Header.Foreground", "Gallery.Header.Background");
+        AssertTextContrast(libraryTheme, "Gallery.Header.MouseOver.Foreground", "Gallery.Header.MouseOver.Background");
+    }
+
+    [Test]
+    [TestCase("Light")]
+    [TestCase("Dark")]
+    public void GenerateRuntimeLibraryTheme_HighContrast_GalleryHeader_Uses_HighContrast_Color_Pairs(string baseColorScheme)
+    {
+        // A Windows High Contrast theme only promises readable contrast for its own pairs,
+        // so the label and its mouse over background must be one of those pairs for every High Contrast theme,
+        // not just for the system colors of the machine that runs the tests.
+        var libraryTheme = RuntimeThemeGenerator.Current.GenerateRuntimeLibraryTheme(baseColorScheme, GetAccentColor(), true, RibbonLibraryThemeProvider.DefaultInstance);
+
+        Assert.That(libraryTheme, Is.Not.Null);
+
+        AssertIsHighContrastPair(libraryTheme, "Gallery.Header.Foreground", "Gallery.Header.Background");
+        AssertIsHighContrastPair(libraryTheme, "Gallery.Header.MouseOver.Foreground", "Gallery.Header.MouseOver.Background");
+    }
+
     /// <summary>
     /// Expected mapping from Fluent color keys to the <see cref="SystemColors"/> property that must be used in High Contrast.
     /// </summary>
@@ -123,6 +156,44 @@ public class RibbonLibraryThemeProviderHighContrastTests
         yield return new object[] { "Fluent.Ribbon.Brushes.BackstageTabControl.Background", nameof(SystemColors.WindowColor) };
         yield return new object[] { "Fluent.Ribbon.Brushes.BackstageTabControl.ItemsPanelBackground", nameof(SystemColors.ControlColor) };
         yield return new object[] { "Fluent.Ribbon.Brushes.Backstage.BackButton.Foreground", nameof(SystemColors.HighlightTextColor) };
+    }
+
+    private static void AssertTextContrast(LibraryTheme libraryTheme, string foregroundKey, string backgroundKey)
+    {
+        var foreground = GetBrushColor(libraryTheme, foregroundKey);
+        var background = GetBrushColor(libraryTheme, backgroundKey);
+
+        var ratio = ContrastHelper.GetContrastRatio(foreground, background);
+
+        // WCAG 1.4.3 (text contrast): normal size text needs 4.5:1.
+        Assert.That(ratio, Is.GreaterThanOrEqualTo(4.5), $"{foregroundKey} ({foreground}) on {backgroundKey} ({background}) has a contrast ratio of {ratio:0.00}:1, needs 4.5:1.");
+    }
+
+    private static void AssertIsHighContrastPair(LibraryTheme libraryTheme, string foregroundKey, string backgroundKey)
+    {
+        var actual = $"{GetBrushColor(libraryTheme, foregroundKey)} on {GetBrushColor(libraryTheme, backgroundKey)}";
+
+        // Text on background pairs of a High Contrast theme, and their inverse (the contrast ratio is the same both ways).
+        var pairs = new List<string>
+        {
+            $"{SystemColors.WindowTextColor} on {SystemColors.WindowColor}",
+            $"{SystemColors.WindowColor} on {SystemColors.WindowTextColor}",
+            $"{SystemColors.ControlTextColor} on {SystemColors.ControlColor}",
+            $"{SystemColors.ControlColor} on {SystemColors.ControlTextColor}",
+            $"{SystemColors.HighlightTextColor} on {SystemColors.HighlightColor}",
+            $"{SystemColors.HighlightColor} on {SystemColors.HighlightTextColor}",
+        };
+
+        Assert.That(pairs, Does.Contain(actual), $"{foregroundKey} on {backgroundKey} must be a High Contrast system color pair.");
+    }
+
+    private static Color GetBrushColor(LibraryTheme libraryTheme, string key)
+    {
+        var brush = libraryTheme.Resources["Fluent.Ribbon.Brushes." + key] as SolidColorBrush;
+
+        Assert.That(brush, Is.Not.Null, $"'Fluent.Ribbon.Brushes.{key}' must be a SolidColorBrush.");
+
+        return brush!.Color;
     }
 
     private static Color GetSystemColor(string systemColorName)
