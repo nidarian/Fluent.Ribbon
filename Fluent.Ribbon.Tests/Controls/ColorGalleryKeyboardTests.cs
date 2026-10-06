@@ -81,6 +81,96 @@ public class ColorGalleryKeyboardTests
         }
     }
 
+    /// <summary>
+    /// Browsing leaves the ListBox selection on the highlighted color without committing it.
+    /// A single-select ListBox raises no SelectionChanged when an already selected item is clicked,
+    /// and a mouse pick used to commit only through SelectionChanged, so clicking the browsed color did nothing
+    /// (no color applied, popup stayed open).
+    /// </summary>
+    [Test]
+    public void Click_on_color_highlighted_by_browsing_commits_it()
+    {
+        var gallery = new ColorGallery
+        {
+            Mode = ColorGalleryMode.HighlightColors
+        };
+
+        var dismissCount = 0;
+
+        // handledEventsToo, so a class handler marking the event handled can't hide it from the count.
+        gallery.AddHandler(PopupService.DismissPopupEvent, new EventHandler<DismissPopupEventArgs>((_, _) => dismissCount++), true);
+
+        using (var window = new TestRibbonWindow(gallery))
+        {
+            gallery.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            var listBox = (ListBox)gallery.Template.FindName("PART_StandardColorsListBox", gallery);
+            Assert.That(listBox, Is.Not.Null, "PART_StandardColorsListBox should exist");
+
+            var firstItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(0);
+            var secondItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(1);
+            Assert.That(firstItem, Is.Not.Null, "first color item should be generated");
+            Assert.That(secondItem, Is.Not.Null, "second color item should be generated");
+
+            window.Activate();
+            firstItem.Focus();
+            UIHelper.DoEvents();
+
+            if (firstItem.IsKeyboardFocused == false)
+            {
+                Assert.Inconclusive("Keyboard focus is not available in this test environment.");
+            }
+
+            // Browse to the next color.
+            PressKey(firstItem, Key.Right);
+
+            if (secondItem.IsKeyboardFocused == false)
+            {
+                Assert.Inconclusive("Keyboard focus did not move to the next color (the test window lost keyboard focus).");
+            }
+
+            Assert.That(gallery.SelectedColor, Is.Null, "precondition: browsing must not commit a color");
+            Assert.That(dismissCount, Is.EqualTo(0), "precondition: browsing must not dismiss the popup");
+            Assert.That(secondItem.IsSelected, Is.True, "precondition: browsing leaves the ListBox selection on the highlighted color");
+
+            // Click the highlighted color.
+            Click(secondItem);
+
+            Assert.That(gallery.SelectedColor, Is.EqualTo(ColorGallery.HighlightColors[1]), "clicking the highlighted color should commit it");
+            Assert.That(dismissCount, Is.EqualTo(1), "clicking the highlighted color should dismiss the popup once");
+        }
+    }
+
+    // Simulates a left click the way WPF input delivers it: MouseDown and MouseUp bubble from the clicked element,
+    // and UIElement re-raises them as MouseLeftButtonDown/Up on each element (ListBoxItem selects in OnMouseLeftButtonDown).
+    private static void Click(UIElement target)
+    {
+        try
+        {
+            var down = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+            {
+                RoutedEvent = Mouse.MouseDownEvent
+            };
+
+            target.RaiseEvent(down);
+            UIHelper.DoEvents();
+
+            var up = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+            {
+                RoutedEvent = Mouse.MouseUpEvent
+            };
+
+            target.RaiseEvent(up);
+            UIHelper.DoEvents();
+        }
+        finally
+        {
+            // The ListBox captures the mouse on an item click; don't leak that capture into other tests.
+            Mouse.Capture(null);
+        }
+    }
+
     // Simulates a key press the way WPF input delivers it: PreviewKeyDown (tunnel) and then KeyDown (bubble)
     // on the focused element, sharing one args object so a handled preview is seen as handled by KeyDown.
     private static void PressKey(UIElement target, Key key)
