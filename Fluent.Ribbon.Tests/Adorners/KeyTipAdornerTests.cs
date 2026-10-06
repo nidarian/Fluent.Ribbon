@@ -132,6 +132,66 @@ public class KeyTipAdornerTests
         Assert.That(IsTextBoxShapedControl(new Fluent.Button()), Is.False, "Ribbon controls keep their size based placement");
     }
 
+    /// <summary>
+    /// The #357 rule ("implements <see cref="IKeyTipedControl"/> but not <see cref="IRibbonControl"/>") is meant for
+    /// controls from outside the library. Fluent's own <see cref="RibbonGroupBox"/>, <see cref="GalleryItem"/> and
+    /// <see cref="BackstageTabItem"/> match it too, so they lost the placement they had before #357.
+    /// </summary>
+    [Test]
+    public void Fluent_controls_with_KeyTips_are_not_text_box_shaped()
+    {
+        Assert.That(IsTextBoxShapedControl(new RibbonGroupBox()), Is.False, nameof(RibbonGroupBox));
+        Assert.That(IsTextBoxShapedControl(new GalleryItem()), Is.False, nameof(GalleryItem));
+        Assert.That(IsTextBoxShapedControl(new BackstageTabItem()), Is.False, nameof(BackstageTabItem));
+    }
+
+    /// <summary>
+    /// A collapsed group is shown as one large button, and its KeyTip is meant to sit at the bottom center like
+    /// the KeyTips of other large buttons. Since #357 it was put in the top left corner instead.
+    /// </summary>
+    [Test]
+    public void Collapsed_group_KeyTip_is_centered_horizontally()
+    {
+        // A fixed width, aligned left, so the group's size doesn't depend on its header or the window.
+        var groupBox = new RibbonGroupBox
+        {
+            Header = "Group",
+            Width = 200,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Items =
+            {
+                new Fluent.Button { Header = "Button" }
+            }
+        };
+
+        KeyTip.SetKeys(groupBox, "ZC");
+
+        var panel = new StackPanel { Children = { groupBox } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            groupBox.ApplyTemplate();
+            groupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Collapsed), "Precondition: the group is collapsed");
+            Assert.That(RibbonProperties.GetSize(groupBox), Is.EqualTo(RibbonControlSize.Large), "Precondition: the group has the default (large) size");
+
+            var adorner = new KeyTipAdorner(panel, panel, null);
+
+            // Measuring the adorner is what computes KeyTip positions.
+            adorner.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            var keyTipInformation = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, groupBox));
+            Assert.That(keyTipInformation.Visibility, Is.EqualTo(Visibility.Visible), "Precondition: a collapsed group's own KeyTip is shown");
+
+            var groupCenterX = groupBox.TranslatePoint(new Point(groupBox.ActualWidth / 2.0, 0), panel).X;
+            var keyTipCenterX = keyTipInformation.Position.X + (keyTipInformation.KeyTip.DesiredSize.Width / 2.0);
+
+            Assert.That(keyTipCenterX, Is.EqualTo(groupCenterX).Within(0.5), "The KeyTip of a collapsed group should be centered horizontally on the group");
+        }
+    }
+
     // The placement decision is private, so it's called through reflection to test it directly.
     private static bool IsTextBoxShapedControl(FrameworkElement element)
     {
