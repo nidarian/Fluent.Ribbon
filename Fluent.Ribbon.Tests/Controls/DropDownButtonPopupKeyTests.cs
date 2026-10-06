@@ -70,6 +70,36 @@ public class DropDownButtonPopupKeyTests
         }
     }
 
+    [Test]
+    public void Enter_typed_into_a_text_box_inside_a_split_button_drop_down_does_not_click_the_button()
+    {
+        var textBox = new System.Windows.Controls.TextBox();
+        var splitButton = new SplitButton
+        {
+            Header = "Split",
+            Items = { textBox }
+        };
+
+        var clicks = 0;
+        splitButton.Click += (_, _) => clicks++;
+
+        using (new TestRibbonWindow(splitButton))
+        {
+            splitButton.ApplyTemplate();
+
+            splitButton.IsDropDownOpen = true;
+            UIHelper.DoEvents();
+
+            Assert.That(splitButton.IsDropDownOpen, Is.True, "Precondition: the drop down should be open");
+            Assert.That(PresentationSource.FromVisual(textBox), Is.Not.Null, "Precondition: the text box should be shown in the drop down");
+
+            PressKey(textBox, Key.Enter);
+
+            Assert.That(clicks, Is.EqualTo(0), "Enter typed into the text box must not click the split button");
+            Assert.That(splitButton.IsDropDownOpen, Is.True, "Enter typed into the text box must not close the drop down");
+        }
+    }
+
     // Simulates a key press the way WPF delivers it: a KeyDown event on the focused element.
     private static KeyEventArgs PressKey(UIElement target, Key key)
     {
