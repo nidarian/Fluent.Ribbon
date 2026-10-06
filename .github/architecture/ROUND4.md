@@ -24,7 +24,8 @@ Same rule as before, for every branch:
 Actions tab; the branch filter there shows them.
 
 Each fix is on `fix/<name>` (proof history) and `upstream-pr/<name>` (the same
-change on top of upstream `develop`, ready to send if that ever happens).
+change on top of upstream `develop`; retired on 2026-10-06, since the original
+project won't take them, see `../README.md`).
 All of them are merged together on `integration/next`, and `integration/all-fixes` (the app package) was moved up to it once the combined build passed.
 
 ## Drop downs and menus

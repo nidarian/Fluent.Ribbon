@@ -17,13 +17,13 @@ original project README is still here: [README.md](../README.md).
 | `integration/all-fixes` | **All fixes together.** The NuGet package for my own app is built from this. | No, see "Keeping the fixes current" |
 | `integration/next` | Where a new round of fixes is merged and built first. When its build passes, `integration/all-fixes` is moved up to it. Round 4 (2026-10-01) went this way. | No |
 | `fix/...`, `feature/...`, `docs/...` | One fix each, with tests (`docs/` = doc comment fixes, no code) | No |
-| `upstream-pr/...` | The same fixes, cleaned up for sending to the original project | No |
+| `upstream-pr/...` | **Retired (2026-10-06).** The same fixes, cleaned up for sending to the original project, which won't take them. Kept as a record, not deleted. Nothing new goes here. | No |
 | `archive` | Copies of the original's issues, pull requests and wiki | Yes, monthly |
 | `fix/issue-357-keytip-placement` | My own fix from Feb 2026 (its fork PR #1 was closed on 2026-09-30 without merging: the fix is in `integration/all-fixes` and `upstream-pr/357-keytip-placement`) | No |
 
 Why the fixes aren't in `develop`: it stays a clean copy of the original, so
-the backup sync never hits merge conflicts. That matters most once the
-original project takes the fixes in its own form.
+the backup sync never hits merge conflicts. The fixes live only on the
+`fix/...` branches and `integration/all-fixes`.
 
 ## What runs automatically (GitHub Actions, $0 on a public repo)
 
@@ -49,16 +49,24 @@ GitHub emails me if a run fails. `.github/FORK-BACKUP.md` explains what to do.
 project has moved on, merge `develop` into `integration/all-fixes` and re-run
 Build (Windows) on it. Or ask Claude to do it.
 
-## Status of the fixes (as of 2026-10-01)
+When merging, check the original's `Changelog.md` for bugs it fixed in its own
+way. If it fixed one the fork also fixed, keep the original's version and drop
+the fork's (revert that fix on `integration/all-fixes`), so the two don't
+conflict later.
 
-- **Not sent to the original project.** I asked the maintainer for permission in
-  [#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284). Nothing is
-  posted there until he agrees.
+## Status of the fixes (as of 2026-10-06)
+
+- **Not sent to the original project, and they won't be.** I asked for
+  permission in [#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284)
+  (closed 2026-09-30). The maintainer doesn't want AI-assisted contributions,
+  so the fixes stay in this fork. Please respect that: don't open pull requests
+  or post these fixes on the original project.
+- This fork maintains its own fixes from now on. The library is MIT-licensed
+  (`License.txt`): keep that file and its copyright lines in anything built
+  from this fork.
 - The full list, the evidence (test runs), and what's still to check by hand are
   in `.github/UPSTREAM-FIXES.md`. Round 4 (51 more fixes, including the items
   that used to be "maintainer's call") is in `.github/architecture/ROUND4.md`.
-- Before sending anything: check whether the original project already fixed it
-  in the meantime (see its Changelog.md).
 
 ## Files in `.github/`
 
@@ -66,7 +74,7 @@ Build (Windows) on it. Or ask Claude to do it.
 |---|---|
 | `README.md` | This page. Start here. |
 | `FORK-BACKUP.md` | A sync or archive run failed |
-| `UPSTREAM-FIXES.md` | Sending fixes to the original project |
+| `UPSTREAM-FIXES.md` | What each early fix does and its proof. Written for sending upstream, which is no longer planned |
 | `APP-REVIEW-CHECKLIST.md` | Trying the fixes in my app |
 | `architecture/` | Before changing the library: state diagrams of the 7 main parts, each claim tied to a code line. Run `python3 .github/scripts/check-citations.py` to check they still match the code. |
 | `architecture/FINDINGS.md` | What the diagrams turned up: bugs fixed, rejected, and still unverified |
