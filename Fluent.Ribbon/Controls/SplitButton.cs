@@ -419,7 +419,9 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
     {
         base.OnKeyDown(e);
 
-        if (e.Key == Key.Enter)
+        // Enter typed inside the drop down (for example into a text box) bubbles up to here too. It must not click the button.
+        if (e.Key == Key.Enter
+            && this.IsKeyFromButton(e.OriginalSource))
         {
             this.button?.InvokeClick();
         }

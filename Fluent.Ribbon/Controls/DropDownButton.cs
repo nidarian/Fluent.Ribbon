@@ -655,8 +655,15 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
 
             case Key.Enter:
             case Key.Space:
-                this.IsDropDownOpen = !this.IsDropDownOpen;
-                handled = true;
+                // Keys pressed inside the open drop down bubble up to here too (the popup's content routes its events
+                // through the button). Only a key pressed on the button itself opens or closes the drop down;
+                // otherwise typing a space into a text box inside the drop down would close it.
+                if (this.IsKeyFromButton(e.OriginalSource))
+                {
+                    this.IsDropDownOpen = !this.IsDropDownOpen;
+                    handled = true;
+                }
+
                 break;
         }
 
@@ -666,6 +673,14 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         }
 
         base.OnKeyDown(e);
+    }
+
+    // The popup's content is not a visual descendant of the button (a popup has its own visual root),
+    // so this is true for the button and its template parts (like the parts of a SplitButton), not for the drop down.
+    private protected bool IsKeyFromButton(object originalSource)
+    {
+        return ReferenceEquals(originalSource, this)
+               || (originalSource is System.Windows.Media.Visual visual && this.IsAncestorOf(visual));
     }
 
     internal static void NavigateToContainer(DependencyObject container, FocusNavigationDirection focusNavigationDirection = FocusNavigationDirection.Down)
