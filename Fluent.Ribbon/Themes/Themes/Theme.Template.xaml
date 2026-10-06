@@ -189,10 +189,12 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.Background" Color="{StaticResource Fluent.Ribbon.Colors.Gray3}" options:Freeze="True" />
     <!-- Fixed black, not Colors.Black (which is white in Dark): Gray3 (#9D9D9D) is the same in both themes.
          Black on it is 7.74:1; the old white text (Light) was 2.71:1, and the old #FFD232 mouse over text 1.87:1.
-         On mouse over the background turns #FFD232 instead, with black text at 14.5:1. -->
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.Foreground" Color="#FF000000" options:Freeze="True" />
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Background" Color="{StaticResource Fluent.Ribbon.Colors.ExtremeHighlight}" options:Freeze="True" />
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Foreground" Color="#FF000000" options:Freeze="True" />
+         On mouse over the background turns #FFD232 instead, with black text at 14.5:1.
+         These three are placeholders (defaults in GeneratorParameters.json) only so that a High Contrast runtime theme
+         can replace them with system color pairs: there Gray3 is WindowText, which can be black. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.Foreground" Color="{{Fluent.Ribbon.Brushes.Gallery.Header.Foreground}}" options:Freeze="True" />
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Background" Color="{{Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Background}}" options:Freeze="True" />
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Foreground" Color="{{Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Foreground}}" options:Freeze="True" />
 
     <!-- InRibbonGallery -->
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.InRibbonGallery.Content.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />

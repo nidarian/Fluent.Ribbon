@@ -110,7 +110,7 @@ public class RibbonLibraryThemeProvider : LibraryThemeProvider
         values["Fluent.Ribbon.Colors.Black20"] = grayText;
         values["Fluent.Ribbon.Colors.Gray1"] = windowText; // also KeyTip background, its text uses "White", so it gets inverted colors
         values["Fluent.Ribbon.Colors.Gray2"] = windowText;
-        values["Fluent.Ribbon.Colors.Gray3"] = windowText; // also Gallery header background, its text uses "White"
+        values["Fluent.Ribbon.Colors.Gray3"] = windowText; // also Gallery header background, its text is set below
         values["Fluent.Ribbon.Colors.Gray4"] = windowText;
         values["Fluent.Ribbon.Colors.Gray5"] = windowText;
         values["Fluent.Ribbon.Colors.Gray6"] = windowText;
@@ -161,6 +161,13 @@ public class RibbonLibraryThemeProvider : LibraryThemeProvider
 
         // The back button background is AccentBase (Highlight), so its text needs HighlightText.
         values["Fluent.Ribbon.Brushes.Backstage.BackButton.Foreground"] = highlightText;
+
+        // The gallery filter label is a fixed black in the normal themes, which is invisible on Gray3 (WindowText)
+        // when WindowText is black or dark (High Contrast White, Desert). So the header gets inverted colors like KeyTips,
+        // and the mouse over (#FFD232 otherwise) uses the Highlight pair.
+        values["Fluent.Ribbon.Brushes.Gallery.Header.Foreground"] = window;
+        values["Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Background"] = highlight;
+        values["Fluent.Ribbon.Brushes.Gallery.Header.MouseOver.Foreground"] = highlightText;
     }
 
     private static string ToColorString(Color color)
