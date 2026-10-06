@@ -780,7 +780,18 @@ public class KeyTipAdorner : Adorner
             || element is System.Windows.Controls.ComboBox
             || element is System.Windows.Controls.TextBox
             || element is System.Windows.Controls.CheckBox
-            || (element is IKeyTipedControl && element is not IRibbonControl);
+            || (element is IKeyTipedControl && element is not IRibbonControl && IsKeyTipedControlFromFluent(element) == false);
+    }
+
+    // Fluent's own controls which implement IKeyTipedControl without being an IRibbonControl.
+    // The rule above is meant for controls from outside the library (#357), these keep their previous placement.
+    // Derived types are covered as well, so an app's subclass of these controls is placed like the original.
+    private static bool IsKeyTipedControlFromFluent(FrameworkElement element)
+    {
+        return element is RibbonGroupBox
+            || element is GalleryItem
+            || element is BackstageTabItem
+            || element is RibbonTabItem;
     }
 
     // Determines whether the element is children to RibbonToolBar
