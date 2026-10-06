@@ -422,7 +422,9 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
         // InvokeClick doesn't check IsEnabled, so check it here: a disabled button part
         // (IsButtonEnabled = false, or a command that can't execute) must not be clicked by Enter.
         // Enter then only opens the drop down, which is the part that is still usable.
+        // Enter typed inside the drop down (for example into a text box) bubbles up to here too. It must not click the button.
         if (e.Key == Key.Enter
+            && this.IsKeyFromButton(e.OriginalSource)
             && this.button is { IsEnabled: true } button)
         {
             button.InvokeClick();
