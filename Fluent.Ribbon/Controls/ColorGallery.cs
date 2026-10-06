@@ -691,6 +691,9 @@ public class ColorGallery : Control
 
         // handledEventsToo: the ListBox marks navigation keys as handled, but we still have to end the browse.
         EventManager.RegisterClassHandler(type, Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDownHandledEventsToo), true);
+
+        // handledEventsToo: the ListBoxItem marks the mouse down as handled after selecting itself.
+        EventManager.RegisterClassHandler(type, Mouse.MouseDownEvent, new MouseButtonEventHandler(OnMouseDownHandledEventsToo), true);
     }
 
     #endregion
@@ -1009,6 +1012,37 @@ public class ColorGallery : Control
         ((ColorGallery)sender).isKeyboardBrowsing = false;
     }
 
+    private static void OnMouseDownHandledEventsToo(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left
+            || e.OriginalSource is not DependencyObject source)
+        {
+            return;
+        }
+
+        var gallery = (ColorGallery)sender;
+
+        foreach (var listBox in gallery.listBoxes)
+        {
+            if (listBox.ContainerFromElement(source) is not ListBoxItem { IsSelected: true, Content: Color color })
+            {
+                continue;
+            }
+
+            // Browsing leaves the ListBox selection on the highlighted color without committing it.
+            // Clicking an already selected item raises no SelectionChanged, so the click has to commit it here.
+            // A click on a not yet selected item was already committed by SelectionChanged (SelectedColor is equal then),
+            // and clicking the committed color keeps doing nothing, as before.
+            if (color != default
+                && gallery.SelectedColor != color)
+            {
+                gallery.CommitColor(listBox, color);
+            }
+
+            return;
+        }
+    }
+
     private void OnListBoxSelectedChanged(object sender, SelectionChangedEventArgs e)
     {
         if (this.isSelectionChanging)
@@ -1029,7 +1063,7 @@ public class ColorGallery : Control
         }
     }
 
-    // Shared by mouse selection (SelectionChanged) and Enter/Space: makes the color the SelectedColor and closes the popup.
+    // Shared by mouse selection (SelectionChanged or a click on the browsed color) and Enter/Space: makes the color the SelectedColor and closes the popup.
     private void CommitColor(object sourceListBox, Color color)
     {
         this.isSelectionChanging = true;

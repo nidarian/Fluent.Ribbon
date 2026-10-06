@@ -72,7 +72,7 @@ Control (never Highlight), and states stay visible through borders.
 | `Colors.Black20` | `GrayTextColor` | Subdued text, made opaque |
 | `Colors.Gray1` | `WindowTextColor` | Selected tab text, CheckBox stroke; KeyTip background (KeyTip text is `White`, so KeyTips are inverted) |
 | `Colors.Gray2` | `WindowTextColor` | Hover borders, tab/backstage underlines, KeyTip border |
-| `Colors.Gray3` | `WindowTextColor` | Pressed border; Gallery header background (its text is `White`) |
+| `Colors.Gray3` | `WindowTextColor` | Pressed border; Gallery header background (its text is `Brushes.Gallery.Header.Foreground`) |
 | `Colors.Gray4` .. `Colors.Gray7` | `WindowTextColor` | Control, drop down, scroll and separator borders |
 | `Colors.Gray8`, `Colors.Gray9`, `Colors.Gray10` | `ControlColor` | Fills: group headers, resize grip, scroll buttons, disabled TextBox |
 | `Colors.White` | `WindowColor` | Main background |
@@ -90,6 +90,9 @@ Control (never Highlight), and states stay visible through borders.
 | `Brushes.RibbonTabControl.Content.Background`, `Brushes.DropDown.Background`, `Brushes.BackstageTabControl.Background` | `WindowColor` | Literal colors in GeneratorParameters.json |
 | `Brushes.BackstageTabControl.ItemsPanelBackground` | `ControlColor` | Literal color in GeneratorParameters.json |
 | `Brushes.Backstage.BackButton.Foreground` | `HighlightTextColor` | Its background is AccentBase (Highlight) |
+| `Brushes.Gallery.Header.Foreground` | `WindowColor` | Gallery filter label on Gray3 (WindowText), inverted like KeyTips; fixed black in the shipped themes |
+| `Brushes.Gallery.Header.MouseOver.Background` | `HighlightColor` | `ExtremeHighlight` (#FFD232) in the shipped themes |
+| `Brushes.Gallery.Header.MouseOver.Foreground` | `HighlightTextColor` | Text on that; fixed black in the shipped themes |
 
 All keys are prefixed with `Fluent.Ribbon.`.
 
@@ -105,7 +108,7 @@ Hard-coded colors (found with grep in `Fluent.Ribbon/Themes/**`):
   `TextBox.Selection` already uses `SystemColors.HighlightColor`, but only as read when the dictionary loads.
 - `GeneratorParameters.json` default values that are left as they are:
   `ExtremeHighlight` `#FFD232` and `DarkExtremeHighlight` `#F29536`
-  (ColorGallery selected swatch border, Gallery filter label on hover),
+  (ColorGallery selected swatch border),
   `ApplicationMenuItem.CheckBox.Background` `#FCF1C2` and `.Border` `#F29536`.
 - `RibbonWindow.xaml`: `NonActiveBorderBrush` and `NonActiveGlowColor` `#434346`.
 - `Controls/Slider.xaml`: thumb background `Red` on hover (three triggers).
@@ -125,8 +128,6 @@ Other gaps:
   (`Accent40`) blends with the background; ColorGallery item borders and the
   disabled TextBox border (`Gray8`) blend too; the disabled caption button text
   uses `Brushes.White` (= Window) and disappears.
-- The Gallery filter label is `White` (= Window) on `Gray3` (= WindowText),
-  and turns `ExtremeHighlight` on hover.
 - Colors the app sets itself (for example a `RibbonContextualTabGroup.Background`).
 - When High Contrast is turned off again, ControlzEx does not go back to the
   shipped theme (for example `Light.Blue`): it generates a normal runtime theme
