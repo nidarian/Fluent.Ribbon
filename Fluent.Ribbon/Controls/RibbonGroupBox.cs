@@ -1058,11 +1058,19 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
         switch (e.Key)
         {
             // A collapsed group behaves like a drop down button, and buttons are activated with Space and Enter.
+            // Keys pressed inside the open drop down bubble up to here too (the popup's content routes its events
+            // through the group box). Only a key pressed on the group itself opens it; otherwise Enter pressed in a
+            // text box inside the drop down would be marked handled and never reach window-level key bindings
+            // or default buttons.
             case Key.Space:
             case Key.Enter:
-                e.Handled = true;
+                if (this.IsKeyFromGroupBox(e.OriginalSource))
+                {
+                    e.Handled = true;
 
-                this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
+                    this.SetCurrentValue(IsDropDownOpenProperty, BooleanBoxes.TrueBox);
+                }
+
                 break;
 
             case Key.System:
@@ -1087,6 +1095,14 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
     #endregion
 
     #region Event Handling
+
+    // The popup's content is not a visual descendant of the group box (a popup has its own visual root),
+    // so this is true for the group box and its template parts, not for the drop down.
+    private bool IsKeyFromGroupBox(object originalSource)
+    {
+        return ReferenceEquals(originalSource, this)
+               || (originalSource is Visual visual && this.IsAncestorOf(visual));
+    }
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
