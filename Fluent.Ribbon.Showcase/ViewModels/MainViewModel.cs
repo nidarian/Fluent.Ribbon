@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Timers;
 using System.Windows;
@@ -89,8 +90,14 @@ public class MainViewModel : ViewModel
 
             this.zoom = value;
             this.OnPropertyChanged();
+            this.OnPropertyChanged(nameof(this.ZoomHeader));
         }
     }
+
+    // A ready made string for RibbonGroupBox.Header.
+    // Binding.StringFormat is ignored there because Header is of type object,
+    // and HeaderStringFormat is ignored because the group box header uses its own templates.
+    public string ZoomHeader => string.Format(CultureInfo.CurrentCulture, "{0} Zoom", this.Zoom);
 
     public bool AreContextGroupsVisible
     {
