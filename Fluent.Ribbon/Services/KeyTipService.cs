@@ -295,7 +295,11 @@ public class KeyTipService
                 // Implementing navigation the way office does would require complex focus/state tracking etc. so i decided to just terminate keytips and not restore focus.
                 {
                     this.backUpFocusedControl = null;
-                    this.Terminate();
+
+                    // Keep open popups open. Terminating with an empty result closes all popups (see OnAdornerChainTerminated),
+                    // which also closed the drop down the user just opened with a key tip (like a collapsed group box),
+                    // so pressing Down to move into it closed it instead. The key tips are terminated anyway.
+                    this.activeAdornerChain?.Terminate(new KeyTipPressedResult(pressedElementAquiredFocus: false, pressedElementOpenedPopup: true));
                 }
 
                 return;

@@ -589,28 +589,6 @@ public class KeyTipAdorner : Adorner
             return;
         }
 
-        double[]? rows = null;
-        var groupBox = this.oneOfAssociatedElements as RibbonGroupBox ?? UIHelper.GetParent<RibbonGroupBox>(this.oneOfAssociatedElements);
-        var panel = groupBox?.GetPanel();
-
-        if (panel is not null
-            && groupBox is not null)
-        {
-            var layoutRoot = groupBox.GetLayoutRoot();
-
-            if (layoutRoot is not null)
-            {
-                var height = layoutRoot.DesiredSize.Height;
-                rows = new[]
-                {
-                    layoutRoot.TranslatePoint(new Point(0, 0), this.AdornedElement).Y,
-                    layoutRoot.TranslatePoint(new Point(0, panel.DesiredSize.Height / 2.0), this.AdornedElement).Y,
-                    layoutRoot.TranslatePoint(new Point(0, panel.DesiredSize.Height), this.AdornedElement).Y,
-                    layoutRoot.TranslatePoint(new Point(0, height + 1), this.AdornedElement).Y
-                };
-            }
-        }
-
         foreach (var keyTipInformation in this.keyTipInformations)
         {
             // Skip invisible keytips
@@ -618,6 +596,11 @@ public class KeyTipAdorner : Adorner
             {
                 continue;
             }
+
+            // The rows come from the group the element is in, not from the group of the first KeyTip on this level.
+            // On a tab, the first KeyTip often belongs to a group box itself, and the rows of a collapsed group come from
+            // its drop down content, which is somewhere else than the collapsed group's button (#5).
+            var rows = this.GetGroupRows(keyTipInformation.AssociatedElement);
 
             // Update KeyTip Visibility
             var visualTargetIsVisible = keyTipInformation.VisualTarget.IsVisible;
@@ -754,7 +737,7 @@ public class KeyTipAdorner : Adorner
                     var translatedPoint = keyTipInformation.VisualTarget.TranslatePoint(point, this.AdornedElement);
 
                     // Snapping to rows if it present
-                    translatedPoint = SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
+                    translatedPoint = SnapToRowsIfPresent(CanSnapToGroupRows(keyTipInformation) ? rows : null, keyTipInformation, translatedPoint);
 
                     keyTipInformation.Position = translatedPoint;
                 }
@@ -766,12 +749,49 @@ public class KeyTipAdorner : Adorner
                     var translatedPoint = keyTipInformation.VisualTarget.TranslatePoint(point, this.AdornedElement);
 
                     // Snapping to rows if it present
-                    translatedPoint = SnapToRowsIfPresent(rows, keyTipInformation, translatedPoint);
+                    translatedPoint = SnapToRowsIfPresent(CanSnapToGroupRows(keyTipInformation) ? rows : null, keyTipInformation, translatedPoint);
 
                     keyTipInformation.Position = translatedPoint;
                 }
             }
         }
+    }
+
+    // Returns the rows of the group the element is in (top, middle and bottom of the group's panel, and below it),
+    // or null if the element is not in a group. A group box's own KeyTip is not in a group, so it gets no rows.
+    private double[]? GetGroupRows(FrameworkElement element)
+    {
+        var groupBox = UIHelper.GetParent<RibbonGroupBox>(element);
+        var panel = groupBox?.GetPanel();
+        var layoutRoot = groupBox?.GetLayoutRoot();
+
+        if (panel is null
+            || layoutRoot is null)
+        {
+            return null;
+        }
+
+        var height = layoutRoot.DesiredSize.Height;
+        return new[]
+        {
+            layoutRoot.TranslatePoint(new Point(0, 0), this.AdornedElement).Y,
+            layoutRoot.TranslatePoint(new Point(0, panel.DesiredSize.Height / 2.0), this.AdornedElement).Y,
+            layoutRoot.TranslatePoint(new Point(0, panel.DesiredSize.Height), this.AdornedElement).Y,
+            layoutRoot.TranslatePoint(new Point(0, height + 1), this.AdornedElement).Y
+        };
+    }
+
+    // Snapping to rows is meant for controls shown in a group in the ribbon.
+    // In the drop down of a collapsed group the first row is the drop down's top edge, and a KeyTip centered on it
+    // would stick out of the drop down (#5). Controls in other popups (for example the drop down of a button
+    // in the group) are not part of the group's rows either. Neither is a visual descendant of the group.
+    private static bool CanSnapToGroupRows(KeyTipInformation keyTipInformation)
+    {
+        var groupBox = UIHelper.GetParent<RibbonGroupBox>(keyTipInformation.AssociatedElement);
+
+        return groupBox is not null
+            && groupBox.IsInButtonState == false
+            && keyTipInformation.VisualTarget.IsDescendantOf(groupBox);
     }
 
     private static bool IsTextBoxShapedControl(FrameworkElement element)

@@ -192,6 +192,190 @@ public class KeyTipAdornerTests
         }
     }
 
+    /// <summary>
+    /// https://github.com/nidarian/Fluent.Ribbon/issues/5
+    /// The rows used for snapping were taken from the first KeyTip's element. On a tab that is often a group box
+    /// itself, and for a collapsed group these rows come from its drop down content (not shown), not from the button.
+    /// Since snapping took effect, the KeyTip of a collapsed group was moved to the top of the window.
+    /// </summary>
+    [Test]
+    public void Collapsed_group_KeyTip_is_placed_on_the_collapsed_group()
+    {
+        var groupBox = CreateCollapsibleGroupBox("ZC", new Fluent.Button { Header = "Button" });
+
+        // Something above the group, so "the top of the window" and "the group" are different places.
+        var panel = new StackPanel { Children = { new Border { Height = 100 }, groupBox } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            groupBox.ApplyTemplate();
+            groupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Collapsed), "Precondition: the group is collapsed");
+
+            var adorner = new KeyTipAdorner(panel, panel, null);
+
+            // Measuring the adorner is what computes KeyTip positions.
+            adorner.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            var keyTipInformation = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, groupBox));
+            Assert.That(keyTipInformation.Visibility, Is.EqualTo(Visibility.Visible), "Precondition: a collapsed group's own KeyTip is shown");
+
+            AssertKeyTipTopIsWithinElement(keyTipInformation, groupBox, panel);
+        }
+    }
+
+    /// <summary>
+    /// https://github.com/nidarian/Fluent.Ribbon/issues/5
+    /// A tab with a collapsed group and an expanded group: the controls in the expanded group still snap to its rows,
+    /// and the collapsed group's KeyTip stays on the collapsed group.
+    /// </summary>
+    [Test]
+    public void KeyTips_snap_to_rows_of_expanded_groups_next_to_a_collapsed_group()
+    {
+        var collapsedGroupBox = CreateCollapsibleGroupBox("ZC", new Fluent.Button { Header = "Button" });
+
+        // SizeDefinition="Small" keeps the button small, so its KeyTip goes through the "small control" placement.
+        var button = new Fluent.Button
+        {
+            Header = "Small",
+            KeyTip = "S",
+            SizeDefinition = "Small"
+        };
+        var expandedGroupBox = CreateCollapsibleGroupBox("ZE", button);
+
+        // The collapsed group comes first, like groupLL on the Showcase's Insert tab.
+        var groups = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { collapsedGroupBox, expandedGroupBox }
+        };
+
+        var panel = new StackPanel { Children = { new Border { Height = 100 }, groups } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            collapsedGroupBox.ApplyTemplate();
+            expandedGroupBox.ApplyTemplate();
+            collapsedGroupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(collapsedGroupBox.State, Is.EqualTo(RibbonGroupBoxState.Collapsed), "Precondition: the first group is collapsed");
+            Assert.That(expandedGroupBox.State, Is.Not.EqualTo(RibbonGroupBoxState.Collapsed), "Precondition: the second group is expanded");
+
+            var adorner = new KeyTipAdorner(panel, panel, null);
+
+            // Measuring the adorner is what computes KeyTip positions.
+            adorner.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            var groupKeyTip = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, collapsedGroupBox));
+            Assert.That(groupKeyTip.Visibility, Is.EqualTo(Visibility.Visible), "Precondition: a collapsed group's own KeyTip is shown");
+            AssertKeyTipTopIsWithinElement(groupKeyTip, collapsedGroupBox, panel);
+
+            var buttonKeyTip = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, button));
+            Assert.That(buttonKeyTip.Visibility, Is.EqualTo(Visibility.Visible), "Precondition: the button's KeyTip is shown");
+
+            // The rows of the button's own group: top, middle and bottom of the group's panel, and below it.
+            var layoutRoot = expandedGroupBox.GetLayoutRoot();
+            var groupPanel = expandedGroupBox.GetPanel();
+            Assert.That(layoutRoot, Is.Not.Null);
+            Assert.That(groupPanel, Is.Not.Null);
+
+            var rows = new[]
+            {
+                layoutRoot.TranslatePoint(new Point(0, 0), panel).Y,
+                layoutRoot.TranslatePoint(new Point(0, groupPanel.DesiredSize.Height / 2.0), panel).Y,
+                layoutRoot.TranslatePoint(new Point(0, groupPanel.DesiredSize.Height), panel).Y,
+                layoutRoot.TranslatePoint(new Point(0, layoutRoot.DesiredSize.Height + 1), panel).Y
+            };
+
+            var keyTipCenterY = buttonKeyTip.Position.Y + (buttonKeyTip.KeyTip.DesiredSize.Height / 2.0);
+
+            Assert.That(rows.Any(row => Math.Abs(row - keyTipCenterY) < 0.01), Is.True, $"KeyTip center {keyTipCenterY} should be on one of the rows {string.Join(", ", rows)} of its own group");
+        }
+    }
+
+    /// <summary>
+    /// https://github.com/nidarian/Fluent.Ribbon/issues/5
+    /// Inside the open drop down of a collapsed group the rows start at the drop down's top edge.
+    /// Snapping centered the KeyTips of the top controls on that edge, so half of each KeyTip was outside the drop down.
+    /// </summary>
+    [Test]
+    public void KeyTips_in_the_drop_down_of_a_collapsed_group_stay_inside_the_drop_down()
+    {
+        // Small buttons, stacked like in a ribbon group, so the top button is far from the middle row.
+        var button = new Fluent.Button { Header = "Small 1", KeyTip = "S", SizeDefinition = "Small" };
+        var groupBox = CreateCollapsibleGroupBox(
+            "ZC",
+            button,
+            new Fluent.Button { Header = "Small 2", KeyTip = "T", SizeDefinition = "Small" },
+            new Fluent.Button { Header = "Small 3", KeyTip = "U", SizeDefinition = "Small" });
+
+        var panel = new StackPanel { Children = { groupBox } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            groupBox.ApplyTemplate();
+            groupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            groupBox.IsDropDownOpen = true;
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.IsDropDownOpen, Is.True, "Precondition: the drop down is open");
+            Assert.That(PresentationSource.FromVisual(button), Is.Not.Null, "Precondition: the button is shown in the drop down");
+
+            // The adorner KeyTipAdorner.Forward creates after the collapsed group's KeyTip was pressed:
+            // it adorns the content of the drop down and looks for KeyTips in the group.
+            var adorner = new KeyTipAdorner(button, groupBox, null);
+
+            // Measuring the adorner is what computes KeyTip positions.
+            adorner.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            var keyTipInformation = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, button));
+            Assert.That(keyTipInformation.Visibility, Is.EqualTo(Visibility.Visible), "Precondition: the button's KeyTip is shown");
+
+            // The drop down's content (the group's layout root moves into the drop down while the group is collapsed).
+            var layoutRoot = groupBox.GetLayoutRoot();
+            Assert.That(layoutRoot, Is.Not.Null);
+            var dropDownContentTop = layoutRoot.TranslatePoint(new Point(0, 0), button).Y;
+
+            Assert.That(keyTipInformation.Position.Y, Is.GreaterThanOrEqualTo(dropDownContentTop - 0.5), "The KeyTip's top edge should not be above the drop down's content");
+        }
+    }
+
+    // A group with the height it has in a ribbon, aligned top left, so its size doesn't depend on the window.
+    private static RibbonGroupBox CreateCollapsibleGroupBox(string keys, params UIElement[] items)
+    {
+        var groupBox = new RibbonGroupBox
+        {
+            Header = "Group",
+            Width = 200,
+            Height = 94,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top
+        };
+
+        foreach (var item in items)
+        {
+            groupBox.Items.Add(item);
+        }
+
+        KeyTip.SetKeys(groupBox, keys);
+
+        return groupBox;
+    }
+
+    // The KeyTip's top edge has to be on the element (the KeyTip itself may reach below it).
+    private static void AssertKeyTipTopIsWithinElement(KeyTipInformation keyTipInformation, FrameworkElement element, UIElement relativeTo)
+    {
+        var elementTop = element.TranslatePoint(new Point(0, 0), relativeTo).Y;
+        var elementBottom = elementTop + element.ActualHeight;
+
+        Assert.That(keyTipInformation.Position.Y, Is.InRange(elementTop - 0.5, elementBottom + 0.5), $"The KeyTip's top edge should be on {element} (from {elementTop} to {elementBottom})");
+    }
+
     // The placement decision is private, so it's called through reflection to test it directly.
     private static bool IsTextBoxShapedControl(FrameworkElement element)
     {

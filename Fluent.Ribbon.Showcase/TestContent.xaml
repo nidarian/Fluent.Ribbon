@@ -1212,7 +1212,7 @@
                                   KeyTip="I"
                                   ReduceOrder="groupLL, groupLL, groupLL, (groupLL),(groupLL),(groupLL),(groupLL),(groupLL)">
                 <Fluent:RibbonGroupBox x:Name="groupLL"
-                                       Header="{Binding Path=Zoom, StringFormat='{}{0} Zoom'}"
+                                       Header="{Binding Path=ZoomHeader}"
                                        IsLauncherVisible="False"
                                        KeyTip="FG"
                                        StateDefinition="Middle,Collapsed">

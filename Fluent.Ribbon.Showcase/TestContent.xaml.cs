@@ -165,7 +165,14 @@ public partial class TestContent
 
     private void InitializeColors()
     {
-        ColorGallery.RecentColors.Add((Color)this.FindResource("Fluent.Ribbon.Colors.AccentBase"));
+        // ColorGallery.RecentColors is static and shared by every ColorGallery in the process, but the collection views WPF creates for it
+        // only accept changes from the thread that created them (the main UI thread).
+        // So only seed it from the main window. TestContent instances created on another thread ("Open Ribbon-Window (new Thread)")
+        // must not touch it, otherwise WPF throws a NotSupportedException that takes down the whole process.
+        if (this.Dispatcher == Application.Current?.Dispatcher)
+        {
+            ColorGallery.RecentColors.Add((Color)this.FindResource("Fluent.Ribbon.Colors.AccentBase"));
+        }
 
         var currentColors = new[]
         {
