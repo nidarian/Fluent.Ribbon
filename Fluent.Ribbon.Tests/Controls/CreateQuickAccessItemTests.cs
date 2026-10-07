@@ -240,6 +240,33 @@ public class CreateQuickAccessItemTests
         Assert.That(viewModel.Name, Is.EqualTo("Typed"));
     }
 
+    [Test]
+    public void TextBox_Does_Not_Update_Explicit_Source_Binding_Of_Original_When_Quick_Access_Item_Loses_Focus()
+    {
+        var viewModel = new NameViewModel { Name = "Initial" };
+
+        // The application only commits on its own (e.g. a Save action) by calling UpdateSource itself.
+        var source = new TextBox();
+        source.SetBinding(System.Windows.Controls.TextBox.TextProperty, new System.Windows.Data.Binding(nameof(NameViewModel.Name)) { Source = viewModel, UpdateSourceTrigger = System.Windows.Data.UpdateSourceTrigger.Explicit });
+
+        Assert.That(source.Text, Is.EqualTo("Initial"), "Precondition: original is bound to the view model.");
+
+        var textBox = (TextBox)source.CreateQuickAccessItem();
+
+        textBox.Text = "Typed";
+
+        Assert.That(source.Text, Is.EqualTo("Typed"), "Precondition: quick access item writes into the original.");
+
+        textBox.RaiseEvent(new RoutedEventArgs(UIElement.LostFocusEvent, textBox));
+
+        Assert.That(viewModel.Name, Is.EqualTo("Initial"), "An explicit binding must not be committed just because the quick access item lost focus.");
+
+        // The application's own commit still works.
+        System.Windows.Data.BindingOperations.GetBindingExpression(source, System.Windows.Controls.TextBox.TextProperty)!.UpdateSource();
+
+        Assert.That(viewModel.Name, Is.EqualTo("Typed"));
+    }
+
     #endregion
 
     #region Spinner
