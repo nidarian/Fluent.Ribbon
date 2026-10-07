@@ -165,7 +165,27 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
         // while the user types into the quick access item. So we push the pending value when the item loses focus.
         var bindingExpression = BindingOperations.GetBindingExpressionBase(this, TextProperty);
 
-        if (bindingExpression?.IsDirty == true)
+        if (bindingExpression is null
+            || bindingExpression.IsDirty == false)
+        {
+            return;
+        }
+
+        // Only stand in for the LostFocus trigger. An Explicit binding must only be committed by the application
+        // and a PropertyChanged binding already pushed the value while typing.
+        var updateSourceTrigger = bindingExpression.ParentBindingBase switch
+        {
+            Binding binding => binding.UpdateSourceTrigger,
+            MultiBinding multiBinding => multiBinding.UpdateSourceTrigger,
+            _ => UpdateSourceTrigger.Default
+        };
+
+        if (updateSourceTrigger == UpdateSourceTrigger.Default)
+        {
+            updateSourceTrigger = (TextProperty.GetMetadata(this) as FrameworkPropertyMetadata)?.DefaultUpdateSourceTrigger ?? UpdateSourceTrigger.LostFocus;
+        }
+
+        if (updateSourceTrigger == UpdateSourceTrigger.LostFocus)
         {
             bindingExpression.UpdateSource();
         }

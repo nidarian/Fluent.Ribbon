@@ -6,6 +6,12 @@
     
     <IsTestProject>true</IsTestProject>
 
+    <!-- Run the tests of the target frameworks one after another, not at the same time.
+         Many tests open a window and need keyboard focus. Run in parallel, the windows of the
+         other frameworks' tests take activation and focus away, which made focus tests end
+         inconclusive or fail at random on CI. -->
+    <TestTfmsInParallel>false</TestTfmsInParallel>
+
     <NoWarn>$(NoWarn);SA0001;SA1602</NoWarn>
   </PropertyGroup>
   <ItemGroup>

@@ -237,9 +237,10 @@ internal static class QuickAccessItemsProvider
     {
         FrameworkElement? result = null;
 
-        // If control supports the interface just return what it provides
-        if (element is IQuickAccessItemProvider provider
-            && provider.CanAddToQuickAccessToolBar)
+        // If control supports the interface just return what it provides.
+        // CanAddToQuickAccessToolBar is checked by the caller when adding (IsSupported), not here,
+        // so an element pinned before the flag was turned off can get a new copy when the ribbon is re-templated.
+        if (element is IQuickAccessItemProvider provider)
         {
             result = provider.CreateQuickAccessItem();
         }
