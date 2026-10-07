@@ -150,6 +150,7 @@ public class RibbonGroupBoxKeyboardTests
             PressKeyOnFocusedElement(window, Key.I);
             PressKeyOnFocusedElement(window, Key.F);
             PressKeyOnFocusedElement(window, Key.G);
+            InconclusiveIfWindowDeactivated(window, "after F G");
 
             Assert.That(groupBox.IsDropDownOpen, Is.True, "precondition: F G should open the drop down of the collapsed group");
             Assert.That(keyTipService.GetFieldValue<KeyTipAdorner>("activeAdornerChain"), Is.Not.Null, "precondition: KeyTips should still be active for the items in the drop down");
@@ -158,6 +159,7 @@ public class RibbonGroupBoxKeyboardTests
             Assert.That(firstItem.IsKeyboardFocused, Is.True, "precondition: opening the drop down should focus its first item");
 
             PressKeyOnFocusedElement(window, Key.Down);
+            InconclusiveIfWindowDeactivated(window, "after Down");
 
             Assert.That(groupBox.IsDropDownOpen, Is.True, "Down should move inside the drop down, not close it");
             UIHelper.InconclusiveIfKeyboardFocusLost("after Down");
@@ -187,6 +189,17 @@ public class RibbonGroupBoxKeyboardTests
 
         Assert.That(groupBox.IsDropDownOpen, Is.True, "precondition: the drop down should be open");
         Assert.That(PresentationSource.FromVisual(content), Is.Not.Null, "precondition: the content should be shown in the drop down");
+    }
+
+    // The tests of the three target frameworks run at the same time, so another test window can take activation.
+    // KeyTipService then ignores keys, and deactivating the window closes all popups (KeyTipService.WindowProc).
+    // That is an environment problem, not the bug, so it ends the test as inconclusive.
+    private static void InconclusiveIfWindowDeactivated(Window window, string step)
+    {
+        if (window.IsActive == false)
+        {
+            Assert.Inconclusive($"The test window was deactivated ({step}).");
+        }
     }
 
     // Like PressKey, but on the element which has keyboard focus (where WPF delivers keys), followed by the key up.
