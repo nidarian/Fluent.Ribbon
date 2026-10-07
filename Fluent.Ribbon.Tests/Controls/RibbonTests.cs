@@ -393,4 +393,102 @@ public class RibbonTests
             Assert.That(ribbon.TabControl.ToolBarItems.Count, Is.EqualTo(1), "The new toolbar item must reach the new tab control.");
         }
     }
+
+    /// <summary>
+    /// Re-templating must keep the toolbar order. The pinned elements are kept in a dictionary,
+    /// and after a removal a new entry reuses the removed entry's slot, so the dictionary order is D, B, C here.
+    /// </summary>
+    [Test]
+    public void Retemplating_keeps_quick_access_toolbar_order_after_removal()
+    {
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem()
+            }
+        };
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            ribbon.ApplyTemplate();
+
+            var a = new Button { Header = "A" };
+            var b = new Button { Header = "B" };
+            var c = new Button { Header = "C" };
+            var d = new Button { Header = "D" };
+
+            ribbon.AddToQuickAccessToolBar(a);
+            ribbon.AddToQuickAccessToolBar(b);
+            ribbon.AddToQuickAccessToolBar(c);
+            ribbon.RemoveFromQuickAccessToolBar(a);
+            ribbon.AddToQuickAccessToolBar(d);
+
+            Assert.That(GetQuickAccessToolBarOrder(ribbon), Is.EqualTo(new[] { "B", "C", "D" }), "Precondition: the toolbar must show B, C, D.");
+
+            var template = ribbon.Template;
+            ribbon.Template = null;
+            ribbon.ApplyTemplate();
+            ribbon.Template = template;
+            ribbon.ApplyTemplate();
+
+            Assert.That(GetQuickAccessToolBarOrder(ribbon), Is.EqualTo(new[] { "B", "C", "D" }), "Re-templating must keep the toolbar order.");
+        }
+    }
+
+    /// <summary>
+    /// <see cref="Button.CanAddToQuickAccessToolBar"/> only prevents new adds. An element pinned before it was set to false stays pinned,
+    /// and re-templating must not drop it.
+    /// </summary>
+    [Test]
+    public void Retemplating_keeps_element_pinned_before_CanAddToQuickAccessToolBar_was_turned_off()
+    {
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem()
+            }
+        };
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            ribbon.ApplyTemplate();
+
+            var button = new Button { Header = "X" };
+            ribbon.AddToQuickAccessToolBar(button);
+            button.CanAddToQuickAccessToolBar = false;
+
+            Assert.That(ribbon.IsInQuickAccessToolBar(button), Is.True, "Precondition: turning the flag off must not unpin the button.");
+            Assert.That(ribbon.QuickAccessToolBar.Items.Count, Is.EqualTo(1), "Precondition: the toolbar must show the button.");
+
+            var template = ribbon.Template;
+            ribbon.Template = null;
+            ribbon.ApplyTemplate();
+            ribbon.Template = template;
+            ribbon.ApplyTemplate();
+
+            Assert.That(ribbon.IsInQuickAccessToolBar(button), Is.True, "The button must still be pinned after re-templating.");
+            Assert.That(ribbon.QuickAccessToolBar.Items.Count, Is.EqualTo(1), "The new toolbar must show the button.");
+        }
+    }
+
+    private static List<string> GetQuickAccessToolBarOrder(Ribbon ribbon)
+    {
+        var copies = ribbon.GetQuickAccessElements();
+        var result = new List<string>();
+
+        foreach (var item in ribbon.QuickAccessToolBar.Items)
+        {
+            foreach (var pair in copies)
+            {
+                if (ReferenceEquals(pair.Value, item))
+                {
+                    result.Add((string)((Button)pair.Key).Header);
+                }
+            }
+        }
+
+        return result;
+    }
 }
