@@ -195,9 +195,12 @@ public class RibbonGroupBoxKeyboardTests
     {
         var target = Keyboard.FocusedElement as UIElement ?? window;
 
+        // Taken before the key down: if the key closes a drop down, an item in it has no presentation source anymore.
+        var inputSource = PresentationSource.FromVisual(target);
+
         PressKey(target, key);
 
-        var args = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(target), 0, key)
+        var args = new KeyEventArgs(Keyboard.PrimaryDevice, inputSource, 0, key)
         {
             RoutedEvent = Keyboard.PreviewKeyUpEvent
         };
