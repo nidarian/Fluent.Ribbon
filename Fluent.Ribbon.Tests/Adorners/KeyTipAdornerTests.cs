@@ -345,6 +345,59 @@ public class KeyTipAdornerTests
         }
     }
 
+    /// <summary>
+    /// In the drop down of a collapsed group there are no rows to snap to (#5), so small and text box shaped KeyTips
+    /// kept their top edge half a KeyTip below the control's top edge: for the top row that looked flush against the
+    /// top of the drop down (FD and KET in the Showcase, hand check 2026-10-07).
+    /// They are centered on the control's bottom edge instead, like small controls sit on a row line in the ribbon.
+    /// </summary>
+    [Test]
+    public void KeyTips_in_the_drop_down_of_a_collapsed_group_are_centered_on_the_bottom_edge_of_their_control()
+    {
+        // A combo box (text box shaped, like FD) and a small button (like the "small control" placement).
+        var comboBox = new Fluent.ComboBox { Header = "Fonts", KeyTip = "FD", IsEditable = false };
+        var button = new Fluent.Button { Header = "Small 1", KeyTip = "S", SizeDefinition = "Small" };
+        var groupBox = CreateCollapsibleGroupBox(
+            "ZC",
+            comboBox,
+            button,
+            new Fluent.Button { Header = "Small 2", KeyTip = "T", SizeDefinition = "Small" });
+
+        var panel = new StackPanel { Children = { groupBox } };
+
+        using (new TestRibbonWindow(panel))
+        {
+            groupBox.ApplyTemplate();
+            groupBox.State = RibbonGroupBoxState.Collapsed;
+            UIHelper.DoEvents();
+
+            groupBox.IsDropDownOpen = true;
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.IsDropDownOpen, Is.True, "Precondition: the drop down is open");
+            Assert.That(PresentationSource.FromVisual(comboBox), Is.Not.Null, "Precondition: the combo box is shown in the drop down");
+            Assert.That(PresentationSource.FromVisual(button), Is.Not.Null, "Precondition: the button is shown in the drop down");
+
+            // The adorner KeyTipAdorner.Forward creates after the collapsed group's KeyTip was pressed.
+            var adorner = new KeyTipAdorner(button, groupBox, null);
+
+            // Measuring the adorner is what computes KeyTip positions.
+            adorner.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            foreach (var element in new FrameworkElement[] { comboBox, button })
+            {
+                var keyTipInformation = adorner.KeyTipInformations.Single(x => ReferenceEquals(x.AssociatedElement, element));
+                Assert.That(keyTipInformation.Visibility, Is.EqualTo(Visibility.Visible), $"Precondition: the KeyTip of the {element.GetType().Name} is shown");
+
+                // Positions are relative to the adorned element (the button).
+                var bottomEdgeY = keyTipInformation.VisualTarget.TranslatePoint(new Point(0, keyTipInformation.VisualTarget.RenderSize.Height), button).Y;
+                var keyTipCenterY = keyTipInformation.Position.Y + (keyTipInformation.KeyTip.DesiredSize.Height / 2.0);
+
+                Assert.That(keyTipCenterY, Is.EqualTo(bottomEdgeY).Within(0.5), $"The KeyTip of the {element.GetType().Name} should be centered on its bottom edge");
+            }
+        }
+    }
+
     // A group with the height it has in a ribbon, aligned top left, so its size doesn't depend on the window.
     private static RibbonGroupBox CreateCollapsibleGroupBox(string keys, params UIElement[] items)
     {
