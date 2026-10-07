@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.IO.IsolatedStorage;
+using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
@@ -91,6 +92,52 @@ public class RibbonStateStorageTests
             {
                 TestRibbonStateStorage.DeleteStateFile(fileName);
             }
+        }
+    }
+
+    /// <summary>
+    /// With AutomaticStateManagement off, RibbonStateStorage.Load doesn't mark the state as loaded
+    /// (so enabling AutomaticStateManagement later still reads the saved state).
+    /// Ribbon.LoadInitialState used IsLoaded to run only once, so it ran again on every Loaded
+    /// and selected the first tab again whenever no tab was selected,
+    /// undoing an app's choice to have no tab selected after the ribbon was moved to another parent.
+    /// The first tab must only be selected on the first Loaded, as before.
+    /// </summary>
+    [Test]
+    public void First_tab_is_not_selected_again_when_the_ribbon_is_loaded_again_with_AutomaticStateManagement_disabled()
+    {
+        var firstTab = new RibbonTabItem { Header = "First" };
+        var ribbon = new Ribbon
+        {
+            AutomaticStateManagement = false,
+            Tabs =
+            {
+                firstTab,
+                new RibbonTabItem { Header = "Second" }
+            }
+        };
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon must be loaded.");
+            Assert.That(ribbon.SelectedTabItem, Is.SameAs(firstTab), "Precondition: the first Loaded selects the first tab.");
+
+            // The app chooses to have no tab selected.
+            ribbon.SelectedTabItem = null;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.SelectedTabItem, Is.Null, "Precondition: the app cleared the selected tab.");
+
+            // Move the ribbon out of the window and back in (unloaded, then loaded again).
+            window.Content = null;
+            UIHelper.DoEvents();
+            Assert.That(ribbon.IsLoaded, Is.False, "Precondition: the ribbon must be unloaded.");
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon must be loaded again.");
+
+            Assert.That(ribbon.SelectedTabItem, Is.Null, "Loading the ribbon again must not select the first tab again.");
         }
     }
 
