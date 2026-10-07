@@ -1,4 +1,4 @@
-﻿#pragma warning disable SA1402 // File may only contain a single class
+#pragma warning disable SA1402 // File may only contain a single class
 // ReSharper disable once CheckNamespace
 namespace Fluent;
 
