@@ -8,6 +8,20 @@ what a user would notice, the options, and a recommendation.
 **How to answer:** write the item numbers and A or B (e.g. "D1 B, D2 A, ...")
 and send it to Claude. Anything left blank stays as it is now.
 
+## Decided (2026-10-07)
+
+The owner chose: **D1 B, D2 B, D3 B, D4 B, D5 B, D6 A, D7 A, D8 A**, which are
+the recommendations. D4 is B because no touch screen is available to check
+that touch scrolling doesn't break sliders. It can become A later after such
+a check.
+
+- **A (D6, D7, D8):** no change. The current behaviour stays and is documented
+  in `CHANGES-FOR-APPS.md`.
+- **B (D1 to D5):** being changed test-first, each on its own branch:
+  `fix/d1-button-hover-keeps-app-foreground`, `fix/d2-dark-textbox-border`,
+  `fix/d3-wrong-keytip-first-level-closes`, `fix/d4-touch-panning-opt-in`,
+  `fix/d5-keep-app-collapsed-at-start`.
+
 ## Choices
 
 ### D1. Button text colour on hover
