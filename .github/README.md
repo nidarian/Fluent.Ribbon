@@ -62,7 +62,7 @@ way. If it fixed one the fork also fixed, keep the original's version and drop
 the fork's (revert that fix on `integration/all-fixes`), so the two don't
 conflict later.
 
-## Status of the fixes (as of 2026-10-06)
+## Status of the fixes (as of 2026-10-07)
 
 - **Not sent to the original project, and they won't be.** I asked for
   permission in [#1284](https://github.com/fluentribbon/Fluent.Ribbon/issues/1284)
@@ -89,5 +89,7 @@ conflict later.
 | `architecture/ACCESSIBILITY.md` | Screen reader, keyboard and contrast review: what's fixed, what's left, contrast ratios, High Contrast status |
 | `architecture/DOCUMENTATION.md` | Doc comment audit: 41 corrected tooltips (blind-checked), the README SDK line, the outdated 2012 Walkthrough, what's left |
 | `architecture/AUDIT.md` | **Read before relying on the fixes.** The 2026-10-06 audit: the evidence checked against GitHub, 4 problems and the concerns found, and what only a person can check |
+| `architecture/AUDIT-DECISIONS.md` | The audit's open choices, in plain words, with a recommendation each: answer them to finish the follow-up |
+| `architecture/CHANGES-FOR-APPS.md` | **Updating the package in an app:** colour changes, new theme keys, UI Automation and keyboard changes, new API |
 | `architecture/ROUND4.md` | Round 4: the 51 fixes of 2026-10-01 (the former "maintainer's call" items, keyboard, contrast, screen readers, a new bug hunt), each with its fail and pass build |
 | `architecture/HIGH-CONTRAST.md` | Turning on Windows High Contrast support, and what it doesn't cover yet |

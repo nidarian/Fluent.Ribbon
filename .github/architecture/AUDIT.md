@@ -17,6 +17,36 @@ What was compared: the original code (`develop`, upstream `8572cb2`) against
 all fixes combined (`integration/all-fixes`, `6828bf41`): 93 library and test
 files, about 80 fix branches.
 
+## Status update (2026-10-07)
+
+The problems found below have been worked on since. Each fix is proven the same
+way as the others: a tests-only build fails in the new test on net462, net6.0
+and net8.0, and the build with the fix passes.
+
+| Item | Status | Fail → pass |
+|---|---|---|
+| P1 KeyTips of collapsed groups and gallery items | Fixed, merged (#4) | #213 → #217 |
+| P2 ColorGallery click after arrow browsing | Fixed, merged (#4); confirmed by hand in the Showcase | #215 → #219 |
+| P3 gallery filter label in light High Contrast | Fixed, merged (#4); confirmed by hand | #214 → #218 |
+| P4 Enter swallowed in a collapsed group's drop down | Fixed, merged (#4); confirmed by hand | #212 → #216 |
+| Enter inside an open drop down closed it / clicked a SplitButton | Fixed, merged (#4) | #207 → #208 |
+| **Row snapping put a collapsed group's KeyTip at the window's top-left** (found by hand in the Showcase, issue #5; the audit had listed it as "needs a visual check") | Fixed, merged (#6) | #223 → #226 |
+| ↓ after opening a collapsed group by its KeyTip closed it (also in the original) | Fixed, merged (#6) | #227 → #229 |
+| Showcase: crash on "Open Ribbon-Window (new Thread)", header "1" instead of "1 Zoom" | Fixed, merged (#6); Showcase only, no tests | build #225 |
+| Unreliable CI tests | **Cause found:** the three frameworks' tests ran at the same time, and their windows took keyboard focus from each other. They now run one after another (#8): 0 inconclusive tests in #245. Two tests also got deactivation guards (#7, #8). | #245 |
+| Esc in KeyTip mode after an app cancelled `Backstage.Closing` showed the ribbon's KeyTips over the open Backstage | Fixed (#8) | #238 → #244 |
+| Toolbar copy of a TextBox committed `UpdateSourceTrigger=Explicit` bindings | Fixed (#8) | #234 → #239 |
+| With `AutomaticStateManagement=false`, the first tab was re-selected on every Loaded | Fixed (#8) | #237 → #240 |
+| Re-templating re-pinned toolbar items in a different order and dropped some | Fixed (#8) | #236 → #241 |
+| The other concerns | Need the owner's decision: `AUDIT-DECISIONS.md` | |
+
+Changes apps may notice are now listed in one place: `CHANGES-FOR-APPS.md`.
+
+The hand-check list at the end of this file pointed to the wrong Showcase
+tabs: groups on the KeyTips and Tests tabs never collapse (no `ReduceOrder`).
+The **Insert** tab (group "Zoom", KeyTip FG) is where collapsed groups can be
+tested. The list below is corrected.
+
 ## Summary
 
 | Question | Answer |
@@ -92,7 +122,7 @@ Not yet in `integration/all-fixes`.
 The reviewers could not run anything. These need someone at a Windows PC with
 the app (`APP-REVIEW-CHECKLIST.md` explains how to install the fixed package):
 
-1. Make the window narrow until groups collapse, press Alt then a tab's letter: where do the group letters appear? (P1)
+1. On the **Insert** tab, make the window narrow until the "Zoom" group collapses, press Alt, then I: where do the group letters appear? (P1, #5)
 2. Open a color picker, press the right arrow, then click the highlighted color. (P2)
 3. Turn on Windows High Contrast (White theme), open a gallery with filters. (P3; only if the app opts in)
 4. Hover a button in a Dark theme: is the text readable, and are text box borders visible?
