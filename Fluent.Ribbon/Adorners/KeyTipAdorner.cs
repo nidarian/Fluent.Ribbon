@@ -382,6 +382,16 @@ public class KeyTipAdorner : Adorner
         var control = this.keyTipElementContainer as IKeyTipedControl;
         control?.OnKeyTipBack();
 
+        // #1247: The app can cancel closing the backstage (Backstage.Closing), and CanChangeIsOpen can keep it open.
+        // Going back to the parent level would then show the KeyTips of the ribbon on top of the backstage that is still open,
+        // and pressing one would select a tab hidden behind it. So end the KeyTips instead, the backstage stays as it is.
+        if (this.keyTipElementContainer is Backstage { IsOpen: true })
+        {
+            this.LogDebug("Backstage stayed open, terminating instead of going back");
+            this.Terminate(KeyTipPressedResult.Empty);
+            return;
+        }
+
         if (this.parentAdorner is not null)
         {
             this.LogDebug("Back");
