@@ -94,6 +94,77 @@ public class RibbonGroupBoxKeyboardTests
         }
     }
 
+    // Showcase, Insert tab, group "FG" collapsed: Alt, I, F, G opens the group's drop down and shows the KeyTips
+    // of its items. Pressing Down to move into the items closed the drop down instead. KeyTipService ends KeyTips
+    // on a key which is no KeyTip input (like Down), and ending them that way also closed every open popup,
+    // including the drop down the user just opened with the KeyTip.
+    [Test]
+    public void Down_after_opening_a_collapsed_group_with_its_KeyTip_keeps_the_drop_down_open()
+    {
+        var firstItem = new Button { Header = "First", KeyTip = "A" };
+        var secondItem = new Button { Header = "Second", KeyTip = "B" };
+
+        var groupBox = new RibbonGroupBox
+        {
+            Header = "Group",
+            KeyTip = "FG",
+
+            // Only the collapsed state, so the group stays collapsed whatever the window size.
+            StateDefinition = new RibbonGroupBoxStateDefinition("Collapsed"),
+            Items =
+            {
+                firstItem,
+                secondItem
+            }
+        };
+
+        var tabItem = new RibbonTabItem { Header = "Insert", KeyTip = "I" };
+        tabItem.Groups.Add(groupBox);
+
+        var ribbon = new Ribbon
+        {
+            // Don't load a persisted (maybe minimized) state, a minimized ribbon would open the tab in a popup instead.
+            AutomaticStateManagement = false
+        };
+        ribbon.Tabs.Add(tabItem);
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            // KeyTipService ignores all keys while the window is not active.
+            window.Activate();
+            UIHelper.DoEvents();
+
+            if (window.IsActive == false)
+            {
+                Assert.Inconclusive("The test window could not be activated, so KeyTipService would ignore all keys.");
+            }
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Collapsed), "precondition: the group is collapsed");
+
+            var keyTipService = ribbon.GetFieldValue<KeyTipService>("keyTipService");
+
+            // Alt shows the KeyTips, I selects the tab, F G presses the KeyTip of the collapsed group.
+            PressKeyOnFocusedElement(window, Key.LeftAlt);
+            Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.True, "precondition: Alt should show the KeyTips");
+
+            PressKeyOnFocusedElement(window, Key.I);
+            PressKeyOnFocusedElement(window, Key.F);
+            PressKeyOnFocusedElement(window, Key.G);
+
+            Assert.That(groupBox.IsDropDownOpen, Is.True, "precondition: F G should open the drop down of the collapsed group");
+            Assert.That(keyTipService.GetFieldValue<KeyTipAdorner>("activeAdornerChain"), Is.Not.Null, "precondition: KeyTips should still be active for the items in the drop down");
+
+            UIHelper.InconclusiveIfKeyboardFocusLost("after opening the drop down");
+            Assert.That(firstItem.IsKeyboardFocused, Is.True, "precondition: opening the drop down should focus its first item");
+
+            PressKeyOnFocusedElement(window, Key.Down);
+
+            Assert.That(groupBox.IsDropDownOpen, Is.True, "Down should move inside the drop down, not close it");
+            UIHelper.InconclusiveIfKeyboardFocusLost("after Down");
+            Assert.That(firstItem.IsKeyboardFocused || secondItem.IsKeyboardFocused, Is.True, "Keyboard focus should stay on the items of the drop down");
+        }
+    }
+
     private static RibbonGroupBox CreateGroupBoxWith(UIElement content)
     {
         return new RibbonGroupBox
@@ -116,6 +187,27 @@ public class RibbonGroupBoxKeyboardTests
 
         Assert.That(groupBox.IsDropDownOpen, Is.True, "precondition: the drop down should be open");
         Assert.That(PresentationSource.FromVisual(content), Is.Not.Null, "precondition: the content should be shown in the drop down");
+    }
+
+    // Like PressKey, but on the element which has keyboard focus (where WPF delivers keys), followed by the key up.
+    // The window's PreviewKeyDown and KeyUp handlers are how KeyTipService sees keys.
+    private static void PressKeyOnFocusedElement(Window window, Key key)
+    {
+        var target = Keyboard.FocusedElement as UIElement ?? window;
+
+        PressKey(target, key);
+
+        var args = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(target), 0, key)
+        {
+            RoutedEvent = Keyboard.PreviewKeyUpEvent
+        };
+
+        target.RaiseEvent(args);
+
+        args.RoutedEvent = Keyboard.KeyUpEvent;
+        target.RaiseEvent(args);
+
+        UIHelper.DoEvents();
     }
 
     // Simulates a key press the way WPF input delivers it: PreviewKeyDown (tunnel) and then KeyDown (bubble)
