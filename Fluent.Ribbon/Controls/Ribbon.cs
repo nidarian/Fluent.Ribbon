@@ -1,4 +1,4 @@
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -1655,7 +1655,11 @@ public class Ribbon : Control, ILogicalChildSupport
         }
 
         // Elements pinned to the old toolbar. They are pinned again below, so re-templating doesn't empty the toolbar.
-        var pinnedElements = this.QuickAccessElements.Keys.ToList();
+        // They are taken in the old toolbar's order: after removals the dictionary's order can differ from it.
+        var pinnedElements = this.QuickAccessElements
+            .OrderBy(x => this.QuickAccessToolBar?.Items.IndexOf(x.Value) ?? 0)
+            .Select(x => x.Key)
+            .ToList();
 
         if (this.QuickAccessToolBar is not null)
         {
@@ -1691,14 +1695,12 @@ public class Ribbon : Control, ILogicalChildSupport
             }
         }
 
-        // Pin them again through AddToQuickAccessToolBar, so each gets a fresh copy.
+        // Pin them again, so each gets a fresh copy.
         // The old copies can't be moved: they are still children of the old toolbar's panel.
+        // CanAddToQuickAccessToolBar is not checked here: it only prevents adding, not keeping an element that is already pinned.
         foreach (var element in pinnedElements)
         {
-            if (this.IsInQuickAccessToolBar(element) == false)
-            {
-                this.AddToQuickAccessToolBar(element);
-            }
+            this.PinToQuickAccessToolBar(element);
         }
 
         if (this.ShowQuickAccessToolBarAboveRibbon)
@@ -1821,6 +1823,14 @@ public class Ribbon : Control, ILogicalChildSupport
             return;
         }
 
+        this.PinToQuickAccessToolBar(element);
+    }
+
+    /// <summary>
+    /// Puts a copy of <paramref name="element"/> on the quick access toolbar, without checking <see cref="IQuickAccessItemProvider.CanAddToQuickAccessToolBar"/>.
+    /// </summary>
+    private void PinToQuickAccessToolBar(UIElement element)
+    {
         if (this.IsInQuickAccessToolBar(element) == false)
         {
             Debug.WriteLine($"Adding \"{element}\" to QuickAccessToolBar.");
