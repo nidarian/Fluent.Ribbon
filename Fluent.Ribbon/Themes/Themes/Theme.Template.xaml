@@ -296,8 +296,9 @@
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.ScrollViewer.Button.Background" Color="{StaticResource Fluent.Ribbon.Colors.Gray8}" options:Freeze="True" />
 
     <!-- TextBox -->
-    <!-- Gray2 instead of Gray6: Gray6 (#CCCCCC) was 1.50:1 on the Light ribbon background (#F7F7F7), Gray2 (#7F7F7F) is 3.7:1 there (Dark: 3.5:1 on #2C2C2C). -->
-    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Border" Color="{StaticResource Fluent.Ribbon.Colors.Gray2}" options:Freeze="True" />
+    <!-- Set per base color scheme in GeneratorParameters.json. Light: Gray2 (#7F7F7F) instead of Gray6 (#CCCCCC), which was only 1.50:1 on the ribbon background (#F7F7F7), Gray2 is 3.7:1 there.
+         Dark keeps Gray6 (#CCCCCC, 8.7:1 on #2C2C2C), Gray2 would lower it to 3.5:1 there. -->
+    <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Border" Color="{{Fluent.Ribbon.Brushes.TextBox.Border}}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Background" Color="{StaticResource Fluent.Ribbon.Colors.White}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Caret" Color="{StaticResource Fluent.Ribbon.Colors.Black}" options:Freeze="True" />
     <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.TextBox.Selection" Color="{x:Static SystemColors.HighlightColor}" options:Freeze="True" />
