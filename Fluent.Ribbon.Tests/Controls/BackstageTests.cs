@@ -325,6 +325,55 @@ public class BackstageTests
         }
     }
 
+    // D3: Alt pressed while the backstage is open shows the KeyTips directly in the backstage (KeyTipService.Show forwards there).
+    // That is the first KeyTip level the user sees, so a key which matches no KeyTip must close the KeyTips like at the ribbon's first level (#908),
+    // and the key must reach its normal target (e.g. a text box in the backstage), instead of beeping and being swallowed.
+
+    [Test]
+    public void Wrong_key_in_first_KeyTip_level_of_open_backstage_closes_the_KeyTips()
+    {
+        var (ribbon, backstage, _) = CreateRibbonWithBackstage();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            var wasDeactivated = OpenBackstageAndPressAlt(window, ribbon, backstage, out var keyTipService);
+
+            // Z matches no KeyTip of the backstage.
+            var zHandled = PressKeyOnFocusedElement(window, Key.Z);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated(), "after Z");
+
+            Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.False, "A key which matches no KeyTip in the first KeyTip level of the backstage should close the KeyTips");
+            Assert.That(zHandled, Is.False, "The key should not be swallowed by the KeyTips, so it reaches its normal target");
+            Assert.That(backstage.IsOpen, Is.True, "Closing the KeyTips should not close the backstage");
+        }
+    }
+
+    [Test]
+    public void Wrong_key_in_nested_KeyTip_level_of_open_backstage_keeps_the_KeyTips()
+    {
+        var (ribbon, backstage, _) = CreateRibbonWithBackstage();
+        var tabItem = (BackstageTabItem)((BackstageTabControl)backstage.Content).Items[0];
+        var button = new Button { Header = "Button", KeyTip = "B" };
+        tabItem.Content = button;
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            var wasDeactivated = OpenBackstageAndPressAlt(window, ribbon, backstage, out var keyTipService);
+
+            // I opens the next level: the KeyTips of the content of the "Info" tab.
+            PressKeyOnFocusedElement(window, Key.I);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated(), "after I");
+            Assert.That(IsKeyTipShown(keyTipService, button), Is.True, "Precondition: I should show the KeyTips of the content of the tab");
+
+            // Z matches no KeyTip in this nested level: this should beep and keep the KeyTips (#908).
+            var zHandled = PressKeyOnFocusedElement(window, Key.Z);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated(), "after Z");
+
+            Assert.That(IsKeyTipShown(keyTipService, button), Is.True, "A key which matches no KeyTip in a nested KeyTip level should keep the KeyTips");
+            Assert.That(zHandled, Is.True, "The non matching key should be swallowed in a nested KeyTip level");
+        }
+    }
+
     private static (Ribbon Ribbon, Backstage Backstage, RibbonTabItem RibbonTab) CreateRibbonWithBackstage()
     {
         var backstage = new Backstage
@@ -388,6 +437,77 @@ public class BackstageTests
         Assert.That(IsKeyTipShown(keyTipService, ribbon.Tabs[0]), Is.False, "Precondition: the KeyTips of the tabs should not be shown while the backstage is open");
 
         return keyTipService;
+    }
+
+    // Opens the backstage and presses Alt through the window, which shows the KeyTips directly in the open backstage.
+    private static Func<bool> OpenBackstageAndPressAlt(Window window, Ribbon ribbon, Backstage backstage, out KeyTipService keyTipService)
+    {
+        // KeyTipService ignores all keys while the window is not active.
+        window.Activate();
+        UIHelper.DoEvents();
+
+        if (window.IsActive == false)
+        {
+            Assert.Inconclusive("The test window could not be activated, so KeyTipService would ignore all keys.");
+        }
+
+        // The tests of the three target frameworks run at the same time, so another test window can take activation for a moment.
+        // KeyTipService then ends the KeyTips, and the window can be active again by the time IsActive is checked.
+        var deactivated = false;
+        window.Deactivated += (_, _) => deactivated = true;
+
+        backstage.IsOpen = true;
+        UIHelper.DoEvents();
+
+        Assert.That(backstage.IsOpenAndDisplayed, Is.True, "Precondition: the backstage should be open and displayed");
+
+        keyTipService = ribbon.GetFieldValue<KeyTipService>("keyTipService");
+
+        PressKeyOnFocusedElement(window, Key.LeftAlt);
+        InconclusiveIfWindowDeactivated(window, deactivated, "after Alt");
+
+        var tabItem = ((BackstageTabControl)backstage.Content).Items[0];
+        Assert.That(IsKeyTipShown(keyTipService, (FrameworkElement)tabItem), Is.True, "Precondition: Alt should show the KeyTips of the backstage");
+        Assert.That(IsKeyTipShown(keyTipService, ribbon.Tabs[0]), Is.False, "Precondition: the KeyTips of the tabs should not be shown while the backstage is open");
+
+        return () => deactivated;
+    }
+
+    // Presses a key the way WPF input delivers it, on the element which has keyboard focus (or the window):
+    // PreviewKeyDown (tunnel) and KeyDown (bubble) sharing one args object, then the key up.
+    // The window's PreviewKeyDown and KeyUp handlers are how KeyTipService sees keys.
+    // Returns whether the PreviewKeyDown was handled, i.e. whether the key was swallowed before reaching its target.
+    private static bool PressKeyOnFocusedElement(Window window, Key key)
+    {
+        var target = Keyboard.FocusedElement as UIElement ?? window;
+        var inputSource = PresentationSource.FromVisual(target);
+
+        var args = new KeyEventArgs(Keyboard.PrimaryDevice, inputSource, 0, key)
+        {
+            RoutedEvent = Keyboard.PreviewKeyDownEvent
+        };
+
+        target.RaiseEvent(args);
+        var previewHandled = args.Handled;
+
+        args.RoutedEvent = Keyboard.KeyDownEvent;
+        target.RaiseEvent(args);
+
+        UIHelper.DoEvents();
+
+        var upArgs = new KeyEventArgs(Keyboard.PrimaryDevice, inputSource, 0, key)
+        {
+            RoutedEvent = Keyboard.PreviewKeyUpEvent
+        };
+
+        target.RaiseEvent(upArgs);
+
+        upArgs.RoutedEvent = Keyboard.KeyUpEvent;
+        target.RaiseEvent(upArgs);
+
+        UIHelper.DoEvents();
+
+        return previewHandled;
     }
 
     // Whether the given element's KeyTip is shown in the KeyTip level the user is currently in.
