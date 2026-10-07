@@ -516,6 +516,17 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
             Source = this
         });
 
+        // #1176: touch panning of the groups is opt-in (off by default, as upstream), because a horizontal touch drag
+        // on a slider inside the ribbon might otherwise scroll the ribbon. An app opts in with ScrollViewer.PanningMode="HorizontalOnly"
+        // on the Ribbon, which our style passes on to this tab item. It's bound through the tab item (and not straight to the Ribbon),
+        // because the container is moved into a popup when the ribbon is minimized.
+        // ScrollViewer only enables manipulation (touch) when PanningMode changes, which a binding does.
+        this.GroupsContainer.SetBinding(ScrollViewer.PanningModeProperty, new Binding
+        {
+            Path = new PropertyPath(ScrollViewer.PanningModeProperty),
+            Source = this
+        });
+
         ContextMenuService.Coerce(this);
 
         this.Loaded += this.OnLoaded;
