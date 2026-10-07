@@ -33,8 +33,11 @@ and net8.0, and the build with the fix passes.
 | **Row snapping put a collapsed group's KeyTip at the window's top-left** (found by hand in the Showcase, issue #5; the audit had listed it as "needs a visual check") | Fixed, merged (#6) | #223 → #226 |
 | ↓ after opening a collapsed group by its KeyTip closed it (also in the original) | Fixed, merged (#6) | #227 → #229 |
 | Showcase: crash on "Open Ribbon-Window (new Thread)", header "1" instead of "1 Zoom" | Fixed, merged (#6); Showcase only, no tests | build #225 |
-| Unreliable CI tests (focus lost to a parallel test window) | `Down_after_opening…` fixed (#7); `Down_opens_and_focuses_the_first_item` in progress | #232 |
-| Concerns that are plain bugs (Backstage.Closing + KeyTips, TextBox copy and Explicit bindings, state storage re-selecting the first tab, toolbar re-pin order) | In progress, each on its own branch | |
+| Unreliable CI tests | **Cause found:** the three frameworks' tests ran at the same time, and their windows took keyboard focus from each other. They now run one after another (#8): 0 inconclusive tests in #245. Two tests also got deactivation guards (#7, #8). | #245 |
+| Esc in KeyTip mode after an app cancelled `Backstage.Closing` showed the ribbon's KeyTips over the open Backstage | Fixed (#8) | #238 → #244 |
+| Toolbar copy of a TextBox committed `UpdateSourceTrigger=Explicit` bindings | Fixed (#8) | #234 → #239 |
+| With `AutomaticStateManagement=false`, the first tab was re-selected on every Loaded | Fixed (#8) | #237 → #240 |
+| Re-templating re-pinned toolbar items in a different order and dropped some | Fixed (#8) | #236 → #241 |
 | The other concerns | Need the owner's decision: `AUDIT-DECISIONS.md` | |
 
 Changes apps may notice are now listed in one place: `CHANGES-FOR-APPS.md`.

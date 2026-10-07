@@ -97,7 +97,9 @@ written down where someone updating the package will look. They are listed in
 - Changes that break automated UI tests (UI Automation types and tree).
 - New theme keys that hand-written theme dictionaries must add.
 
-## Being fixed now (plain bugs, no choice needed)
+## Fixed (plain bugs, no choice needed)
+
+All four are in pull request #8, each proven test-first (`AUDIT.md`, status table).
 
 | Concern | Branch |
 |---|---|
