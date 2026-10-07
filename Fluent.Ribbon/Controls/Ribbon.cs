@@ -522,6 +522,9 @@ public class Ribbon : Control, ILogicalChildSupport
 
     private Window? ownerWindow;
 
+    // Whether LoadInitialState already selected the first tab (see LoadInitialState)
+    private bool isInitialTabSelectionDone;
+
     #endregion
 
     #region Properties
@@ -2006,6 +2009,16 @@ public class Ribbon : Control, ILogicalChildSupport
         }
 
         this.RibbonStateStorage.Load();
+
+        // With AutomaticStateManagement disabled the storage stays "not loaded" (so enabling it later still loads the state),
+        // which means we get here on every Loaded.
+        // Only select the first tab the first time, so a later Loaded doesn't override the tab selection the app made in the meantime.
+        if (this.isInitialTabSelectionDone)
+        {
+            return;
+        }
+
+        this.isInitialTabSelectionDone = true;
 
         if (this.SelectedTabItem is null)
         {
