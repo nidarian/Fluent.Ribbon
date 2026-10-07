@@ -1,5 +1,6 @@
 ﻿namespace FluentTest
 {
+    using System;
     using System.Collections;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -24,9 +25,28 @@
             view.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ThemeResource.Theme)));
             view.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ThemeResource.LibraryTheme)));
 
-            this.UpdateThemeAnalyzers(ThemeManager.Current.DetectTheme());
+            // ThemeManager.Current.ThemeChanged is static and raised on the thread that changed the theme.
+            // Subscribing in the constructor (and never unsubscribing) kept every ResourcesView ever created alive and subscribed,
+            // including the one of a window opened on its own UI thread ("Open Ribbon-Window (new Thread)") after that window was closed.
+            // The next theme change on the main thread then ran this view's handler on the wrong thread: VerifyAccess threw,
+            // which was swallowed by the binding for BaseColors/Theme (so the change looked like it did nothing)
+            // and terminated the process when it came from "Sync now".
+            // So only listen while loaded, and refresh on Loaded because changes made while unloaded (e.g. on another tab) were missed.
+            this.Loaded += this.OnLoaded;
+            this.Unloaded += this.OnUnloaded;
+        }
 
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ThemeManager.Current.ThemeChanged -= this.ThemeManager_ThemeChanged;
             ThemeManager.Current.ThemeChanged += this.ThemeManager_ThemeChanged;
+
+            this.UpdateThemeAnalyzers(ThemeManager.Current.DetectTheme());
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            ThemeManager.Current.ThemeChanged -= this.ThemeManager_ThemeChanged;
         }
 
         public static readonly DependencyProperty ThemeResourcesProperty = DependencyProperty.Register(
@@ -78,6 +98,21 @@
 
         private void ThemeManager_ThemeChanged(object? sender, ThemeChangedEventArgs e)
         {
+            // A view on another UI thread (a window opened on its own thread) is still loaded while the main thread changes the theme.
+            if (this.Dispatcher.CheckAccess() == false)
+            {
+                if (this.Dispatcher.HasShutdownStarted)
+                {
+                    // That thread is gone (its window was closed without Unloaded reaching us), stop listening.
+                    ThemeManager.Current.ThemeChanged -= this.ThemeManager_ThemeChanged;
+                    return;
+                }
+
+                var newTheme = e.NewTheme;
+                this.Dispatcher.BeginInvoke(new Action(() => this.UpdateThemeAnalyzers(newTheme)));
+                return;
+            }
+
             this.UpdateThemeAnalyzers(e.NewTheme);
         }
 
