@@ -139,18 +139,31 @@ public class RibbonGroupBoxKeyboardTests
                 Assert.Inconclusive("The test window could not be activated, so KeyTipService would ignore all keys.");
             }
 
+            // IsActive only tells the state at the moment it is checked. If another test window takes activation for a moment
+            // between two keys, KeyTipService terminates the KeyTips (and closes popups) and the window can be active again
+            // by the time IsActive is checked. So remember any deactivation during the key sequence.
+            var wasDeactivated = false;
+            window.Deactivated += (_, _) => wasDeactivated = true;
+
             Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Collapsed), "precondition: the group is collapsed");
 
             var keyTipService = ribbon.GetFieldValue<KeyTipService>("keyTipService");
 
             // Alt shows the KeyTips, I selects the tab, F G presses the KeyTip of the collapsed group.
             PressKeyOnFocusedElement(window, Key.LeftAlt);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated, "after Alt");
             Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.True, "precondition: Alt should show the KeyTips");
 
             PressKeyOnFocusedElement(window, Key.I);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated, "after I");
+            Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.True, "precondition: I should show the KeyTips of the tab");
+
             PressKeyOnFocusedElement(window, Key.F);
+            InconclusiveIfWindowDeactivated(window, wasDeactivated, "after F");
+            Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.True, "precondition: F should keep the KeyTips (FG is not complete yet)");
+
             PressKeyOnFocusedElement(window, Key.G);
-            InconclusiveIfWindowDeactivated(window, "after F G");
+            InconclusiveIfWindowDeactivated(window, wasDeactivated, "after F G");
 
             Assert.That(groupBox.IsDropDownOpen, Is.True, "precondition: F G should open the drop down of the collapsed group");
             Assert.That(keyTipService.GetFieldValue<KeyTipAdorner>("activeAdornerChain"), Is.Not.Null, "precondition: KeyTips should still be active for the items in the drop down");
@@ -159,7 +172,7 @@ public class RibbonGroupBoxKeyboardTests
             Assert.That(firstItem.IsKeyboardFocused, Is.True, "precondition: opening the drop down should focus its first item");
 
             PressKeyOnFocusedElement(window, Key.Down);
-            InconclusiveIfWindowDeactivated(window, "after Down");
+            InconclusiveIfWindowDeactivated(window, wasDeactivated, "after Down");
 
             Assert.That(groupBox.IsDropDownOpen, Is.True, "Down should move inside the drop down, not close it");
             UIHelper.InconclusiveIfKeyboardFocusLost("after Down");
@@ -194,9 +207,10 @@ public class RibbonGroupBoxKeyboardTests
     // The tests of the three target frameworks run at the same time, so another test window can take activation.
     // KeyTipService then ignores keys, and deactivating the window closes all popups (KeyTipService.WindowProc).
     // That is an environment problem, not the bug, so it ends the test as inconclusive.
-    private static void InconclusiveIfWindowDeactivated(Window window, string step)
+    private static void InconclusiveIfWindowDeactivated(Window window, bool wasDeactivated, string step)
     {
-        if (window.IsActive == false)
+        if (wasDeactivated
+            || window.IsActive == false)
         {
             Assert.Inconclusive($"The test window was deactivated ({step}).");
         }
