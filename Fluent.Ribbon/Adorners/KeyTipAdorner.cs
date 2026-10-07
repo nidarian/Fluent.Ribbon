@@ -743,6 +743,15 @@ public class KeyTipAdorner : Adorner
                 {
                     var x = keyTipInformation.KeyTip.DesiredSize.Width / 2.0;
                     var y = keyTipInformation.KeyTip.DesiredSize.Height / 2.0;
+
+                    // In the drop down of a collapsed group there are no rows to snap to (#5), so the KeyTip kept its top edge
+                    // half a KeyTip below the control's top edge: for the top row that is flush against the top of the drop down.
+                    // Center it on the control's bottom edge instead, like small controls sit on a row line in the ribbon.
+                    if (IsInCollapsedGroupDropDown(keyTipInformation))
+                    {
+                        y = keyTipInformation.VisualTarget.RenderSize.Height - (keyTipInformation.KeyTip.DesiredSize.Height / 2.0);
+                    }
+
                     var point = new Point(x, y);
                     var translatedPoint = keyTipInformation.VisualTarget.TranslatePoint(point, this.AdornedElement);
 
@@ -802,6 +811,15 @@ public class KeyTipAdorner : Adorner
         return groupBox is not null
             && groupBox.IsInButtonState == false
             && keyTipInformation.VisualTarget.IsDescendantOf(groupBox);
+    }
+
+    // The element is shown in the drop down of a collapsed group (or of a group in the quick access toolbar).
+    private static bool IsInCollapsedGroupDropDown(KeyTipInformation keyTipInformation)
+    {
+        var groupBox = UIHelper.GetParent<RibbonGroupBox>(keyTipInformation.AssociatedElement);
+
+        return groupBox is not null
+            && groupBox.IsInButtonState;
     }
 
     private static bool IsTextBoxShapedControl(FrameworkElement element)
