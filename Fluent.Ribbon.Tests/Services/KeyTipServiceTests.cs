@@ -228,7 +228,10 @@ public class KeyTipServiceTests
     }
 
     // D3: Alt pressed while the application menu is open shows the KeyTips directly in the menu (KeyTipService.Show forwards there).
-    // A key which matches no KeyTip in that first level should only close the KeyTips, like decided for D3, not the application menu itself.
+    // A key which matches no KeyTip in that first level closes the KeyTips and reaches its normal target (here a text box),
+    // and it must not close the application menu itself.
+    // Keyboard focus stays in the text box: with focus inside the menu, Alt itself already closes the menu
+    // (Show raises the DismissPopup event on the focused element before showing the KeyTips), so the KeyTips could not be shown in it.
     [Test]
     public void Wrong_key_in_first_KeyTip_level_of_open_application_menu_closes_the_KeyTips_but_keeps_the_menu_open()
     {
@@ -238,6 +241,9 @@ public class KeyTipServiceTests
         var applicationMenu = new ApplicationMenu
         {
             Header = "File",
+
+            // Keep keyboard focus in the text box when the menu opens.
+            FocusFirstItemOnDropDownOpen = false,
             Items =
             {
                 firstItem,
@@ -254,7 +260,18 @@ public class KeyTipServiceTests
         };
         ribbon.Tabs.Add(new RibbonTabItem { Header = "Home", KeyTip = "H" });
 
-        using var testWindow = new TestRibbonWindow(ribbon);
+        var textBox = new System.Windows.Controls.TextBox();
+
+        var panel = new System.Windows.Controls.StackPanel
+        {
+            Children =
+            {
+                ribbon,
+                textBox
+            }
+        };
+
+        using var testWindow = new TestRibbonWindow(panel);
 
         // KeyTipService ignores all keys while the window is not active.
         testWindow.Activate();
@@ -270,11 +287,21 @@ public class KeyTipServiceTests
         var wasDeactivated = false;
         testWindow.Deactivated += (_, _) => wasDeactivated = true;
 
+        textBox.Focus();
+        UIHelper.DoEvents();
+
+        if (textBox.IsKeyboardFocused == false)
+        {
+            Assert.Inconclusive("The text box could not get keyboard focus in this test environment.");
+        }
+
         applicationMenu.IsDropDownOpen = true;
         UIHelper.DoEvents();
         InconclusiveIfWindowDeactivated(testWindow, wasDeactivated, "after opening the application menu");
 
         Assert.That(applicationMenu.IsDropDownOpen, Is.True, "Precondition: the application menu should be open");
+        UIHelper.InconclusiveIfKeyboardFocusLost("after opening the application menu");
+        Assert.That(textBox.IsKeyboardFocused, Is.True, "Precondition: keyboard focus should stay in the text box");
 
         var keyTipService = ribbon.GetFieldValue<KeyTipService>("keyTipService");
 
@@ -285,10 +312,11 @@ public class KeyTipServiceTests
         Assert.That(IsKeyTipShown(keyTipService, firstItem), Is.True, "Precondition: Alt should show the KeyTips of the application menu");
 
         // Z matches no KeyTip of the application menu.
-        PressKeyOnFocusedElement(testWindow, Key.Z);
+        var zHandled = PressKeyOnFocusedElement(testWindow, Key.Z);
         InconclusiveIfWindowDeactivated(testWindow, wasDeactivated, "after Z");
 
         Assert.That(keyTipService.AreAnyKeyTipsVisible, Is.False, "A key which matches no KeyTip in the first KeyTip level of the application menu should close the KeyTips");
+        Assert.That(zHandled, Is.False, "The key should not be swallowed by the KeyTips, so it reaches the text box");
         Assert.That(applicationMenu.IsDropDownOpen, Is.True, "Closing the KeyTips should not close the application menu");
     }
 
@@ -315,7 +343,8 @@ public class KeyTipServiceTests
     // Presses a key the way WPF input delivers it, on the element which has keyboard focus (or the window):
     // PreviewKeyDown (tunnel) and KeyDown (bubble) sharing one args object, then the key up.
     // The window's PreviewKeyDown and KeyUp handlers are how KeyTipService sees keys.
-    private static void PressKeyOnFocusedElement(Window window, Key key)
+    // Returns whether the PreviewKeyDown was handled, i.e. whether the key was swallowed before reaching its target.
+    private static bool PressKeyOnFocusedElement(Window window, Key key)
     {
         var target = Keyboard.FocusedElement as UIElement ?? window;
         var inputSource = PresentationSource.FromVisual(target);
@@ -326,6 +355,7 @@ public class KeyTipServiceTests
         };
 
         target.RaiseEvent(args);
+        var previewHandled = args.Handled;
 
         args.RoutedEvent = Keyboard.KeyDownEvent;
         target.RaiseEvent(args);
@@ -346,6 +376,8 @@ public class KeyTipServiceTests
         target.RaiseEvent(upArgs);
 
         UIHelper.DoEvents();
+
+        return previewHandled;
     }
 
     // Another test window taking activation ends the KeyTips and closes all popups. That is an environment problem, not the bug.
