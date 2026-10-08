@@ -3852,8 +3852,38 @@
                         Minimum="0.5"
                         SmallChange="0.1"
                         TickFrequency="0.1"
+                        ToolTip="Zoom"
                         ValueChanged="ZoomSlider_OnValueChanged"
-                        Value="{Binding Zoom}" />
+                        Value="{Binding Zoom}">
+                    <Slider.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="ZoomPresetMenuItem_OnClick"
+                                      Header="50%">
+                                <MenuItem.Tag>
+                                    <System:Double>0.5</System:Double>
+                                </MenuItem.Tag>
+                            </MenuItem>
+                            <MenuItem Click="ZoomPresetMenuItem_OnClick"
+                                      Header="100%">
+                                <MenuItem.Tag>
+                                    <System:Double>1.0</System:Double>
+                                </MenuItem.Tag>
+                            </MenuItem>
+                            <MenuItem Click="ZoomPresetMenuItem_OnClick"
+                                      Header="150%">
+                                <MenuItem.Tag>
+                                    <System:Double>1.5</System:Double>
+                                </MenuItem.Tag>
+                            </MenuItem>
+                            <MenuItem Click="ZoomPresetMenuItem_OnClick"
+                                      Header="200%">
+                                <MenuItem.Tag>
+                                    <System:Double>2.0</System:Double>
+                                </MenuItem.Tag>
+                            </MenuItem>
+                        </ContextMenu>
+                    </Slider.ContextMenu>
+                </Slider>
             </Fluent:StatusBarItem>
         </Fluent:StatusBar>
     </Grid>
