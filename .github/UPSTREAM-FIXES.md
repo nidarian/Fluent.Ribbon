@@ -540,13 +540,36 @@ color, and that the template uses it.
 
 ---
 
-## Open question for the maintainer (#1251 follow-up)
+## #1251 follow-up: unchecking from code (done 2026-10-08)
 
-`QuickAccessMenuItem.OnUnchecked` returns early while the item isn't loaded. So
-unchecking an item from code before its menu has ever been opened doesn't
-remove it from the toolbar. The guard dates from before 2017 and its reason
-isn't recorded. It may protect bindings or state loading, so I left it alone.
-Ask whether it's still needed.
+`QuickAccessMenuItem.OnUnchecked` returned early while the item wasn't loaded,
+and an item is only loaded once the quick access menu has been opened. So
+unchecking an item from code (or a binding) before that left it on the toolbar.
+
+**Why the guard was there:** it came with the 2010 commit b37af55e that saved
+toolbar items in the ribbon state. Loading that state reset `IsChecked` on every
+menu item, and the guard kept that from removing anything. Saving toolbar items
+was removed upstream in 383f17f4 (#810), so the reason is gone.
+
+**Fix** (branch `fix/qat-uncheck-from-code-before-menu-opened`): while not
+loaded, the item is removed only if the toolbar exists and the item is on it.
+Before the toolbar exists nothing changes.
+
+| Run | Code | Result |
+|---|---|---|
+| #282 | tests only | Fails as expected on all 3 frameworks: 2 of 1006, *Expected False, But was True* |
+| #284 | tests + fix | 1006/1006 on each framework |
+
+## #708: tooltip and context menu on the zoom slider (done 2026-10-08)
+
+Nothing in the library blocks them: the ZoomSlider template, `StatusBar` and
+`StatusBarItem` set no menu or tooltip of their own on the slider's parts, and the
+status bar's "Customize" menu only applies where the slider has none. So there
+was no bug to fix. The Showcase's status bar zoom slider now has a "Zoom"
+tooltip and a right-click menu with 50%, 100%, 150% and 200% (branch
+`fix/708-zoom-slider-tooltip-contextmenu`). A test checks that an app's menu and
+tooltip on such a slider stay in place and that a right-click isn't swallowed.
+Run #283: 1002/1002 on each framework.
 
 ---
 
@@ -567,7 +590,9 @@ Ask whether it's still needed.
 | Issue | Why not |
 |---|---|
 | #1279 QAT icon size | Already solved upstream (`QATIconSize`, #1281/#1282). Waiting for a release. |
-| #1018, #1270, #708 | Theme/design work (High Contrast, Office look). |
+| #1018 | Partly done: opt-in High Contrast (`architecture/HIGH-CONTRAST.md`). Full High Contrast themes are design work. |
+| #1270 | Office look (hover, rounded corners): a visual redesign every app would see. Only on the owner's request. |
+| #1233 "sub-groups" | A new feature beyond the "..." sample above. Only on the owner's request. |
 | #803, #962 | Documentation / logo, not code. |
 | #1283 | Support question, the maintainer already answered. |
 

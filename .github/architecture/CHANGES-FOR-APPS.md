@@ -2,7 +2,7 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-10-07. The open choices about some of
+be checked when updating. Status: 2026-10-08. The open choices about some of
 these are in `AUDIT-DECISIONS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
@@ -101,5 +101,9 @@ searches by the old value stops finding the control.
 - **Ribbon collapse at start**: the ribbon collapses itself at start if the
   window is too small, not only on the first resize. It never expands a ribbon
   the app set to collapsed (D5).
+- **Quick Access Toolbar items changed from code**: checking a
+  `QuickAccessMenuItem` from code adds its control to the toolbar right away
+  (#1251), and unchecking it removes it right away, even before the user has
+  opened the quick access menu.
 - **Turning on `AutomaticStateManagement` after load** reads the saved state
   instead of overwriting it.
