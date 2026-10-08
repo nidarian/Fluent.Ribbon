@@ -317,6 +317,55 @@ public class RibbonTests
     }
 
     /// <summary>
+    /// The check of the window size on load must only collapse the ribbon.
+    /// An app that starts the ribbon collapsed on purpose (<see cref="Ribbon.IsCollapsed"/> = true, with
+    /// <see cref="Ribbon.IsAutomaticCollapseEnabled"/> left on) saw it expand on load in a large window.
+    /// </summary>
+    [Test]
+    public void Ribbon_collapsed_by_the_app_stays_collapsed_when_loaded_into_a_large_window()
+    {
+        var ribbon = new Ribbon
+        {
+            IsCollapsed = true
+        };
+
+        using (var window = new TestRibbonWindow())
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(window.ActualWidth, Is.GreaterThanOrEqualTo(Ribbon.MinimalVisibleWidth), "Precondition: the window is wide enough");
+            Assert.That(window.ActualHeight, Is.GreaterThanOrEqualTo(Ribbon.MinimalVisibleHeight), "Precondition: the window is high enough");
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded");
+            Assert.That(ribbon.IsAutomaticCollapseEnabled, Is.True, "Precondition: automatic collapse is on by default");
+            Assert.That(ribbon.IsCollapsed, Is.True, "Loading must not expand a ribbon the app collapsed");
+        }
+    }
+
+    /// <summary>
+    /// A ribbon the app did not collapse stays expanded when loaded into a large window.
+    /// </summary>
+    [Test]
+    public void Ribbon_loaded_into_a_large_window_is_not_collapsed()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow())
+        {
+            UIHelper.DoEvents();
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded");
+            Assert.That(ribbon.IsCollapsed, Is.False, "A ribbon in a large window must not be collapsed");
+        }
+    }
+
+    /// <summary>
     /// <see cref="Ribbon.QuickAccessItems"/>.Clear() raises a Reset without the removed items.
     /// The removed menu items must still forget the ribbon, otherwise checking them later pins their target to a ribbon they no longer belong to.
     /// </summary>

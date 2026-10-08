@@ -184,6 +184,8 @@
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Margin" Value="0" />
+        <!--  #1176: touch panning of the groups is opt-in. An app sets ScrollViewer.PanningMode="HorizontalOnly" on the Ribbon; the tab item passes it on to its GroupsContainer (see RibbonTabItem constructor). Off (None) by default, as upstream.  -->
+        <Setter Property="ScrollViewer.PanningMode" Value="{Binding Path=(ScrollViewer.PanningMode), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}" />
         <Setter Property="Template" Value="{DynamicResource Fluent.Ribbon.Templates.RibbonTabItem}" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Style.Triggers>

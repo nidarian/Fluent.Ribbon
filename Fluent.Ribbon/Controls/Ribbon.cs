@@ -1770,7 +1770,11 @@ public class Ribbon : Control, ILogicalChildSupport
 
         // SizeChanged only reports later changes. The window may already be too small
         // (its first SizeChanged happens before the ribbon is loaded), so check it now.
-        this.MaintainIsCollapsed();
+        // Only collapse here: an IsCollapsed set by the app must not be undone on load.
+        if (this.IsCollapsed == false)
+        {
+            this.MaintainIsCollapsed();
+        }
     }
 
     private void DetachFromWindow()

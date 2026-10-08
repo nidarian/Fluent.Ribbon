@@ -14,6 +14,16 @@
         <Setter Property="Content" Value="{Binding Path=Header, RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
         <Setter Property="ContentTemplate" Value="{Binding Path=HeaderTemplate, RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
         <Setter Property="ContentTemplateSelector" Value="{Binding Path=HeaderTemplateSelector, RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
+        <!-- Whether the text color is still the theme's default (the Foreground setter below); the templates only use the theme's hover and pressed text colors then. -->
+        <Setter Property="Fluent:RibbonProperties.UsesThemeForeground">
+            <Setter.Value>
+                <MultiBinding Converter="{x:Static converters:IsSameAsResourceConverter.Instance}"
+                              ConverterParameter="Fluent.Ribbon.Brushes.LabelText">
+                    <Binding RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="Foreground" RelativeSource="{RelativeSource Self}" />
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
         <Setter Property="FocusVisualStyle" Value="{DynamicResource Fluent.Ribbon.Styles.FocusVisual}" />
         <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelText}" />
         <Setter Property="HeaderTemplate" Value="{DynamicResource Fluent.Ribbon.DataTemplates.Button.Header}" />
@@ -107,7 +117,6 @@
             <Trigger Property="IsEnabled" Value="False">
                 <Setter TargetName="PART_HeaderContentHost" Property="Opacity" Value="0.5" />
             </Trigger>
-            <!-- On the accent colored hover and pressed fills the header text uses the palette contrast color of that fill (at least 4.65:1); the normal text color fell to 2.16:1 (Dark.Yellow). -->
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsMouseOver" Value="True" />
@@ -116,7 +125,6 @@
                 </MultiTrigger.Conditions>
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Border}" />
-                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -130,8 +138,25 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Border}" />
-                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
             </Trigger>
+            <!-- On the accent colored hover and pressed fills the header text uses the palette contrast color of that fill (at least 4.65:1); the normal text color fell to 2.16:1 (Dark.Yellow).
+                 Only while the text color is the theme's default (UsesThemeForeground, set by the style): a text color set by the application (for example red for "Delete") is kept. -->
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="IsPressed" Value="False" />
+                    <Condition Property="IsChecked" Value="False" />
+                    <Condition Property="Fluent:RibbonProperties.UsesThemeForeground" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsPressed" Value="True" />
+                    <Condition Property="Fluent:RibbonProperties.UsesThemeForeground" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
+            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -221,7 +246,6 @@
                 </MultiTrigger.Conditions>
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Border}" />
-                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -235,8 +259,25 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Border}" />
-                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
             </Trigger>
+            <!-- On the accent colored hover and pressed fills the header text uses the palette contrast color of that fill (at least 4.65:1); the normal text color fell to 2.16:1 (Dark.Yellow).
+                 Only while the text color is the theme's default (UsesThemeForeground, set by the style): a text color set by the application (for example red for "Delete") is kept. -->
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="IsPressed" Value="False" />
+                    <Condition Property="IsChecked" Value="False" />
+                    <Condition Property="Fluent:RibbonProperties.UsesThemeForeground" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Foreground}" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsPressed" Value="True" />
+                    <Condition Property="Fluent:RibbonProperties.UsesThemeForeground" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="PART_HeaderContentHost" Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Foreground}" />
+            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 </ResourceDictionary>

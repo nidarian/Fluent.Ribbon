@@ -19,7 +19,7 @@ public class RibbonGroupsContainerScrollViewer : ScrollViewer
 
     /// <inheritdoc />
     /// <remarks>
-    /// Touch panning is enabled by the default style (PanningMode, see #1176).
+    /// Touch panning is opt-in (PanningMode, see #1176 and the <see cref="RibbonTabItem" /> constructor).
     /// When the user drags past the first or last group, Windows would by default move the whole window
     /// as "boundary feedback". For a ribbon at the top of the window that looks broken, so it's swallowed here.
     /// </remarks>
