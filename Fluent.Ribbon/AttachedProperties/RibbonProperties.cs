@@ -275,6 +275,34 @@ public class RibbonProperties : DependencyObject
 
     #endregion
 
+    #region UsesThemeForegroundProperty
+
+    /// <summary>
+    /// <see cref="DependencyProperty"/> for specifying UsesThemeForeground.
+    /// Tells the Fluent <see cref="Button"/> and <see cref="ToggleButton"/> templates whether the text color is still the theme's default.
+    /// Only then do they switch the header text to the theme's hover and pressed text colors, so a text color set by the application is kept.
+    /// The Fluent styles compute it from <see cref="System.Windows.Controls.Control.Foreground"/>.
+    /// </summary>
+    public static readonly DependencyProperty UsesThemeForegroundProperty = DependencyProperty.RegisterAttached("UsesThemeForeground", typeof(bool), typeof(RibbonProperties), new PropertyMetadata(BooleanBoxes.FalseBox));
+
+    /// <summary>
+    /// Sets <see cref="UsesThemeForegroundProperty"/> for <paramref name="element"/>.
+    /// </summary>
+    public static void SetUsesThemeForeground(DependencyObject element, bool value)
+    {
+        element.SetValue(UsesThemeForegroundProperty, BooleanBoxes.Box(value));
+    }
+
+    /// <summary>
+    /// Gets <see cref="UsesThemeForegroundProperty"/> for <paramref name="element"/>.
+    /// </summary>
+    public static bool GetUsesThemeForeground(DependencyObject element)
+    {
+        return (bool)element.GetValue(UsesThemeForegroundProperty);
+    }
+
+    #endregion
+
     #region IsSelectedBackgroundProperty
 
     /// <summary>
