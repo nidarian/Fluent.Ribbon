@@ -15,9 +15,7 @@ and send it to Claude. Anything left blank stays as it is now.
 - **D4 is B because there is no touch screen to check sliders on** (the recommendation was A only
   with that check). It can become A later if someone tests it on a touch screen.
 - **D2 and D3 were looked at, not only read:** the same Showcase spot was photographed on build #211
-  (before) and #250 (after). Pictures are in the workspace diary
-  `diary.2026-10-07-02-fluent-ribbon-overnight.md` (`D2-textbox-borders-compare.png`,
-  `D3-backstage-wrong-key-compare.png`). D2: in Dark the borders went from light grey to medium grey,
+  (before) and #250 (after), and the screenshots were compared. D2: in Dark the borders went from light grey to medium grey,
   weaker, while Light improved clearly. D3: since the change a wrong key keeps the Backstage KeyTips
   and Esc then shows the ribbon's first-level KeyTips; before, the wrong key closed them.
 - **D1 could not be photographed:** no Showcase button sets its own text colour.
