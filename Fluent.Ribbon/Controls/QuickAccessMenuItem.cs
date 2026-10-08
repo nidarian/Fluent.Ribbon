@@ -170,12 +170,21 @@ public class QuickAccessMenuItem : MenuItem
 
     private void OnUnchecked(object sender, RoutedEventArgs e)
     {
-        if (this.IsLoaded == false)
+        // Items added from code only get loaded once the quick access menu is opened.
+        // Unchecking them from code (or through a binding) before that must still remove them from the toolbar,
+        // like checking adds them (#1251).
+        // Before the toolbar exists (XAML/startup order) nothing is removed, as before:
+        // the item's IsChecked is synced from the toolbar once it gets loaded (OnItemLoaded).
+        var ownerRibbon = this.Ribbon;
+
+        if (this.IsLoaded == false
+            && (ownerRibbon?.QuickAccessToolBar is null
+                || ownerRibbon.IsInQuickAccessToolBar(this.Target) == false))
         {
             return;
         }
 
-        this.Ribbon?.RemoveFromQuickAccessToolBar(this.Target);
+        ownerRibbon?.RemoveFromQuickAccessToolBar(this.Target);
     }
 
     private void OnItemLoaded(object sender, RoutedEventArgs e)
