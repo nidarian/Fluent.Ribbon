@@ -30,6 +30,11 @@ public class KeyTipService
 
     // Is KeyTips Actived now
     private KeyTipAdorner? activeAdornerChain;
+
+    // The first KeyTip level the user sees. That's the chain root, or the level of the backstage, application menu or start screen
+    // if Show forwarded directly to one of them.
+    private KeyTipAdorner? firstKeyTipLevel;
+
     // This element must be remembered to restore focus
     private FocusWrapper? backUpFocusedControl;
 
@@ -337,7 +342,10 @@ public class KeyTipService
                 // Only do this in the root layer. Checking "AdornedElement is Ribbon" does not work for that,
                 // because the chain root is always created on the ribbon (see Show), so it was true in every layer.
                 // The active adorner is the root itself only as long as we did not navigate to a nested layer.
-                if (ReferenceEquals(this.activeAdornerChain.ActiveKeyTipAdorner, this.activeAdornerChain))
+                // If Show forwarded directly to an open backstage, application menu or start screen, that level is the first one the user sees,
+                // so it counts as root layer too. Otherwise a key typed there (e.g. into a text box after pressing Alt by accident) was swallowed.
+                if (ReferenceEquals(this.activeAdornerChain.ActiveKeyTipAdorner, this.activeAdornerChain)
+                    || ReferenceEquals(this.activeAdornerChain.ActiveKeyTipAdorner, this.firstKeyTipLevel))
                 {
                     this.Terminate();
                     return;
@@ -448,6 +456,7 @@ public class KeyTipService
         }
 
         this.activeAdornerChain = null;
+        this.firstKeyTipLevel = null;
         this.ClearUserInput();
 
         if (e.PressedElementOpenedPopup == false)
@@ -547,11 +556,16 @@ public class KeyTipService
         this.activeAdornerChain = new KeyTipAdorner(this.ribbon, this.ribbon, null);
         this.activeAdornerChain.Terminated += this.OnAdornerChainTerminated;
         this.activeAdornerChain.Attach();
+        this.firstKeyTipLevel = this.activeAdornerChain;
 
         // continuation of Office mimik: if the real target wasn't the ribbon we immediately forward to the target control
         if (keyTipsTarget is not Ribbon)
         {
             this.activeAdornerChain.Forward(string.Empty, keyTipsTarget, false);
+
+            // Remember the level we forwarded to, it's the first level the user sees (see OnWindowPreviewKeyDown).
+            // Forward terminates the chain if the target has no KeyTips, which clears activeAdornerChain.
+            this.firstKeyTipLevel = this.activeAdornerChain?.ActiveKeyTipAdorner;
         }
     }
 
