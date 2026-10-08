@@ -39,6 +39,8 @@ and keyboard focus inside it, the normal case after opening it, pressing Alt
 closes the menu instead of showing its KeyTips. This was already so before
 the fork's changes. Fixing it would change what Alt does inside an open
 menu, so it needs its own decision.
+**Decided (owner, 2026-10-08): leave it as is.** It is the same as in the
+original library and the old-style menu, and nobody has complained.
 
 ## Choices
 
