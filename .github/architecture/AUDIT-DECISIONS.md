@@ -8,6 +8,22 @@ what a user would notice, the options, and a recommendation.
 **How to answer:** write the item numbers and A or B (e.g. "D1 B, D2 A, ...")
 and send it to Claude. Anything left blank stays as it is now.
 
+## Answers (Jay, 2026-10-07)
+
+**D1 B, D2 B, D3 B, D4 B, D5 B, D6 A, D7 A, D8 A**: all recommendations taken.
+
+- **D4 is B because there is no touch screen to check sliders on** (the recommendation was A only
+  with that check). It can become A later if someone tests it on a touch screen.
+- **D2 and D3 were looked at, not only read:** the same Showcase spot was photographed on build #211
+  (before) and #250 (after). Pictures are in the workspace diary
+  `diary.2026-10-07-02-fluent-ribbon-overnight.md` (`D2-textbox-borders-compare.png`,
+  `D3-backstage-wrong-key-compare.png`). D2: in Dark the borders went from light grey to medium grey,
+  weaker, while Light improved clearly. D3: since the change a wrong key keeps the Backstage KeyTips
+  and Esc then shows the ribbon's first-level KeyTips; before, the wrong key closed them.
+- **D1 could not be photographed:** no Showcase button sets its own text colour.
+
+Next: implement the B items test-first, like the other fixes.
+
 ## Choices
 
 ### D1. Button text colour on hover
