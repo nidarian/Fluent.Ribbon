@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ControlzEx.Theming;
 using Fluent.Tests.Helper;
+using Fluent.Theming;
 using NUnit.Framework;
 
 /// <summary>
@@ -49,6 +51,22 @@ public class ThemeContrastTests
         }
     }
 
+    private static IEnumerable<string> LightThemes()
+    {
+        foreach (var colorScheme in colorSchemes)
+        {
+            yield return $"Light.{colorScheme}";
+        }
+    }
+
+    private static IEnumerable<string> DarkThemes()
+    {
+        foreach (var colorScheme in colorSchemes)
+        {
+            yield return $"Dark.{colorScheme}";
+        }
+    }
+
     [TestCaseSource(nameof(AllThemes))]
     public void TextBox_Border_Has_NonText_Contrast(string themeName)
     {
@@ -57,6 +75,42 @@ public class ThemeContrastTests
         // The border is the only thing that shows where an empty text box is.
         AssertContrast(themeName, "TextBox.Border on TextBox.Background", GetBrushColor(theme, "TextBox.Border"), GetBrushColor(theme, "TextBox.Background"), NonTextMinimum);
         AssertContrast(themeName, "TextBox.Border on the ribbon background", GetBrushColor(theme, "TextBox.Border"), GetBrushColor(theme, "RibbonTabControl.Content.Background"), NonTextMinimum);
+    }
+
+    [TestCaseSource(nameof(LightThemes))]
+    public void TextBox_Border_Is_Gray2_In_Light_Themes(string themeName)
+    {
+        var theme = GetTheme(themeName);
+
+        // Decision D2 (.github/architecture/AUDIT-DECISIONS.md): Light keeps the darker border (#7F7F7F, 3.7:1 on the ribbon background #F7F7F7),
+        // the old Gray6 (#CCCCCC) was only 1.50:1 there.
+        Assert.That(GetBrushColor(theme, "TextBox.Border"), Is.EqualTo(Color.FromRgb(0x7F, 0x7F, 0x7F)), $"{themeName}: TextBox.Border");
+    }
+
+    [TestCaseSource(nameof(DarkThemes))]
+    public void TextBox_Border_Is_Gray6_In_Dark_Themes(string themeName)
+    {
+        var theme = GetTheme(themeName);
+
+        // Decision D2 (.github/architecture/AUDIT-DECISIONS.md): Dark keeps its original border (#CCCCCC, 8.7:1 on the ribbon background #2C2C2C),
+        // the Light fix (#7F7F7F) lowered it to 3.5:1 there.
+        Assert.That(GetBrushColor(theme, "TextBox.Border"), Is.EqualTo(Color.FromRgb(0xCC, 0xCC, 0xCC)), $"{themeName}: TextBox.Border");
+    }
+
+    [Test]
+    [TestCase("Light", "#FF7F7F7F")]
+    [TestCase("Dark", "#FFCCCCCC")]
+    public void TextBox_Border_In_Runtime_Theme_Follows_Base_Color_Scheme(string baseColorScheme, string expectedColor)
+    {
+        // Themes generated at runtime (for example for a custom accent color) must get the same border as the shipped themes.
+        var libraryTheme = RuntimeThemeGenerator.Current.GenerateRuntimeLibraryTheme(baseColorScheme, Colors.Red, false, RibbonLibraryThemeProvider.DefaultInstance);
+
+        Assert.That(libraryTheme, Is.Not.Null);
+
+        var brush = libraryTheme!.Resources[BrushPrefix + "TextBox.Border"] as SolidColorBrush;
+
+        Assert.That(brush, Is.Not.Null, $"'{BrushPrefix}TextBox.Border' must be a SolidColorBrush.");
+        Assert.That(brush!.Color, Is.EqualTo((Color)ColorConverter.ConvertFromString(expectedColor)), $"{baseColorScheme} runtime theme: TextBox.Border");
     }
 
     [TestCaseSource(nameof(AllThemes))]
