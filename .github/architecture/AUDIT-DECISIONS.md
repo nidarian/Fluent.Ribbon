@@ -22,7 +22,25 @@ and send it to Claude. Anything left blank stays as it is now.
   and Esc then shows the ribbon's first-level KeyTips; before, the wrong key closed them.
 - **D1 could not be photographed:** no Showcase button sets its own text colour.
 
-Next: implement the B items test-first, like the other fixes.
+## Done (2026-10-08)
+
+- **A (D6, D7, D8):** no change. The current behaviour stays and is documented
+  in `CHANGES-FOR-APPS.md`.
+- **B (D1 to D5):** done test-first, all five in pull request #13:
+
+| # | Branch | Tests only fail → with fix pass |
+|---|---|---|
+| D1 | `fix/d1-button-hover-keeps-app-foreground` | #263 → #268 |
+| D2 | `fix/d2-dark-textbox-border` | #260 → #266 |
+| D3 | `fix/d3-wrong-keytip-first-level-closes` | #261 → #265 (application menu guard test: #270) |
+| D4 | `fix/d4-touch-panning-opt-in` | #262 → #267 |
+| D5 | `fix/d5-keep-app-collapsed-at-start` | #259 → #264 |
+
+**Found while doing D3 (open, not changed):** with an application menu open
+and keyboard focus inside it, the normal case after opening it, pressing Alt
+closes the menu instead of showing its KeyTips. This was already so before
+the fork's changes. Fixing it would change what Alt does inside an open
+menu, so it needs its own decision.
 
 ## Choices
 
