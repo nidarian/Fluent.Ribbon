@@ -11,8 +11,7 @@ These colours were changed to meet WCAG contrast ratios. `ROUND4.md` has the
 reasons, and `AUDIT.md` lists the ratios recalculated by the audit.
 
 - **Text box borders** (ComboBox, Spinner, TextBox): `#CCCCCC` → `#7F7F7F` in
-  Light and Dark. Easier to see in Light, **harder** to see in Dark (see
-  `AUDIT-DECISIONS.md`, D2).
+  **Light** only (easier to see there). Dark keeps `#CCCCCC`, by decision D2.
 - **Light.Blue**: check marks, the text box focus border and the Backstage
   selection bar go from `#0078D7` to `#0048A3`.
 - **Dark.Blue**: the checked toggle button border goes from `#1651AA` to
@@ -21,8 +20,8 @@ reasons, and `AUDIT.md` lists the ratios recalculated by the audit.
   This also darkens Light.Yellow contextual tab text and the tab border.
 - **Button text on hover and press** uses a palette colour: white in
   Light.Crimson and Light.Indigo, black in Dark.Amber, Cyan, Lime, Pink, Teal
-  and Yellow. It overrides an app's own button `Foreground` while hovered
-  (see `AUDIT-DECISIONS.md`, D1).
+  and Yellow. A button with its own `Foreground` (for example red) keeps it
+  on hover and press, by decision D1.
 - **Gallery filter header**: black text instead of white, with a yellow
   (`#FFD232`) hover background. In opt-in High Contrast mode it follows the
   system colours.
@@ -70,8 +69,9 @@ searches by the old value stops finding the control.
 - **Drop downs**: Tab with focus still on the button closes the drop down.
   Enter or Space pressed *inside* an open drop down (for example in a text
   box) no longer closes it, and in a SplitButton no longer clicks the button.
-- **KeyTips**: a wrong key inside a group or menu beeps and keeps the KeyTips
-  (see `AUDIT-DECISIONS.md`, D3). After opening a drop down with its KeyTip,
+- **KeyTips**: a wrong key inside a group or menu beeps and keeps the KeyTips.
+  At the first level the user sees (the ribbon, or an open Backstage,
+  application menu or start screen), a wrong key closes the KeyTips (D3). After opening a drop down with its KeyTip,
   ↓, Tab and other non-letter keys end KeyTips but leave the drop down open,
   as in Office.
 - **ColorGallery**: arrow keys browse colours without picking. Enter or Space
@@ -86,14 +86,20 @@ searches by the old value stops finding the control.
 - Opt-in High Contrast support for runtime themes (`HIGH-CONTRAST.md`).
 - The `IsLastItem` resource key on GalleryItem is marked obsolete, so apps that
   build with warnings as errors get a compile error until they stop using it.
+- `RibbonProperties.UsesThemeForeground` (attached, set by the button styles)
+  and `Fluent.Converters.IsSameAsResourceConverter`: used to keep an app's own
+  button text colour on hover (D1).
 - Internal writes to `IsDropDownOpen` and similar properties use
   `SetCurrentValue`, so an app's OneWay binding on them survives.
 
 ## Other
 
-- **Touch**: the ribbon's groups area scrolls sideways by touch, for every app
-  (#1176; see `AUDIT-DECISIONS.md`, D4).
-- **Ribbon collapse at start**: the ribbon collapses or expands for the window
-  width at start, not only on the first resize (see `AUDIT-DECISIONS.md`, D5).
+- **Touch** (#1176): the ribbon's groups area can scroll sideways by touch,
+  **opt-in** (D4): `<Fluent:Ribbon ScrollViewer.PanningMode="HorizontalOnly">`.
+  It is off by default, as in the original, because it hasn't been checked on
+  a touch screen.
+- **Ribbon collapse at start**: the ribbon collapses itself at start if the
+  window is too small, not only on the first resize. It never expands a ribbon
+  the app set to collapsed (D5).
 - **Turning on `AutomaticStateManagement` after load** reads the saved state
   instead of overwriting it.
