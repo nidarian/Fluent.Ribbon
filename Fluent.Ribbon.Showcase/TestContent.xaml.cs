@@ -523,6 +523,14 @@ public partial class TestContent
         TextOptions.SetTextFormattingMode(window, textFormattingMode);
     }
 
+    private void ZoomPresetMenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: double zoom })
+        {
+            this.zoomSlider.Value = zoom;
+        }
+    }
+
     private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (Keyboard.IsKeyDown(Key.LeftCtrl) == false
