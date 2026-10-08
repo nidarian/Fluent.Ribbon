@@ -14,6 +14,23 @@ Why: the links ended up in about 412 public commits and several pull requests.
 They were removed from the pull request descriptions; the commit history stays
 as it is.
 
+## Never rewrite published history (permanent rule from the owner)
+
+Do not rewrite commit history to remove the session links: no `git rebase`,
+`git filter-repo` or similar followed by a force push on `develop`,
+`integration/all-fixes` or any other shared branch.
+
+- No real gain: the links only lead to a login page. They are IDs, not access.
+- It doesn't really delete them: old commits stay reachable on GitHub by their
+  hash, and every existing clone keeps them.
+- It is destructive: about 400 commits would change hash, open branches and pull
+  requests would have to be rebuilt, and the CI runs that prove the fixes would
+  no longer match the commits.
+
+Enough: don't write the links from now on, and clean up pull request, issue and
+comment texts if needed. If a history rewrite ever seems necessary, ask the
+owner first.
+
 ## Working in this fork
 
 - Start with `.github/README.md`. It explains the branches and the notes.
