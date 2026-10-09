@@ -89,6 +89,39 @@ public class RibbonRemovedFromWindowTests
     }
 
     /// <summary>
+    /// The title bar of a RibbonWindow shows the quick access toolbar and the contextual groups of the ribbon in the window.
+    /// Once the ribbon is removed, the title bar must no longer show (and hold) them.
+    /// </summary>
+    [Test]
+    public void TitleBar_of_a_RibbonWindow_lets_go_of_a_removed_ribbon()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            var titleBar = window.TitleBar;
+
+            Assert.That(titleBar, Is.Not.Null, "Precondition: the window template provides a title bar");
+            Assert.That(ribbon.TitleBar, Is.SameAs(titleBar), "Precondition: the ribbon found the title bar of its window");
+            Assert.That(titleBar!.QuickAccessToolBar, Is.SameAs(ribbon.QuickAccessToolBar), "Precondition: the title bar shows the quick access toolbar of the ribbon");
+
+            window.Content = null;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.False, "Precondition: the ribbon is unloaded");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(ribbon.TitleBar, Is.Null, "A removed ribbon must no longer use the title bar of its old window");
+                Assert.That(titleBar.QuickAccessToolBar, Is.Null, "The title bar must no longer show the quick access toolbar of a removed ribbon");
+                Assert.That(titleBar.ItemsSource, Is.Null, "The title bar must no longer show the contextual groups of a removed ribbon");
+            }
+        }
+    }
+
+    /// <summary>
     /// A ribbon that is removed, added again and removed again must also be released.
     /// </summary>
     [Test]
