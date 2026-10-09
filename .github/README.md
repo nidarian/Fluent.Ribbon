@@ -95,4 +95,5 @@ conflict later.
 | `architecture/ROUND4.md` | Round 4: the 51 fixes of 2026-10-01 (the former "maintainer's call" items, keyboard, contrast, screen readers, a new bug hunt), each with its fail and pass build |
 | `architecture/HIGH-CONTRAST.md` | Turning on Windows High Contrast support, and what it doesn't cover yet |
 | `architecture/ROUND5.md` | Round 5: the window, contextual tabs and galleries (11 fixes, each with its fail and pass build), what was rejected, and what's left for the owner |
+| `architecture/ROUND6.md` | Round 6: input controls, simplified ribbon, status bar, tooltips, robustness (16 fixes), and what's still open |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |

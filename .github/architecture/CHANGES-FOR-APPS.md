@@ -2,7 +2,7 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-10-08. The open choices about some of
+be checked when updating. Status: 2026-10-09 (rounds 5 and 6). The open choices about some of
 these are in `AUDIT-DECISIONS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
@@ -141,3 +141,15 @@ searches by the old value stops finding the control.
     a button.
   - `ColorGallery` keeps an app's OneWay `SelectedColor` binding after the user
     picks a colour.
+- **Round 6** (`ROUND6.md`):
+  - OneWay bindings now survive user clicks and ribbon actions on `IsChecked`
+    (split buttons, toolbar copies), `ItemsSource` (toolbar copy drop downs),
+    Spinner `Value`, ComboBox `SelectedItem`, and IsSimplified / IsMinimized /
+    toolbar position (saved state and the ribbon's menu).
+  - `ToolTipService.IsEnabled="False"` is respected by drop downs.
+  - A percent-format Spinner reads typed numbers as percent ("60" = 60 %).
+  - Assigning custom ribbon texts always replaces the current ones; switching
+    between variants of one language (en-US/en-GB) now reloads the texts.
+  - A bad icon path shows no icon (and a debug-output line) instead of
+    crashing. A typo in a fixed XAML icon path no longer fails at startup.
+  - Moving a tab group (`Groups.Move`) briefly unloads and reloads it.
