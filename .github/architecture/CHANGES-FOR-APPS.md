@@ -116,3 +116,15 @@ searches by the old value stops finding the control.
     (it already saved it when it was removed).
   - The ribbon's context menu items re-check whether they are enabled each time
     the menu opens, so they no longer show disabled until the next key or click.
+- **Round 6** (`ROUND6.md`):
+  - OneWay bindings now survive user clicks and ribbon actions on `IsChecked`
+    (split buttons, toolbar copies), `ItemsSource` (toolbar copy drop downs),
+    Spinner `Value`, ComboBox `SelectedItem`, and IsSimplified / IsMinimized /
+    toolbar position (saved state and the ribbon's menu).
+  - `ToolTipService.IsEnabled="False"` is respected by drop downs.
+  - A percent-format Spinner reads typed numbers as percent ("60" = 60 %).
+  - Assigning custom ribbon texts always replaces the current ones; switching
+    between variants of one language (en-US/en-GB) now reloads the texts.
+  - A bad icon path shows no icon (and a debug-output line) instead of
+    crashing. A typo in a fixed XAML icon path no longer fails at startup.
+  - Moving a tab group (`Groups.Move`) briefly unloads and reloads it.
