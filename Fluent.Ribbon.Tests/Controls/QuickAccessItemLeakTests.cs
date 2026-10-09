@@ -109,7 +109,17 @@ public class QuickAccessItemLeakTests
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static WeakReference CreateDiscardedCopy(IQuickAccessItemProvider source)
     {
-        return new WeakReference(source.CreateQuickAccessItem());
+        var copy = source.CreateQuickAccessItem();
+
+        // WPF's ItemsControl only starts listening to its own GroupStyle collection once its items and item container generator exist.
+        // Some controls create them in their constructor, the others as soon as the copy is shown in the toolbar (templated, measured).
+        // Create them here, so every copy is in the state it has after being shown.
+        if (copy is System.Windows.Controls.ItemsControl itemsControl)
+        {
+            _ = itemsControl.ItemContainerGenerator;
+        }
+
+        return new WeakReference(copy);
     }
 
     private static void CollectGarbage()

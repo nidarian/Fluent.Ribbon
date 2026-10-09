@@ -3,7 +3,9 @@ namespace Fluent;
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Automation.Peers;
@@ -256,6 +258,9 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
     /// <inheritdoc />
     public abstract FrameworkElement CreateQuickAccessItem();
 
+    // Keeps the GroupStyle sync helpers alive exactly as long as their quick access copy (the key), without the source referencing the copy.
+    private static readonly ConditionalWeakTable<ItemsControl, List<CollectionSyncHelper<GroupStyle>>> GroupStyleSyncHelpers = new();
+
     /// <summary>
     /// Binds default properties of control to quick access element
     /// </summary>
@@ -331,8 +336,12 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
 
             Bind(source, target, nameof(ItemsControl.GroupStyleSelector), ItemsControl.GroupStyleSelectorProperty, BindingMode.OneWay);
 
-            // cannot "bind" to GroupStyle observable collection property, but can at least keep them in sync
-            _ = new CollectionSyncHelper<GroupStyle>(sourceItemsControl.GroupStyle, targetItemsControl.GroupStyle);
+            // cannot "bind" to GroupStyle observable collection property, but can at least keep them in sync.
+            // The helper listens weakly and is kept alive by the target only. A strong subscription would let the source
+            // (which usually lives as long as the window) keep every quick access copy ever created alive, and the toolbar
+            // re-creates its copies whenever items are added/removed, its state is loaded or the ribbon is re-templated.
+            var groupStyleSync = new CollectionSyncHelper<GroupStyle>(sourceItemsControl.GroupStyle, targetItemsControl.GroupStyle, listenWeakly: true);
+            GroupStyleSyncHelpers.GetOrCreateValue(targetItemsControl).Add(groupStyleSync);
 
             if (source is Selector
                 && target is Selector)
