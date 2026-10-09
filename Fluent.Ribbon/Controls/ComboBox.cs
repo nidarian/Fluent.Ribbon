@@ -537,7 +537,8 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
 
         ItemsControlHelper.MoveItemsToDifferentControl(this, this.quickAccessCombo);
 
-        this.SelectedItem = null;
+        // SetCurrentValue keeps a OneWay binding on SelectedItem (SetValue would replace it with a local value).
+        this.SetCurrentValue(SelectedItemProperty, null);
         this.quickAccessCombo.SelectedItem = this.selectedItem;
         this.quickAccessCombo.Menu = this.Menu;
         this.Menu = null;
@@ -558,7 +559,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         ItemsControlHelper.MoveItemsToDifferentControl(this.quickAccessCombo, this);
 
         this.quickAccessCombo.SelectedItem = null;
-        this.SelectedItem = this.selectedItem;
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.Menu = this.quickAccessCombo.Menu;
         this.quickAccessCombo.Menu = null;
         this.IsSnapped = false;
@@ -737,7 +738,8 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
             if (this.IsEditable &&
                 this.Items.Contains(this.ItemContainerGenerator.ItemFromContainerOrContainerContent((DependencyObject)Keyboard.FocusedElement)))
             {
-                this.SelectedItem = this.ItemContainerGenerator.ItemFromContainerOrContainerContent((DependencyObject)Keyboard.FocusedElement);
+                // SetCurrentValue keeps a OneWay binding on SelectedItem (SetValue would replace it with a local value).
+                this.SetCurrentValue(SelectedItemProperty, this.ItemContainerGenerator.ItemFromContainerOrContainerContent((DependencyObject)Keyboard.FocusedElement));
             }
         }
     }
