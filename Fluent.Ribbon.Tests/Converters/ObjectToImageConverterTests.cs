@@ -2,11 +2,13 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Fluent.Converters;
 using NUnit.Framework;
 
@@ -105,5 +107,76 @@ public class ObjectToImageConverterTests
         {
             CultureInfo.CurrentCulture = previousCulture;
         }
+    }
+
+    /// <summary>
+    /// Icon and LargeIcon of every Fluent control go through this converter (IconPresenter).
+    /// A bound path that is empty, points to a missing file or to a file that is not an image
+    /// made the converter throw. WPF does not catch exceptions thrown by converters, so an app
+    /// with Icon="{Binding IconPath}" crashed. The control should show no icon instead.
+    /// </summary>
+    [TestCase("")]
+    [TestCase(@"C:\does-not-exist\x.png")]
+    [TestCase(@"Images\does-not-exist.png")]
+    public void Convert_Does_Not_Throw_For_Invalid_Image_Path(string imagePath)
+    {
+        AssertConvertsToNoIcon(imagePath);
+    }
+
+    [Test]
+    public void Convert_Does_Not_Throw_For_File_That_Is_Not_An_Image()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), "Fluent.Tests." + Guid.NewGuid().ToString("N") + ".png");
+
+        try
+        {
+            File.WriteAllText(filePath, "This is not an image.");
+
+            AssertConvertsToNoIcon(filePath);
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    [Test]
+    public void Convert_Still_Converts_Valid_Image_Path()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), "Fluent.Tests." + Guid.NewGuid().ToString("N") + ".png");
+
+        try
+        {
+            var bitmap = BitmapSource.Create(2, 2, 96, 96, PixelFormats.Bgra32, null, new byte[2 * 2 * 4], 2 * 4);
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+
+            using (var stream = File.Create(filePath))
+            {
+                encoder.Save(stream);
+            }
+
+            var convertedValue = new ObjectToImageConverter().Convert(filePath, typeof(object), null, CultureInfo.InvariantCulture);
+
+            Assert.That(convertedValue, Is.InstanceOf<Image>());
+            Assert.That(((Image)convertedValue).Source, Is.InstanceOf<BitmapSource>());
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    private static void AssertConvertsToNoIcon(string imagePath)
+    {
+        // A null value converts to null today, which IconPresenter shows as "no icon".
+        Assert.That(new ObjectToImageConverter().Convert(null, typeof(object), null, CultureInfo.InvariantCulture), Is.Null, "Precondition: null converts to null.");
+
+        object convertedValue = "not converted";
+
+        Assert.That(() => convertedValue = new ObjectToImageConverter().Convert(imagePath, typeof(object), null, CultureInfo.InvariantCulture), Throws.Nothing);
+
+        // Returning the path itself would make IconPresenter show the path as text.
+        Assert.That(convertedValue, Is.Null);
     }
 }
