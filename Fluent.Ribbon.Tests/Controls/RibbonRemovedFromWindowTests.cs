@@ -122,6 +122,32 @@ public class RibbonRemovedFromWindowTests
     }
 
     /// <summary>
+    /// A ribbon removed from a RibbonWindow and added again must show its quick access toolbar in the title bar again.
+    /// </summary>
+    [Test]
+    public void Ribbon_removed_and_re_added_to_a_RibbonWindow_shows_its_toolbar_in_the_title_bar_again()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            window.Content = null;
+            UIHelper.DoEvents();
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded again");
+            Assert.That(window.TitleBar, Is.Not.Null, "Precondition: the window template provides a title bar");
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null, "Precondition: the ribbon has a quick access toolbar");
+            Assert.That(window.TitleBar!.QuickAccessToolBar, Is.SameAs(ribbon.QuickAccessToolBar), "The title bar must show the quick access toolbar of the re-added ribbon");
+            Assert.That(window.TitleBar.ItemsSource, Is.SameAs(ribbon.ContextualGroups), "The title bar must show the contextual groups of the re-added ribbon");
+        }
+    }
+
+    /// <summary>
     /// A ribbon that is removed, added again and removed again must also be released.
     /// </summary>
     [Test]
