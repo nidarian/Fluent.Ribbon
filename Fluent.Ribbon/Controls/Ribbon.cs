@@ -1784,7 +1784,10 @@ public class Ribbon : Control, ILogicalChildSupport
 
     private void RemoveQuickAccessToolBarFromTitleBar(RibbonTitleBar? titleBar)
     {
-        if (titleBar is not null)
+        // Only remove our own toolbar: the title bar may already show the toolbar of another ribbon
+        // that replaced this one in the window.
+        if (titleBar is not null
+            && ReferenceEquals(titleBar.QuickAccessToolBar, this.QuickAccessToolBar))
         {
             titleBar.QuickAccessToolBar = null;
         }
@@ -1993,6 +1996,21 @@ public class Ribbon : Control, ILogicalChildSupport
 
         this.AttachToWindow();
 
+        // Show our toolbar and contextual groups in the title bar again, if they were removed from it in OnUnloaded.
+        // OnTitleBarChanged does not run again when the ribbon comes back to the same window.
+        // Only for the title bar of our current window: the binding can still hold the title bar of an old window.
+        if (this.TitleBar is not null
+            && this.ownerWindow is not null
+            && ReferenceEquals(Window.GetWindow(this.TitleBar), this.ownerWindow))
+        {
+            this.TitleBar.ItemsSource = this.ContextualGroups;
+
+            if (this.ShowQuickAccessToolBarAboveRibbon)
+            {
+                this.MoveQuickAccessToolBarToTitleBar(this.TitleBar);
+            }
+        }
+
         this.LoadInitialState();
 
         this.TitleBar?.ScheduleForceMeasureAndArrange();
@@ -2041,8 +2059,25 @@ public class Ribbon : Control, ILogicalChildSupport
 
         if (this.ownerWindow is not null)
         {
+            // Closed has to be removed too: otherwise a window that stays open (the app removed or replaced the ribbon)
+            // keeps this ribbon alive until the window is closed.
+            // A ribbon that is loaded again subscribes again in AttachToWindow.
+            this.ownerWindow.Closed -= this.OnOwnerWindowClosed;
             this.ownerWindow.SizeChanged -= this.OnSizeChanged;
             this.ownerWindow.KeyDown -= this.OnKeyDown;
+        }
+
+        // The TitleBar binding (FindAncestor IRibbonWindow) keeps its value when the ribbon is removed from the window,
+        // so OnTitleBarChanged does not run. Take our toolbar and contextual groups out of the title bar here,
+        // otherwise the window keeps showing them and keeps this ribbon alive.
+        if (this.TitleBar is not null)
+        {
+            if (ReferenceEquals(this.TitleBar.ItemsSource, this.ContextualGroups))
+            {
+                this.TitleBar.ItemsSource = null;
+            }
+
+            this.RemoveQuickAccessToolBarFromTitleBar(this.TitleBar);
         }
     }
 
