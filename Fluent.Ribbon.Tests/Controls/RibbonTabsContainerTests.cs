@@ -1,6 +1,7 @@
 namespace Fluent.Tests.Controls;
 
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
@@ -221,6 +222,39 @@ public class RibbonTabsContainerTests
                 59,
                 42
             }));
+        }
+    }
+
+    // When the window is too narrow for all tabs, the regular tabs shrink and separator lines are faded in between them.
+    // Contextual tabs are never shrunk and should never get these separator lines, but UpdateSeparators
+    // set the separator opacity to 0 for contextual tabs and then immediately overwrote it with the regular opacity.
+    [Test]
+    public void Contextual_Tab_Has_No_Separator_When_Tabs_Are_Reduced()
+    {
+        var tabsContainer = new RibbonTabsContainer();
+
+        var regularTab = new RibbonTabItem { Header = "Header text" };
+        var secondRegularTab = new RibbonTabItem { Header = "Header" };
+        var contextualGroup = new RibbonContextualTabGroup { Header = "Group", Visibility = Visibility.Visible };
+        var contextualTab = new RibbonTabItem { Header = "Contextual", Group = contextualGroup };
+
+        tabsContainer.Children.Add(regularTab);
+        tabsContainer.Children.Add(secondRegularTab);
+        tabsContainer.Children.Add(contextualTab);
+
+        var container = new ContentControl { Content = tabsContainer, Width = 100 };
+
+        using (new TestRibbonWindow(container))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(contextualTab.IsContextual, Is.True);
+
+            // Baseline: the regular tabs were reduced far enough for separators to be shown
+            Assert.That(regularTab.SeparatorOpacity, Is.GreaterThan(0));
+            Assert.That(secondRegularTab.SeparatorOpacity, Is.GreaterThan(0));
+
+            Assert.That(contextualTab.SeparatorOpacity, Is.EqualTo(0));
         }
     }
 }
