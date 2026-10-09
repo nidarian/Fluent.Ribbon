@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
@@ -226,12 +227,17 @@ public class ColorGallery : Control
 
     #region RecentItems
 
-    private static ObservableCollection<Color>? recentColors;
+    // RecentColors is shared by all galleries of the process, also by galleries on other UI threads
+    // (apps that run a window on its own thread). The gallery makes its changes under this lock,
+    // and each gallery registers the lock with WPF for its thread (see the constructor).
+    private static readonly object recentColorsLock = new();
+
+    private static readonly ObservableCollection<Color> recentColors = new();
 
     /// <summary>
     /// Gets recent colors collection
     /// </summary>
-    public static ObservableCollection<Color> RecentColors => recentColors ?? (recentColors = new ObservableCollection<Color>());
+    public static ObservableCollection<Color> RecentColors => recentColors;
 
     #endregion
 
@@ -696,6 +702,19 @@ public class ColorGallery : Control
         EventManager.RegisterClassHandler(type, Mouse.MouseDownEvent, new MouseButtonEventHandler(OnMouseDownHandledEventsToo), true);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorGallery"/> class.
+    /// </summary>
+    public ColorGallery()
+    {
+        // The "Recent Colors" list box of every gallery shows the static RecentColors.
+        // Without this, a change made on one UI thread (e.g. "More Colors" in a window running on its own thread)
+        // makes the list box view of a gallery on another thread throw a NotSupportedException, which ends the app.
+        // WPF keeps this registration per thread, so it has to be done on the thread of each gallery.
+        // Repeating it on the same thread is harmless.
+        BindingOperations.EnableCollectionSynchronization(recentColors, recentColorsLock);
+    }
+
     #endregion
 
     #region Overrides
@@ -897,12 +916,7 @@ public class ColorGallery : Control
             if (!args.Canceled)
             {
                 var color = args.Color;
-                if (RecentColors.Contains(color))
-                {
-                    RecentColors.Remove(color);
-                }
-
-                RecentColors.Insert(0, color);
+                AddRecentColor(color);
 
                 if (this.recentColorsListBox is not null)
                 {
@@ -935,18 +949,27 @@ public class ColorGallery : Control
             if (PInvoke.ChooseColor(chooseColor))
             {
                 var color = ConvertFromWin32Color(chooseColor.rgbResult);
-                if (RecentColors.Contains(color))
-                {
-                    RecentColors.Remove(color);
-                }
-
-                RecentColors.Insert(0, color);
+                AddRecentColor(color);
 
                 if (this.recentColorsListBox is not null)
                 {
                     this.recentColorsListBox.SelectedIndex = 0;
                 }
             }
+        }
+    }
+
+    private static void AddRecentColor(Color color)
+    {
+        // RecentColors may be shown by galleries on other UI threads, so change it only under the lock registered with WPF.
+        lock (recentColorsLock)
+        {
+            if (recentColors.Contains(color))
+            {
+                recentColors.Remove(color);
+            }
+
+            recentColors.Insert(0, color);
         }
     }
 
