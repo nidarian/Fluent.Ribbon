@@ -1992,6 +1992,10 @@ public class Ribbon : Control, ILogicalChildSupport
 
         if (this.ownerWindow is not null)
         {
+            // Closed has to be removed too: otherwise a window that stays open (the app removed or replaced the ribbon)
+            // keeps this ribbon alive until the window is closed.
+            // A ribbon that is loaded again subscribes again in AttachToWindow.
+            this.ownerWindow.Closed -= this.OnOwnerWindowClosed;
             this.ownerWindow.SizeChanged -= this.OnSizeChanged;
             this.ownerWindow.KeyDown -= this.OnKeyDown;
         }

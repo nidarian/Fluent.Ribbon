@@ -140,6 +140,28 @@ public class RibbonRemovedFromWindowTests
         }
     }
 
+    /// <summary>
+    /// A ribbon that is still in its window when the window is closed must still be detached from the window then
+    /// (its state storage gets saved and disposed). The fix only removes the Closed handler when the ribbon is unloaded.
+    /// </summary>
+    [Test]
+    public void Ribbon_still_in_its_window_is_detached_when_the_window_is_closed()
+    {
+        var ribbon = new TrackingRibbon();
+
+        var window = new TestRibbonWindow(ribbon);
+        UIHelper.DoEvents();
+
+        Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded");
+
+        var storage = (TrackingRibbonStateStorage)ribbon.RibbonStateStorage;
+
+        window.Close();
+        UIHelper.DoEvents();
+
+        Assert.That(storage.IsDisposed, Is.True, "The state storage of a ribbon that was in the window when it was closed must be disposed");
+    }
+
     private static Window CreatePlainWindow()
     {
         var window = new Window
@@ -239,5 +261,23 @@ public class RibbonRemovedFromWindowTests
         }
 
         return weakReference.IsAlive == false;
+    }
+
+    private sealed class TrackingRibbon : Ribbon
+    {
+        protected override IRibbonStateStorage CreateRibbonStateStorage()
+        {
+            return new TrackingRibbonStateStorage(this);
+        }
+    }
+
+    private sealed class TrackingRibbonStateStorage : RibbonStateStorage
+    {
+        public TrackingRibbonStateStorage(Ribbon ribbon)
+            : base(ribbon)
+        {
+        }
+
+        public bool IsDisposed => this.Disposed;
     }
 }
