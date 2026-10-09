@@ -163,6 +163,7 @@ public class Ribbon : Control, ILogicalChildSupport
     {
         contextMenus.Add(Thread.CurrentThread.ManagedThreadId, new ContextMenu());
         RibbonContextMenu.Opened += OnContextMenuOpened;
+        RibbonContextMenu.Closed += OnContextMenuClosed;
     }
 
     private static void InitRibbonContextMenuItems()
@@ -331,6 +332,17 @@ public class Ribbon : Control, ILogicalChildSupport
         ShowQuickAccessToolbarBelowTheRibbonMenuItem.CommandTarget = ribbon;
         ShowQuickAccessToolbarAboveTheRibbonMenuItem.CommandTarget = ribbon;
 
+        // A menu item doesn't ask its command again whether it can execute when CommandTarget changes, and the target
+        // is cleared when the menu closes. So ask now, otherwise the items could show disabled until the next input.
+        // Setting Command again is the only public way to make a menu item ask right away (CommandManager.InvalidateRequerySuggested
+        // asks every command of the application, and only later on the dispatcher).
+        foreach (var menuItem in RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>())
+        {
+            var command = menuItem.Command;
+            menuItem.Command = null;
+            menuItem.Command = command;
+        }
+
         // Hide items for ribbon controls
         AddToQuickAccessMenuItem.Visibility = Visibility.Collapsed;
         AddGroupToQuickAccessMenuItem.Visibility = Visibility.Collapsed;
@@ -457,6 +469,43 @@ public class Ribbon : Control, ILogicalChildSupport
         if (RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>().All(x => x.Visibility == Visibility.Collapsed))
         {
             RibbonContextMenu.IsOpen = false;
+        }
+    }
+
+    // Occurs when context menu is closed
+    private static void OnContextMenuClosed(object sender, RoutedEventArgs e)
+    {
+        // The context menu is static and shared by all ribbons of the thread.
+        // Forget the ribbon it was opened on, otherwise the menu items keep that ribbon and its whole window
+        // alive after the window was closed (until another ribbon opens the menu).
+        // WPF raises Closed after it ran the command of a clicked item, and OnContextMenuOpened sets the target again on the next opening.
+        contextMenuOwner = null;
+
+        foreach (var menuItem in RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>())
+        {
+            menuItem.ClearValue(System.Windows.Controls.MenuItem.CommandTargetProperty);
+        }
+
+        // While open, the popup of the menu uses the PlacementTarget as its parent, so the menu and its items take over
+        // inherited values from it, like the DataContext and the window (Window.GetWindow).
+        // WPF only resets them if the PlacementTarget is still set when it destroys the popup right after this event,
+        // but WPF clears the PlacementTarget (by forgetting the menu's owner) during this event already.
+        // So keep the PlacementTarget until the popup is destroyed and remove it afterwards.
+        var menu = (System.Windows.Controls.ContextMenu)sender;
+        var placementTarget = menu.PlacementTarget;
+
+        if (placementTarget is not null
+            && menu.ReadLocalValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty) == DependencyProperty.UnsetValue)
+        {
+            menu.PlacementTarget = placementTarget;
+
+            menu.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Send, new Action(() =>
+            {
+                if (ReferenceEquals(menu.ReadLocalValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty), placementTarget))
+                {
+                    menu.ClearValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty);
+                }
+            }));
         }
     }
 
