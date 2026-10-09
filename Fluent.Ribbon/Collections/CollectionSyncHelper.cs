@@ -10,17 +10,41 @@ using System.Collections.Specialized;
 /// </summary>
 public class CollectionSyncHelper<TItem>
 {
+    private readonly bool listenWeakly;
+
     /// <summary>
     /// Creates a new instance with <paramref name="source"/> as <see cref="Source"/> and <paramref name="target"/> as <see cref="Target"/>.
     /// </summary>
     public CollectionSyncHelper(ObservableCollection<TItem> source, IList target)
+        : this(source, target, listenWeakly: false)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new instance with <paramref name="source"/> as <see cref="Source"/> and <paramref name="target"/> as <see cref="Target"/>.
+    /// </summary>
+    /// <param name="source">The source collection.</param>
+    /// <param name="target">The target collection.</param>
+    /// <param name="listenWeakly">
+    /// <c>true</c> to listen to changes of <paramref name="source"/> through a weak event, so <paramref name="source"/> does not keep this instance
+    /// (and with it <paramref name="target"/>) alive. The caller then has to keep this instance alive for as long as <paramref name="target"/> should be synchronized.
+    /// </param>
+    internal CollectionSyncHelper(ObservableCollection<TItem> source, IList target, bool listenWeakly)
     {
         this.Source = source ?? throw new ArgumentNullException(nameof(source));
         this.Target = target ?? throw new ArgumentNullException(nameof(target));
+        this.listenWeakly = listenWeakly;
 
         this.SyncTarget();
 
-        this.Source.CollectionChanged += this.SourceOnCollectionChanged;
+        if (listenWeakly)
+        {
+            CollectionChangedEventManager.AddHandler(this.Source, this.SourceOnCollectionChanged);
+        }
+        else
+        {
+            this.Source.CollectionChanged += this.SourceOnCollectionChanged;
+        }
     }
 
     /// <summary>
@@ -32,7 +56,14 @@ public class CollectionSyncHelper<TItem>
     /// </remarks>
     internal void Detach()
     {
-        this.Source.CollectionChanged -= this.SourceOnCollectionChanged;
+        if (this.listenWeakly)
+        {
+            CollectionChangedEventManager.RemoveHandler(this.Source, this.SourceOnCollectionChanged);
+        }
+        else
+        {
+            this.Source.CollectionChanged -= this.SourceOnCollectionChanged;
+        }
     }
 
     /// <summary>
