@@ -179,6 +179,10 @@ public class RibbonContextMenuLeakTests
         Assert.That(raiseMethod, Is.Not.Null, "Precondition: PopupControlService.RaiseContextMenuOpeningEvent exists");
 
         raiseMethod.Invoke(currentProperty.GetValue(null, null), new object[] { element, -1.0, -1.0, false });
+
+        // A real right click or key press is input, and after input WPF asks all commands again whether they can execute,
+        // which enables or disables the menu items. Nothing here is real input, so ask for that explicitly.
+        CommandManager.InvalidateRequerySuggested();
         UIHelper.DoEvents();
 
         Assert.That(Ribbon.RibbonContextMenu.IsOpen, Is.True, "Precondition: the ribbon context menu is open");
