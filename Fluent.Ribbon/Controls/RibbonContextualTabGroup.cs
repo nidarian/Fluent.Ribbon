@@ -220,17 +220,28 @@ public class RibbonContextualTabGroup : Control
 
     private RibbonTabItem? GetFirstVisibleItem()
     {
-        return this.Items.FirstOrDefault(item => item.Visibility == Visibility.Visible);
+        return this.Items.FirstOrDefault(IsVisibleInRibbon);
     }
 
     private RibbonTabItem? GetLastVisibleItem()
     {
-        return this.Items.LastOrDefault(item => item.Visibility == Visibility.Visible);
+        return this.Items.LastOrDefault(IsVisibleInRibbon);
     }
 
     private RibbonTabItem? GetFirstVisibleAndEnabledItem()
     {
-        return this.Items.FirstOrDefault(item => item.Visibility == Visibility.Visible && item.IsEnabled);
+        return this.Items.FirstOrDefault(item => IsVisibleInRibbon(item) && item.IsEnabled);
+    }
+
+    /// <summary>
+    /// Checks if <paramref name="item"/> is visible and still shown in the ribbon.
+    /// A tab the app removed from <see cref="Ribbon.Tabs"/> keeps its <see cref="RibbonTabItem.Group"/> (so adding it again brings it back into the group),
+    /// but it no longer has a visual parent. It must not count for the header, otherwise the header is positioned from a tab that is not in the window.
+    /// </summary>
+    internal static bool IsVisibleInRibbon(RibbonTabItem item)
+    {
+        return item.Visibility == Visibility.Visible
+               && VisualTreeHelper.GetParent(item) is not null;
     }
 
     /// <summary>
@@ -251,7 +262,7 @@ public class RibbonContextualTabGroup : Control
             //else items[i].HasRightGroupBorder = false;
 
             //Workaround so you can have inivisible Tabs on a Group
-            if (this.Items[i].Visibility == Visibility.Visible
+            if (IsVisibleInRibbon(this.Items[i])
                 && leftset == false)
             {
                 this.Items[i].HasLeftGroupBorder = true;
@@ -262,7 +273,7 @@ public class RibbonContextualTabGroup : Control
                 this.Items[i].HasLeftGroupBorder = false;
             }
 
-            if (this.Items[this.Items.Count - 1 - i].Visibility == Visibility.Visible
+            if (IsVisibleInRibbon(this.Items[this.Items.Count - 1 - i])
                 && rightset == false)
             {
                 this.Items[this.Items.Count - 1 - i].HasRightGroupBorder = true;
@@ -315,7 +326,7 @@ public class RibbonContextualTabGroup : Control
     /// </summary>
     private void UpdateInnerVisibility()
     {
-        this.InnerVisibility = this.Visibility == Visibility.Visible && this.Items.Any(item => item.Visibility == Visibility.Visible)
+        this.InnerVisibility = this.Visibility == Visibility.Visible && this.Items.Any(IsVisibleInRibbon)
             ? Visibility.Visible
             : Visibility.Collapsed;
     }

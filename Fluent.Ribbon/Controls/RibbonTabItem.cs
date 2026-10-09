@@ -570,6 +570,21 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
     }
 
     /// <inheritdoc />
+    protected override void OnVisualParentChanged(DependencyObject oldParent)
+    {
+        base.OnVisualParentChanged(oldParent);
+
+        // A contextual tab only counts for its group while it is shown in the ribbon (see RibbonContextualTabGroup.IsVisibleInRibbon).
+        // Removing it from the ribbon or adding it again changes that, so the group and the title bar have to be updated.
+        if (this.Group is not null)
+        {
+            this.Group.UpdateInnerVisiblityAndGroupBorders();
+
+            UIHelper.GetParent<RibbonTitleBar>(this.Group)?.ScheduleForceMeasureAndArrange();
+        }
+    }
+
+    /// <inheritdoc />
     protected override Size ArrangeOverride(Size arrangeBounds)
     {
         var result = base.ArrangeOverride(arrangeBounds);
