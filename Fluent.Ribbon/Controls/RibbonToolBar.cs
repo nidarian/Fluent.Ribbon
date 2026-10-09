@@ -248,6 +248,16 @@ public class RibbonToolBar : RibbonControl, IRibbonSizeChangedSink, ISimplifiedS
 
     private void OnChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // Children added later must take over the current simplified state.
+        // OnIsSimplifiedChanged only reaches the children present when the state changes.
+        if (e.NewItems is not null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                this.UpdateIsSimplifiedOfUIElement(item as DependencyObject, this.IsSimplified);
+            }
+        }
+
         // Children have changed, reset layouts
         this.rebuildVisualAndLogicalChildren = true;
         this.InvalidateMeasure();
