@@ -551,6 +551,12 @@ public class Ribbon : Control, ILogicalChildSupport
     private ObservableCollection<RibbonTabItem>? tabs;
     private CollectionSyncHelper<RibbonTabItem>? tabsSync;
 
+    // True while a tab that was moved or replaced in Tabs is moved or replaced in the tab control (see OnTabItemsCollectionChanged).
+    private bool isSyncingTabControl;
+
+    // The tab that was selected in the tab control before that.
+    private RibbonTabItem? tabSelectedBeforeSync;
+
     // Collection of toolbar items
     private ObservableCollection<UIElement>? toolBarItems;
     private CollectionSyncHelper<UIElement>? toolBarItemsSync;
@@ -962,6 +968,63 @@ public class Ribbon : Control, ILogicalChildSupport
 
                 break;
         }
+
+        // This handler runs before tabsSync applies the change to the tab control.
+        // The tab control can only move or replace a tab by removing and inserting it. Removing the selected tab selects another one,
+        // and while that happens Tabs and the tab control are in a different order, so their indexes must not be mixed
+        // (doing that selected tabs back and forth until the stack overflowed).
+        // The selection is taken over in OnTabItemsCollectionChangedAfterSync, when both are in the same order again.
+        if (this.TabControl is not null
+            && (e.Action is NotifyCollectionChangedAction.Move or NotifyCollectionChangedAction.Replace))
+        {
+            this.isSyncingTabControl = true;
+            this.tabSelectedBeforeSync = this.TabControl.SelectedItem as RibbonTabItem;
+        }
+    }
+
+    /// <summary>
+    /// Handles changes of <see cref="Tabs"/> after <see cref="tabsSync"/> applied them to the tab control.
+    /// </summary>
+    /// <param name="sender">Sender</param>
+    /// <param name="e">The event data</param>
+    private void OnTabItemsCollectionChangedAfterSync(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (this.isSyncingTabControl == false)
+        {
+            return;
+        }
+
+        var previousSelectedTab = this.SelectedTabItem;
+
+        try
+        {
+            // A moved tab stays selected. A replaced tab is gone, then the tab control's choice of another tab is kept.
+            if (this.tabSelectedBeforeSync is not null
+                && this.Tabs.Contains(this.tabSelectedBeforeSync))
+            {
+                this.TabControl?.SetCurrentValue(System.Windows.Controls.Primitives.Selector.SelectedItemProperty, this.tabSelectedBeforeSync);
+            }
+        }
+        finally
+        {
+            this.isSyncingTabControl = false;
+            this.tabSelectedBeforeSync = null;
+        }
+
+        this.SelectedTabItem = this.TabControl?.SelectedItem as RibbonTabItem;
+
+        // Moving tabs can change the index of the selected tab.
+        this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
+
+        if (ReferenceEquals(previousSelectedTab, this.SelectedTabItem) == false)
+        {
+            this.SelectedTabChanged?.Invoke(this, new SelectionChangedEventArgs(System.Windows.Controls.Primitives.Selector.SelectionChangedEvent, ToList(previousSelectedTab), ToList(this.SelectedTabItem))
+            {
+                Source = this.TabControl
+            });
+        }
+
+        static IList ToList(RibbonTabItem? tab) => tab is null ? Array.Empty<object>() : new object[] { tab };
     }
     #endregion
 
@@ -1701,6 +1764,10 @@ public class Ribbon : Control, ILogicalChildSupport
 
             this.tabsSync = new CollectionSyncHelper<RibbonTabItem>(this.Tabs, this.TabControl.Items);
 
+            // Has to run after tabsSync, so it's (re)subscribed after creating tabsSync.
+            this.Tabs.CollectionChanged -= this.OnTabItemsCollectionChangedAfterSync;
+            this.Tabs.CollectionChanged += this.OnTabItemsCollectionChangedAfterSync;
+
             this.TabControl.SelectedItem = selectedTab;
 
             this.toolBarItemsSync = new CollectionSyncHelper<UIElement>(this.ToolBarItems, this.TabControl.ToolBarItems);
@@ -1980,6 +2047,13 @@ public class Ribbon : Control, ILogicalChildSupport
     private void OnTabControlSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (ReferenceEquals(e.OriginalSource, this.TabControl) == false)
+        {
+            return;
+        }
+
+        // While a tab is moved or replaced the tab control removes and inserts it, which can select another tab for a moment.
+        // The selection is taken over right after that (OnTabItemsCollectionChangedAfterSync).
+        if (this.isSyncingTabControl)
         {
             return;
         }
