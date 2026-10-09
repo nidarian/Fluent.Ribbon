@@ -1,5 +1,6 @@
 ﻿namespace Fluent.Tests.Controls;
 
+using System.Linq;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using Fluent.Tests.Helper;
@@ -31,8 +32,8 @@ public class WindowCommandsTests
 
         Assert.That(text, Is.Not.Null.And.Not.Empty);
 
-        // Ordinal search on purpose: a culture sensitive substring search ignores '\0'.
-        Assert.That(text!.IndexOf('\0'), Is.EqualTo(-1), $"The caption '{caption}' must not contain NUL characters, but its length was {text.Length}.");
+        // Count the characters on purpose: a culture sensitive substring search ignores '\0'.
+        Assert.That(text!.Count(c => c == '\0'), Is.Zero, $"The caption '{caption}' must not contain NUL characters, but its length was {text.Length}.");
     }
 
     [TestCase("PART_Min")]
@@ -56,7 +57,7 @@ public class WindowCommandsTests
             var name = AutomationProperties.GetName(button);
 
             Assert.That(name, Is.Not.Null.And.Not.Empty);
-            Assert.That(name.IndexOf('\0'), Is.EqualTo(-1), $"The automation name of '{partName}' must not contain NUL characters, but its length was {name.Length}.");
+            Assert.That(name.Count(c => c == '\0'), Is.Zero, $"The automation name of '{partName}' must not contain NUL characters, but its length was {name.Length}.");
         }
     }
 }
