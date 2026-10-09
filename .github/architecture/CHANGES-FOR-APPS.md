@@ -116,3 +116,28 @@ searches by the old value stops finding the control.
     (it already saved it when it was removed).
   - The ribbon's context menu items re-check whether they are enabled each time
     the menu opens, so they no longer show disabled until the next key or click.
+- **Round 5** (`ROUND5.md`):
+  - `RibbonWindow`: `ShowMinButton="False"` and `ShowMaxRestoreButton="False"`
+    now hide those buttons, and with `ShowMaxRestoreButton="False"` a
+    double-click on the title no longer maximizes or restores.
+    `UseNativeCaptionButtons="True"` shows only Windows' own buttons.
+  - Right-clicking an item the app put in the title bar's window commands no
+    longer opens the Windows window menu. An item without its own menu now
+    shows nothing on right-click.
+  - The caption buttons' automation names and tooltips no longer end in NUL
+    characters ("Close", not "Close\0\0...").
+  - `Ribbon.Tabs.Move(...)` and `Tabs[i] = x` now change the order on screen,
+    and replacing the selected tab no longer crashes. Toolbar and quick access
+    items follow moves and replaces too. A moved tab is briefly removed and
+    re-added, so its content is unloaded and loaded again.
+  - `SelectedTabIndex` changes when a tab is inserted or removed before the
+    selected tab, even though the user didn't switch tabs. The value is now
+    correct.
+  - Contextual group headers ignore tabs removed from `Tabs`, and a group with
+    no tabs left shows no header.
+  - Ctrl+Tab, Ctrl+Shift+Tab, Home and End follow the on-screen tab order.
+  - An `InRibbonGallery` shows its items again when its group gets room again.
+    In a collapsed group's drop down, a gallery now shows its items instead of
+    a button.
+  - `ColorGallery` keeps an app's OneWay `SelectedColor` binding after the user
+    picks a colour.
