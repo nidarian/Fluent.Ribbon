@@ -332,6 +332,17 @@ public class Ribbon : Control, ILogicalChildSupport
         ShowQuickAccessToolbarBelowTheRibbonMenuItem.CommandTarget = ribbon;
         ShowQuickAccessToolbarAboveTheRibbonMenuItem.CommandTarget = ribbon;
 
+        // A menu item doesn't ask its command again whether it can execute when CommandTarget changes, and the target
+        // is cleared when the menu closes. So ask now, otherwise the items could show disabled until the next input.
+        // Setting Command again is the only public way to make a menu item ask right away (CommandManager.InvalidateRequerySuggested
+        // asks every command of the application, and only later on the dispatcher).
+        foreach (var menuItem in RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>())
+        {
+            var command = menuItem.Command;
+            menuItem.Command = null;
+            menuItem.Command = command;
+        }
+
         // Hide items for ribbon controls
         AddToQuickAccessMenuItem.Visibility = Visibility.Collapsed;
         AddGroupToQuickAccessMenuItem.Visibility = Visibility.Collapsed;
