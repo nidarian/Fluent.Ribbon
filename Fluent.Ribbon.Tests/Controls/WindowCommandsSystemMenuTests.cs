@@ -65,11 +65,13 @@ public class WindowCommandsSystemMenuTests
         }
     }
 
+    // Simulates a right button down the way WPF delivers it: a MouseDown event that bubbles up from the clicked element.
+    // WPF turns it into the (direct) MouseRightButtonDown event on every element of the route.
     private static void RightButtonDown(UIElement target)
     {
         var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Right)
         {
-            RoutedEvent = UIElement.MouseRightButtonDownEvent
+            RoutedEvent = Mouse.MouseDownEvent
         };
 
         target.RaiseEvent(args);
