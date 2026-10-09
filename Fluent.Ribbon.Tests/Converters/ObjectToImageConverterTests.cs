@@ -136,7 +136,7 @@ public class ObjectToImageConverterTests
         }
         finally
         {
-            File.Delete(filePath);
+            TryDeleteFile(filePath);
         }
     }
 
@@ -163,14 +163,14 @@ public class ObjectToImageConverterTests
         }
         finally
         {
-            File.Delete(filePath);
+            TryDeleteFile(filePath);
         }
     }
 
     private static void AssertConvertsToNoIcon(string imagePath)
     {
         // A null value converts to null today, which IconPresenter shows as "no icon".
-        Assert.That(new ObjectToImageConverter().Convert(null, typeof(object), null, CultureInfo.InvariantCulture), Is.Null, "Precondition: null converts to null.");
+        Assert.That(new ObjectToImageConverter().Convert((object)null, typeof(object), null, CultureInfo.InvariantCulture), Is.Null, "Precondition: null converts to null.");
 
         object convertedValue = "not converted";
 
@@ -178,5 +178,17 @@ public class ObjectToImageConverterTests
 
         // Returning the path itself would make IconPresenter show the path as text.
         Assert.That(convertedValue, Is.Null);
+    }
+
+    private static void TryDeleteFile(string filePath)
+    {
+        try
+        {
+            File.Delete(filePath);
+        }
+        catch (IOException)
+        {
+            // The decoder may still hold the file open (BitmapCacheOption.Default), so it stays in the temp folder.
+        }
     }
 }
