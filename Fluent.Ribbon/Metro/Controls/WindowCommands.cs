@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Fluent.Helpers;
-using Fluent.Internal;
 using Fluent.Internal.KnownBoxes;
 using Windows.Win32;
 
@@ -243,29 +242,7 @@ public class WindowCommands : ItemsControl, IDisposable
     {
         base.OnMouseRightButtonDown(e);
 
-        // Right clicks on the app's own items (PART_Items) belong to those items, for example to open their context menu.
-        // The system menu is modal and swallows the button up, so their context menu could never open.
-        if (e.Handled
-            || this.IsInsideItems(e.OriginalSource as DependencyObject))
-        {
-            return;
-        }
-
         WindowSteeringHelper.ShowSystemMenu(this, e);
-    }
-
-    private bool IsInsideItems(DependencyObject? element)
-    {
-        var itemsControl = this.ItemsControl;
-
-        if (itemsControl is null
-            || element is null)
-        {
-            return false;
-        }
-
-        return ReferenceEquals(element, itemsControl)
-               || UIHelper.GetParent<ItemsControl>(element, x => ReferenceEquals(x, itemsControl)) is not null;
     }
 
     private void MinimizeClick(object sender, RoutedEventArgs e)
