@@ -804,6 +804,19 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
                 return;
             }
 
+            // Unsnapping must always discard the snapshot, even when invisible or collapsed.
+            // OnUnloaded closes the drop down when the gallery is already invisible (e.g. tab switch).
+            // Keeping the snapshot there would show the old picture with its old size on the next opening.
+            if (value == false)
+            {
+                this.snappedImage.Source = null;
+                this.snappedImage.Width = 0;
+                this.snappedImage.Height = 0;
+
+                this.isSnapped = false;
+                return;
+            }
+
             if (this.IsCollapsed)
             {
                 return;
