@@ -63,6 +63,42 @@ public class RibbonContextMenuLeakTests
         }
     }
 
+    /// <summary>
+    /// While open, the menu (inside its popup) takes over inherited values from the element it was opened on,
+    /// for example the DataContext and the window it belongs to. After closing, none of that may stay.
+    /// </summary>
+    [Test]
+    public void Closed_context_menu_no_longer_refers_to_the_window_it_was_opened_in()
+    {
+        using (var window = CreateWindow(out _, out var button))
+        {
+            var menu = Ribbon.RibbonContextMenu;
+
+            OpenContextMenu(button);
+
+            var windowWhileOpen = Window.GetWindow(menu);
+            var dataContextWhileOpen = menu.DataContext;
+
+            CloseContextMenu();
+
+            var popup = LogicalTreeHelper.GetParent(menu);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(windowWhileOpen, Is.SameAs(window), "While open, the menu belongs to the window");
+                Assert.That(dataContextWhileOpen, Is.SameAs(window.DataContext), "While open, the menu has the window's DataContext");
+
+                Assert.That(menu.PlacementTarget, Is.Null, "PlacementTarget after closing");
+                Assert.That(GetMenuItems().Select(x => x.CommandTarget), Is.All.Null, "CommandTarget of the items after closing");
+                Assert.That(GetMenuItems().Select(x => x.CommandParameter), Is.All.Null, "CommandParameter of the items after closing");
+                Assert.That(Window.GetWindow(menu), Is.Null, "Window of the menu after closing");
+                Assert.That(menu.DataContext, Is.Null, "DataContext of the menu after closing");
+                Assert.That(GetMenuItems().Select(Window.GetWindow), Is.All.Null, "Window of the items after closing");
+                Assert.That(popup is null ? null : Window.GetWindow(popup), Is.Null, "Window of the popup after closing");
+            });
+        }
+    }
+
     [Test]
     public void Context_menu_commands_target_the_ribbon_it_was_opened_on()
     {
