@@ -103,3 +103,12 @@ searches by the old value stops finding the control.
   the app set to collapsed (D5).
 - **Turning on `AutomaticStateManagement` after load** reads the saved state
   instead of overwriting it.
+- **Memory** (`MEMORY-LEAKS.md`): closed windows, removed ribbons and old
+  Quick Access Toolbar copies are now freed. Side effects:
+  - A ribbon that is unloaded while it stays in its window (for example in a
+    tab of the app that isn't shown) takes its toolbar out of the
+    `RibbonWindow` title bar until it is shown again.
+  - A removed ribbon no longer saves its state again when the window closes
+    (it already saved it when it was removed).
+  - The ribbon's context menu items re-check whether they are enabled each time
+    the menu opens, so they no longer show disabled until the next key or click.
