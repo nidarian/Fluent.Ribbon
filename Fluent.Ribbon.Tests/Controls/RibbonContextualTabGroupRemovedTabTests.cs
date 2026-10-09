@@ -1,6 +1,8 @@
 ﻿namespace Fluent.Tests.Controls;
 
+using System;
 using System.Windows;
+using System.Windows.Media;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
 using NUnit.Framework;
@@ -27,7 +29,7 @@ public class RibbonContextualTabGroupRemovedTabTests
             UIHelper.DoEvents();
             UIHelper.DoEvents();
 
-            Assert.That(GetX(setup.GroupA, window), Is.EqualTo(GetX(setup.TabA1, window)).Within(Tolerance), "Precondition: the header of group A starts above its first tab");
+            Assert.That(GetX(setup.GroupA, window), Is.EqualTo(GetX(setup.TabA1, window)).Within(Tolerance), "Precondition: the header of group A starts above its first tab. " + Describe(setup, window));
             Assert.That(GetX(setup.TabA2, window) - GetX(setup.TabA1, window), Is.GreaterThan(10), "Precondition: the tabs of group A are laid out side by side");
 
             setup.Ribbon.Tabs.Remove(setup.TabA1);
@@ -51,7 +53,7 @@ public class RibbonContextualTabGroupRemovedTabTests
             UIHelper.DoEvents();
 
             Assert.That(setup.GroupB.InnerVisibility, Is.EqualTo(Visibility.Visible), "Precondition: the header of group B is shown");
-            Assert.That(GetX(setup.GroupB, window), Is.EqualTo(GetX(setup.TabB1, window)).Within(Tolerance), "Precondition: the header of group B starts above its tab");
+            Assert.That(GetX(setup.GroupB, window), Is.EqualTo(GetX(setup.TabB1, window)).Within(Tolerance), "Precondition: the header of group B starts above its tab. " + Describe(setup, window));
 
             setup.Ribbon.Tabs.Remove(setup.TabB1);
             UIHelper.DoEvents();
@@ -87,6 +89,35 @@ public class RibbonContextualTabGroupRemovedTabTests
             Assert.That(GetX(setup.GroupA, window), Is.EqualTo(GetX(setup.TabA1, window)).Within(Tolerance), "The header of group A must start above its re-added first tab");
             Assert.That(GetX(setup.GroupB, window), Is.EqualTo(GetX(setup.TabB1, window)).Within(Tolerance), "The header of group B must start above its re-added tab");
         }
+    }
+
+    // Layout details for the failure message, so a failure on CI shows where the title bar put the headers.
+    private static string Describe(Setup setup, TestRibbonWindow window)
+    {
+        var titleBar = setup.Ribbon.TitleBar;
+
+        if (titleBar is null)
+        {
+            return "Ribbon.TitleBar is null";
+        }
+
+        return FormattableString.Invariant($"TitleBar X={GetX(titleBar, window)} W={titleBar.ActualWidth} IsCollapsed={titleBar.IsCollapsed} HideContextTabs={titleBar.HideContextTabs} Items={titleBar.Items.Count} itemsRect={titleBar.GetFieldValue<Rect>("itemsRect")} qatRect={titleBar.GetFieldValue<Rect>("quickAccessToolbarRect")} headerRect={titleBar.GetFieldValue<Rect>("headerRect")}; ")
+               + FormattableString.Invariant($"Ribbon IsCollapsed={setup.Ribbon.IsCollapsed} CanScroll={setup.Ribbon.TabControl?.CanScroll}; ")
+               + DescribeGroup("A", setup.GroupA, window)
+               + DescribeGroup("B", setup.GroupB, window)
+               + DescribeTab("A1", setup.TabA1, window)
+               + DescribeTab("A2", setup.TabA2, window)
+               + DescribeTab("B1", setup.TabB1, window);
+    }
+
+    private static string DescribeGroup(string name, RibbonContextualTabGroup group, TestRibbonWindow window)
+    {
+        return FormattableString.Invariant($"Group {name} X={GetX(group, window)} W={group.ActualWidth} Inner={group.InnerVisibility} IsVisible={group.IsVisible} Parent={VisualTreeHelper.GetParent(group)?.GetType().Name}; ");
+    }
+
+    private static string DescribeTab(string name, RibbonTabItem tab, TestRibbonWindow window)
+    {
+        return FormattableString.Invariant($"Tab {name} X={GetX(tab, window)} W={tab.ActualWidth} Desired={tab.DesiredSize.Width}; ");
     }
 
     private static double GetX(UIElement element, UIElement window)
