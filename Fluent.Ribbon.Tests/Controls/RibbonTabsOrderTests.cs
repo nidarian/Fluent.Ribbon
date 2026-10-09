@@ -19,10 +19,10 @@ public class RibbonTabsOrderTests
 {
     /// <summary>
     /// The selection between the ribbon and its tab control can bounce back and forth when the two lists
-    /// differ in order. Selecting a tab once must not select tabs more often than this,
+    /// differ in order. One change of the tabs or one click on a tab must not select tabs more often than this,
     /// otherwise the test stops the bouncing (instead of letting it end in a stack overflow that kills the test run).
     /// </summary>
-    private const int MaxSelectionsPerClick = 10;
+    private const int MaxSelectionsPerAction = 10;
 
     [Test]
     public void Moving_a_tab_should_move_it_in_the_tab_control()
@@ -34,8 +34,7 @@ public class RibbonTabsOrderTests
         using var window = new TestRibbonWindow(ribbon);
         UIHelper.DoEvents();
 
-        ribbon.Tabs.Move(0, 1);
-        UIHelper.DoEvents();
+        Act(ribbon, "Tabs.Move(0, 1)", () => ribbon.Tabs.Move(0, 1));
 
         Assert.That(ribbon.TabControl.Items.Cast<object>().ToList(), Is.EqualTo(ribbon.Tabs.Cast<object>().ToList()), "Tab control items after Tabs.Move(0, 1)");
     }
@@ -51,10 +50,15 @@ public class RibbonTabsOrderTests
         using var window = new TestRibbonWindow(ribbon);
         UIHelper.DoEvents();
 
-        ribbon.Tabs[0] = tabC;
-        UIHelper.DoEvents();
+        Assert.That(ribbon.SelectedTabItem, Is.SameAs(tabA), "Initially selected tab");
+
+        // Replaces the selected tab. Tabs is now C, B
+        Act(ribbon, "Tabs[0] = C", () => ribbon.Tabs[0] = tabC);
 
         Assert.That(ribbon.TabControl.Items.Cast<object>().ToList(), Is.EqualTo(ribbon.Tabs.Cast<object>().ToList()), "Tab control items after Tabs[0] = C");
+
+        // The selected tab is gone, the tab control selects the remaining tab B, and the ribbon has to report that.
+        AssertSelected(ribbon, tabB);
     }
 
     [Test]
@@ -74,16 +78,14 @@ public class RibbonTabsOrderTests
         ribbon.SelectedTabChanged += (_, _) => ++selectedTabChangedCount;
 
         // Tabs is now B, C, A
-        ribbon.Tabs.Move(0, 2);
-        UIHelper.DoEvents();
+        Act(ribbon, "Tabs.Move(0, 2)", () => ribbon.Tabs.Move(0, 2));
 
         Assert.That(ribbon.TabControl.Items.Cast<object>().ToList(), Is.EqualTo(ribbon.Tabs.Cast<object>().ToList()), "Tab control items after Tabs.Move(0, 2)");
         AssertSelected(ribbon, tabA);
         Assert.That(selectedTabChangedCount, Is.EqualTo(0), "SelectedTabChanged raised while moving the selected tab");
 
         // Moving another tab in front of the selected one changes the index of the selected tab. Tabs is now B, A, C
-        ribbon.Tabs.Move(1, 2);
-        UIHelper.DoEvents();
+        Act(ribbon, "Tabs.Move(1, 2)", () => ribbon.Tabs.Move(1, 2));
 
         Assert.That(ribbon.TabControl.Items.Cast<object>().ToList(), Is.EqualTo(ribbon.Tabs.Cast<object>().ToList()), "Tab control items after Tabs.Move(1, 2)");
         AssertSelected(ribbon, tabA);
@@ -103,10 +105,9 @@ public class RibbonTabsOrderTests
         Assert.That(ribbon.SelectedTabItem, Is.SameAs(tabA), "Initially selected tab");
 
         // Tabs is now B, A
-        ribbon.Tabs.Move(0, 1);
-        UIHelper.DoEvents();
+        Act(ribbon, "Tabs.Move(0, 1)", () => ribbon.Tabs.Move(0, 1));
 
-        SelectLikeAClick(ribbon, tabB);
+        Act(ribbon, "Selecting tab B", () => SelectLikeAClick(tabB));
 
         AssertSelected(ribbon, tabB);
     }
@@ -123,25 +124,33 @@ public class RibbonTabsOrderTests
         UIHelper.DoEvents();
 
         // Select B, so the replaced tab A is not the selected one.
-        SelectLikeAClick(ribbon, tabB);
+        Act(ribbon, "Selecting tab B", () => SelectLikeAClick(tabB));
         AssertSelected(ribbon, tabB);
 
         // Tabs is now C, B
-        ribbon.Tabs[0] = tabC;
-        UIHelper.DoEvents();
+        Act(ribbon, "Tabs[0] = C", () => ribbon.Tabs[0] = tabC);
 
-        SelectLikeAClick(ribbon, tabC);
+        Act(ribbon, "Selecting tab C", () => SelectLikeAClick(tabC));
 
         AssertSelected(ribbon, tabC);
     }
 
     /// <summary>
-    /// Selects <paramref name="tab"/> the way a click or keyboard focus on the tab header does it (RibbonTabItem.OnGotKeyboardFocus),
-    /// and fails the test if that makes the selection bounce between tabs.
+    /// Selects <paramref name="tab"/> the way a click or keyboard focus on the tab header does it (RibbonTabItem.OnGotKeyboardFocus).
     /// </summary>
-    private static void SelectLikeAClick(Ribbon ribbon, RibbonTabItem tab)
+    private static void SelectLikeAClick(RibbonTabItem tab)
+    {
+        tab.SetCurrentValue(RibbonTabItem.IsSelectedProperty, true);
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> and fails the test if that makes the selection bounce between tabs.
+    /// Without this guard the bouncing ends in a stack overflow, which kills the whole test run without a test result.
+    /// </summary>
+    private static void Act(Ribbon ribbon, string what, Action action)
     {
         var selections = 0;
+        var bounced = false;
 
         // Selector.SelectedEvent is raised by each tab as soon as it becomes selected,
         // before the ribbon reacts to the selection, so this also counts nested (bouncing) selections.
@@ -149,27 +158,26 @@ public class RibbonTabsOrderTests
         {
             ++selections;
 
-            if (selections > MaxSelectionsPerClick)
+            if (selections > MaxSelectionsPerAction)
             {
-                throw new InvalidOperationException($"Selecting tab \"{tab.Header}\" once selected tabs {selections} times: the selection bounces between tabs.");
+                bounced = true;
+                throw new InvalidOperationException($"{what} selected tabs {selections} times: the selection bounces between tabs (without this guard: stack overflow).");
             }
         };
 
-        foreach (var item in ribbon.Tabs)
-        {
-            item.AddHandler(Selector.SelectedEvent, onSelected);
-        }
+        ribbon.AddHandler(Selector.SelectedEvent, onSelected, handledEventsToo: true);
 
         try
         {
-            tab.SetCurrentValue(RibbonTabItem.IsSelectedProperty, true);
+            action();
             UIHelper.DoEvents();
         }
         finally
         {
-            foreach (var item in ribbon.Tabs)
+            // After bouncing the guard stays, so closing the window can't end in a stack overflow either.
+            if (bounced == false)
             {
-                item.RemoveHandler(Selector.SelectedEvent, onSelected);
+                ribbon.RemoveHandler(Selector.SelectedEvent, onSelected);
             }
         }
     }
