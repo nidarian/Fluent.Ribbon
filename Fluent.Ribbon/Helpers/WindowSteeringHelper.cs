@@ -46,6 +46,11 @@ public static class WindowSteeringHelper
             return;
         }
 
+        // Like ResizeMode, ShowMaxRestoreButton = false (from ControlzEx' WindowChromeWindow) hides the maximize/restore buttons,
+        // so the title bar must not maximize/restore the window either.
+        var canMaximizeOrRestore = (window.ResizeMode == ResizeMode.CanResize || window.ResizeMode == ResizeMode.CanResizeWithGrip)
+                                   && (window is not ControlzEx.WindowChromeWindow chromeWindow || chromeWindow.ShowMaxRestoreButton);
+
         if (handleDragMove
             && e.ClickCount == 1)
         {
@@ -73,7 +78,7 @@ public static class WindowSteeringHelper
         }
         else if (handleStateChange
                  && e.ClickCount == 2
-                 && (window.ResizeMode == ResizeMode.CanResize || window.ResizeMode == ResizeMode.CanResizeWithGrip))
+                 && canMaximizeOrRestore)
         {
             e.Handled = true;
 
