@@ -621,7 +621,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         // We have special handling here because if focus is inside the TabItem content we cannot
         // cycle through TabItem because the content is not part of the TabItem visual tree
         var direction = 0;
-        var startIndex = -1;
+        RibbonTabItem? startItem = null;
 
         switch (e.Key)
         {
@@ -641,7 +641,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             case Key.Tab:
                 if ((e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
                 {
-                    startIndex = this.ItemContainerGenerator.IndexFromContainer(this.ItemContainerGenerator.ContainerFromItem(this.SelectedItem));
+                    startItem = this.GetSelectedTabItem();
                     if ((e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
                     {
                         direction = -1;
@@ -655,15 +655,13 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
                 break;
             case Key.Home:
                 direction = 1;
-                startIndex = -1;
                 break;
             case Key.End:
                 direction = -1;
-                startIndex = this.Items.Count;
                 break;
         }
 
-        var nextTabItem = this.FindNextTabItem(startIndex, direction);
+        var nextTabItem = this.FindNextTabItemInArrangedOrder(startItem, direction);
 
         if (nextTabItem is not null
             && ReferenceEquals(nextTabItem, this.SelectedItem) == false)
@@ -710,8 +708,8 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         var selectedIndex = -1;
 
         var tabs = this.ItemContainerGenerator.Items.OfType<RibbonTabItem>()
-            .Where(x => x.Visibility == Visibility.Visible && x.IsEnabled && (x.IsContextual == false || (x.IsContextual && x.Group?.Visibility == Visibility.Visible)))
-            .OrderBy(x => x.IsContextual);
+            .Where(x => x.Visibility == Visibility.Visible && x.IsEnabled && (x.IsContextual == false || (x.IsContextual && x.Group?.Visibility == Visibility.Visible)));
+        tabs = RibbonTabsContainer.OrderByArrangement(tabs);
 
         foreach (var ribbonTabItem in tabs)
         {
@@ -794,6 +792,56 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
                 {
                     return nextItem;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    // Find next tab item in the order the tabs are shown on screen (contextual tabs are drawn after the normal tabs,
+    // even if they come before a normal tab in Items). Used by Ctrl+Tab, Ctrl+Shift+Tab, Home and End,
+    // so they move through the tabs like the user sees them, like the mouse wheel does.
+    // Without a start item, direction 1 finds the first tab and direction -1 the last one.
+    private RibbonTabItem? FindNextTabItemInArrangedOrder(RibbonTabItem? startItem, int direction)
+    {
+        if (direction == 0)
+        {
+            return null;
+        }
+
+        var containers = new List<RibbonTabItem>();
+        for (var i = 0; i < this.Items.Count; i++)
+        {
+            if (this.ItemContainerGenerator.ContainerOrContainerContentFromIndex<RibbonTabItem>(i) is { } container)
+            {
+                containers.Add(container);
+            }
+        }
+
+        var tabs = RibbonTabsContainer.OrderByArrangement(containers).ToList();
+
+        var index = startItem is null
+            ? -1
+            : tabs.IndexOf(startItem);
+
+        for (var i = 0; i < tabs.Count; i++)
+        {
+            index += direction;
+
+            if (index >= tabs.Count)
+            {
+                index = 0;
+            }
+            else if (index < 0)
+            {
+                index = tabs.Count - 1;
+            }
+
+            var nextItem = tabs[index];
+            if (nextItem.IsEnabled
+                && nextItem.Visibility == Visibility.Visible)
+            {
+                return nextItem;
             }
         }
 
