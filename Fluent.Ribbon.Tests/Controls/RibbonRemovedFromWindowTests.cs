@@ -1,0 +1,344 @@
+﻿namespace Fluent.Tests.Controls;
+
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
+using Fluent.Tests.Helper;
+using Fluent.Tests.TestClasses;
+using NUnit.Framework;
+
+/// <summary>
+/// An app that removes or replaces a <see cref="Ribbon"/> while its window stays open
+/// (for example window.Content = otherView when switching views) must not keep the old ribbon alive.
+/// The ribbon subscribed to <see cref="Window.Closed"/> of its window when loaded, but only removed its
+/// SizeChanged and KeyDown handlers when unloaded. The window kept the removed ribbon
+/// (with its tabs, quick access toolbar and the app's view models) until the window was closed.
+/// </summary>
+[TestFixture]
+public class RibbonRemovedFromWindowTests
+{
+    /// <summary>
+    /// Baseline: proves that the way these tests check for collection works (on CI too).
+    /// A plain element removed from the same kind of window is collected.
+    /// </summary>
+    [Test]
+    public void Baseline_plain_element_removed_from_an_open_window_is_collected()
+    {
+        var window = CreatePlainWindow();
+
+        try
+        {
+            var weakElement = ShowAndRemove(window, () => new Border());
+
+            Assert.That(IsCollected(weakElement), Is.True, "Baseline: a plain element removed from an open window must be collected");
+        }
+        finally
+        {
+            GC.KeepAlive(window);
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// Baseline: a ribbon that was never put into a window is collected.
+    /// </summary>
+    [Test]
+    public void Baseline_ribbon_that_was_never_shown_is_collected()
+    {
+        var weakRibbon = CreateRibbonOnly();
+
+        Assert.That(IsCollected(weakRibbon), Is.True, "Baseline: a ribbon that was never shown must be collected");
+    }
+
+    [Test]
+    public void Ribbon_removed_from_an_open_Window_is_collected()
+    {
+        var window = CreatePlainWindow();
+
+        try
+        {
+            var weakRibbon = ShowAndRemove(window, CreateRibbonInHost);
+
+            Assert.That(IsCollected(weakRibbon), Is.True, "A ribbon removed from a window that stays open must not be kept alive by the window");
+        }
+        finally
+        {
+            GC.KeepAlive(window);
+            window.Close();
+        }
+    }
+
+    [Test]
+    public void Ribbon_removed_from_an_open_RibbonWindow_is_collected()
+    {
+        var window = new TestRibbonWindow();
+
+        try
+        {
+            var weakRibbon = ShowAndRemove(window, CreateRibbonInHost);
+
+            Assert.That(IsCollected(weakRibbon), Is.True, "A ribbon removed from a RibbonWindow that stays open must not be kept alive by the window");
+        }
+        finally
+        {
+            GC.KeepAlive(window);
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// The title bar of a RibbonWindow shows the quick access toolbar and the contextual groups of the ribbon in the window.
+    /// Once the ribbon is removed, the title bar must no longer show (and hold) them.
+    /// </summary>
+    [Test]
+    public void TitleBar_of_a_RibbonWindow_lets_go_of_a_removed_ribbon()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            var titleBar = window.TitleBar;
+
+            Assert.That(titleBar, Is.Not.Null, "Precondition: the window template provides a title bar");
+            Assert.That(ribbon.TitleBar, Is.SameAs(titleBar), "Precondition: the ribbon found the title bar of its window");
+            Assert.That(titleBar!.QuickAccessToolBar, Is.SameAs(ribbon.QuickAccessToolBar), "Precondition: the title bar shows the quick access toolbar of the ribbon");
+
+            window.Content = null;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.False, "Precondition: the ribbon is unloaded");
+
+            // ribbon.TitleBar itself keeps the old title bar: its FindAncestor binding is not updated when the ribbon leaves the window.
+            // That is harmless (a reference from the removed ribbon to the title bar does not keep the ribbon alive);
+            // what matters is that the title bar no longer shows (and holds) the parts of the removed ribbon.
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(titleBar.QuickAccessToolBar, Is.Null, "The title bar must no longer show the quick access toolbar of a removed ribbon");
+                Assert.That(titleBar.ItemsSource, Is.Null, "The title bar must no longer show the contextual groups of a removed ribbon");
+            }
+        }
+    }
+
+    /// <summary>
+    /// A ribbon removed from a RibbonWindow and added again must show its quick access toolbar in the title bar again.
+    /// </summary>
+    [Test]
+    public void Ribbon_removed_and_re_added_to_a_RibbonWindow_shows_its_toolbar_in_the_title_bar_again()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            window.Content = null;
+            UIHelper.DoEvents();
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded again");
+            Assert.That(window.TitleBar, Is.Not.Null, "Precondition: the window template provides a title bar");
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null, "Precondition: the ribbon has a quick access toolbar");
+            Assert.That(window.TitleBar!.QuickAccessToolBar, Is.SameAs(ribbon.QuickAccessToolBar), "The title bar must show the quick access toolbar of the re-added ribbon");
+            Assert.That(window.TitleBar.ItemsSource, Is.SameAs(ribbon.ContextualGroups), "The title bar must show the contextual groups of the re-added ribbon");
+        }
+    }
+
+    /// <summary>
+    /// A ribbon that is removed, added again and removed again must also be released.
+    /// </summary>
+    [Test]
+    public void Ribbon_removed_re_added_and_removed_again_is_collected()
+    {
+        var window = CreatePlainWindow();
+
+        try
+        {
+            var weakRibbon = ShowRemoveReAddAndRemove(window);
+
+            Assert.That(IsCollected(weakRibbon), Is.True, "A ribbon removed again after being re-added must not be kept alive by the window");
+        }
+        finally
+        {
+            GC.KeepAlive(window);
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// A ribbon removed from its window and added again must follow its window again,
+    /// here: collapse when the window becomes too small.
+    /// </summary>
+    [Test]
+    public void Ribbon_removed_and_re_added_still_follows_its_window()
+    {
+        var ribbon = new Ribbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            window.Content = null;
+            UIHelper.DoEvents();
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded again");
+            Assert.That(ribbon.IsCollapsed, Is.False, "Precondition: the ribbon is not collapsed in a large window");
+
+            window.Width = Ribbon.MinimalVisibleWidth - 50;
+            window.Height = Ribbon.MinimalVisibleHeight - 50;
+            UIHelper.DoEvents();
+
+            Assert.That(window.ActualWidth, Is.LessThan(Ribbon.MinimalVisibleWidth), "Precondition: the window is small now");
+            Assert.That(ribbon.IsCollapsed, Is.True, "A re-added ribbon must still collapse when its window becomes too small");
+        }
+    }
+
+    /// <summary>
+    /// A ribbon that is still in its window when the window is closed must still be detached from the window then
+    /// (its state storage gets saved and disposed). The fix only removes the Closed handler when the ribbon is unloaded.
+    /// </summary>
+    [Test]
+    public void Ribbon_still_in_its_window_is_detached_when_the_window_is_closed()
+    {
+        var ribbon = new TrackingRibbon();
+
+        var window = new TestRibbonWindow(ribbon);
+        UIHelper.DoEvents();
+
+        Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded");
+
+        var storage = (TrackingRibbonStateStorage)ribbon.RibbonStateStorage;
+
+        window.Close();
+        UIHelper.DoEvents();
+
+        Assert.That(storage.IsDisposed, Is.True, "The state storage of a ribbon that was in the window when it was closed must be disposed");
+    }
+
+    private static Window CreatePlainWindow()
+    {
+        var window = new Window
+        {
+            Width = 800,
+            Height = 600,
+            ShowActivated = false,
+            ShowInTaskbar = false
+        };
+
+        if (Debugger.IsAttached == false)
+        {
+            window.Left = int.MinValue;
+            window.Top = int.MinValue;
+        }
+
+        FrameworkHelper.SetUseLayoutRounding(window, true);
+
+        window.Show();
+
+        return window;
+    }
+
+    private static FrameworkElement CreateRibbonInHost()
+    {
+        var ribbon = new Ribbon();
+        ribbon.Tabs.Add(new RibbonTabItem { Header = "Tab" });
+
+        var host = new Grid();
+        host.Children.Add(ribbon);
+
+        return host;
+    }
+
+    // Only a WeakReference may escape these helpers, so no local variable keeps the element alive.
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference ShowAndRemove(Window window, Func<FrameworkElement> createContent)
+    {
+        var content = createContent();
+        var target = content is Grid grid ? grid.Children[0] : content;
+
+        window.Content = content;
+        UIHelper.DoEvents();
+
+        Assert.That(((FrameworkElement)target).IsLoaded, Is.True, "Precondition: the element is loaded");
+
+        window.Content = null;
+        UIHelper.DoEvents();
+
+        Assert.That(((FrameworkElement)target).IsLoaded, Is.False, "Precondition: the element is unloaded");
+
+        return new WeakReference(target);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference ShowRemoveReAddAndRemove(Window window)
+    {
+        var ribbon = new Ribbon();
+
+        window.Content = ribbon;
+        UIHelper.DoEvents();
+
+        window.Content = null;
+        UIHelper.DoEvents();
+
+        window.Content = ribbon;
+        UIHelper.DoEvents();
+
+        Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded again");
+
+        window.Content = null;
+        UIHelper.DoEvents();
+
+        Assert.That(ribbon.IsLoaded, Is.False, "Precondition: the ribbon is unloaded");
+
+        return new WeakReference(ribbon);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference CreateRibbonOnly()
+    {
+        var ribbon = new Ribbon();
+        ribbon.Tabs.Add(new RibbonTabItem { Header = "Tab" });
+
+        return new WeakReference(ribbon);
+    }
+
+    private static bool IsCollected(WeakReference weakReference)
+    {
+        for (var i = 0; i < 3 && weakReference.IsAlive; i++)
+        {
+            UIHelper.DoEvents();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
+        return weakReference.IsAlive == false;
+    }
+
+    private sealed class TrackingRibbon : Ribbon
+    {
+        protected override IRibbonStateStorage CreateRibbonStateStorage()
+        {
+            return new TrackingRibbonStateStorage(this);
+        }
+    }
+
+    private sealed class TrackingRibbonStateStorage : RibbonStateStorage
+    {
+        public TrackingRibbonStateStorage(Ribbon ribbon)
+            : base(ribbon)
+        {
+        }
+
+        public bool IsDisposed => this.Disposed;
+    }
+}
