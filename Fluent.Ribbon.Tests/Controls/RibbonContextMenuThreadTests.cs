@@ -70,10 +70,10 @@ public class RibbonContextMenuThreadTests
         var menuOfThisThread = new Button().ContextMenu;
 
         Assert.That(menuOfThisThread, Is.Not.Null, "Precondition: the button on this thread has the ribbon context menu");
-        Assert.That(menuOfThisThread!.Dispatcher, Is.SameAs(Dispatcher.CurrentDispatcher), "Precondition: the menu of this thread belongs to this thread");
+        Assert.That(menuOfThisThread.Dispatcher, Is.SameAs(Dispatcher.CurrentDispatcher), "Precondition: the menu of this thread belongs to this thread");
 
-        System.Windows.Controls.ContextMenu? menuOfOtherThread = null;
-        Dispatcher? otherDispatcher = null;
+        System.Windows.Controls.ContextMenu menuOfOtherThread = null;
+        Dispatcher otherDispatcher = null;
 
         RunUiThreadAndGetWeakReferences(() =>
         {
@@ -85,7 +85,7 @@ public class RibbonContextMenuThreadTests
 
         Assert.That(menuOfOtherThread, Is.Not.Null, "The button on the other thread has a context menu");
         Assert.That(menuOfOtherThread, Is.Not.SameAs(menuOfThisThread), "The other thread must not get the menu of this thread");
-        Assert.That(menuOfOtherThread!.Dispatcher, Is.SameAs(otherDispatcher), "The menu must belong to the thread of the button");
+        Assert.That(menuOfOtherThread.Dispatcher, Is.SameAs(otherDispatcher), "The menu must belong to the thread of the button");
         Assert.That(new Button().ContextMenu, Is.SameAs(menuOfThisThread), "This thread keeps its own menu");
     }
 
@@ -110,11 +110,11 @@ public class RibbonContextMenuThreadTests
     // and the object the work returned.
     // Not inlined, so no local of the caller keeps the thread or its objects alive.
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static UiThreadReferences RunUiThreadAndGetWeakReferences(Func<object?> work)
+    private static UiThreadReferences RunUiThreadAndGetWeakReferences(Func<object> work)
     {
-        WeakReference? dispatcherReference = null;
-        WeakReference? createdReference = null;
-        Exception? exception = null;
+        WeakReference dispatcherReference = null;
+        WeakReference createdReference = null;
+        Exception exception = null;
 
         var thread = new Thread(() =>
         {
@@ -166,7 +166,7 @@ public class RibbonContextMenuThreadTests
         Assert.That(dispatcherReference, Is.Not.Null, "Precondition: the UI thread had a dispatcher");
         Assert.That(createdReference?.IsAlive, Is.True, "Precondition: the UI thread ran the work");
 
-        return new UiThreadReferences(new WeakReference(thread), dispatcherReference!, createdReference!);
+        return new UiThreadReferences(new WeakReference(thread), dispatcherReference, createdReference);
     }
 
     private static bool IsAliveAfterGarbageCollection(WeakReference reference)
