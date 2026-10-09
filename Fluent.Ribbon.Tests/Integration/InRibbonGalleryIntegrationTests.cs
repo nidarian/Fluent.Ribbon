@@ -294,6 +294,109 @@ public class InRibbonGalleryIntegrationTests
         }
     }
 
+    [Test]
+    public void Gallery_Should_Expand_Again_When_Group_Goes_Back_To_Large()
+    {
+        var ribbonGroupsContainer = new RibbonGroupsContainer
+        {
+            Height = RibbonTabControl.DefaultContentHeight,
+            ReduceOrder = "MyGroup"
+        };
+
+        var groupBox = new RibbonGroupBox
+        {
+            Name = "MyGroup"
+        };
+
+        ribbonGroupsContainer.Children.Add(groupBox);
+
+        var inRibbonGallery = new InRibbonGallery
+        {
+            MinItemsInRow = 1,
+            MaxItemsInRow = 3,
+            ItemWidth = 50,
+            ItemHeight = 18,
+            ItemsSource = this.sampleDataItemsForFixedWidth
+        };
+
+        groupBox.Items.Add(inRibbonGallery);
+
+        using (new TestRibbonWindow(ribbonGroupsContainer))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Large));
+            Assert.That(inRibbonGallery.IsCollapsed, Is.False);
+
+            // Too narrow: the group goes to Middle, the gallery is shown as a button
+            ribbonGroupsContainer.Width = 60;
+
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Middle));
+            Assert.That(inRibbonGallery.IsCollapsed, Is.True);
+
+            // Wide again: the group is Large again, so the gallery must show its items again
+            ribbonGroupsContainer.Width = 1000;
+
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Large));
+            Assert.That(inRibbonGallery.IsCollapsed, Is.False, "Gallery stayed collapsed to a button although its group is Large again.");
+        }
+    }
+
+    [Test]
+    public void Gallery_Should_Get_All_Columns_Back_After_Narrowing_And_Widening()
+    {
+        var ribbonGroupsContainer = new RibbonGroupsContainer
+        {
+            Height = RibbonTabControl.DefaultContentHeight,
+            ReduceOrder = "MyGroup,(MyGroup)"
+        };
+
+        var groupBox = new RibbonGroupBox
+        {
+            Name = "MyGroup"
+        };
+
+        ribbonGroupsContainer.Children.Add(groupBox);
+
+        var inRibbonGallery = new InRibbonGallery
+        {
+            MinItemsInRow = 1,
+            MaxItemsInRow = 3,
+            ItemWidth = 50,
+            ItemHeight = 18,
+            ItemsSource = this.sampleDataItemsForFixedWidth
+        };
+
+        groupBox.Items.Add(inRibbonGallery);
+
+        using (new TestRibbonWindow(ribbonGroupsContainer))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(inRibbonGallery.IsCollapsed, Is.False);
+            Assert.That(inRibbonGallery.CurrentGalleryPanelState.GalleryPanel.MaxItemsInRow, Is.EqualTo(3));
+
+            ribbonGroupsContainer.Width = 60;
+
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Middle));
+            Assert.That(inRibbonGallery.IsCollapsed, Is.True);
+
+            ribbonGroupsContainer.Width = 1000;
+
+            UIHelper.DoEvents();
+
+            Assert.That(groupBox.State, Is.EqualTo(RibbonGroupBoxState.Large));
+            Assert.That(inRibbonGallery.IsCollapsed, Is.False);
+            Assert.That(inRibbonGallery.CurrentGalleryPanelState.GalleryPanel.MaxItemsInRow, Is.EqualTo(3), "Gallery lost a column after narrowing and widening the ribbon.");
+        }
+    }
+
     private readonly SampleDataItem[] sampleDataItemsForFixedWidth =
     {
         new("A", "Blue"),
