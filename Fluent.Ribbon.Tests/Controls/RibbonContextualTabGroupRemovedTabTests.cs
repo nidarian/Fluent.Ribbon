@@ -8,7 +8,8 @@ using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 /// <summary>
-/// An app removes contextual tabs from <see cref="Ribbon.Tabs"/> while their <see cref="RibbonContextualTabGroup"/> stays visible.
+/// An app shows the contextual group headers (<see cref="RibbonTitleBar.HideContextTabs"/> = false) and removes contextual tabs
+/// from <see cref="Ribbon.Tabs"/> while their <see cref="RibbonContextualTabGroup"/> stays visible.
 /// The removed tab kept its <see cref="RibbonTabItem.Group"/>, so it stayed in <see cref="RibbonContextualTabGroup.Items"/> and was still counted as a visible tab of the group.
 /// The title bar then measured the header from the removed tab: its position relative to the title bar is (0, 0) because it is no longer in the window,
 /// so the contextual headers were drawn from the left edge of the title bar (over the quick access toolbar) instead of above their tabs,
@@ -26,8 +27,7 @@ public class RibbonContextualTabGroupRemovedTabTests
 
         using (var window = new TestRibbonWindow(setup.Ribbon))
         {
-            UIHelper.DoEvents();
-            UIHelper.DoEvents();
+            ShowContextualHeaders(setup);
 
             Assert.That(GetX(setup.GroupA, window), Is.EqualTo(GetX(setup.TabA1, window)).Within(Tolerance), "Precondition: the header of group A starts above its first tab. " + Describe(setup, window));
             Assert.That(GetX(setup.TabA2, window) - GetX(setup.TabA1, window), Is.GreaterThan(10), "Precondition: the tabs of group A are laid out side by side");
@@ -49,8 +49,7 @@ public class RibbonContextualTabGroupRemovedTabTests
 
         using (var window = new TestRibbonWindow(setup.Ribbon))
         {
-            UIHelper.DoEvents();
-            UIHelper.DoEvents();
+            ShowContextualHeaders(setup);
 
             Assert.That(setup.GroupB.InnerVisibility, Is.EqualTo(Visibility.Visible), "Precondition: the header of group B is shown");
             Assert.That(GetX(setup.GroupB, window), Is.EqualTo(GetX(setup.TabB1, window)).Within(Tolerance), "Precondition: the header of group B starts above its tab. " + Describe(setup, window));
@@ -71,8 +70,7 @@ public class RibbonContextualTabGroupRemovedTabTests
 
         using (var window = new TestRibbonWindow(setup.Ribbon))
         {
-            UIHelper.DoEvents();
-            UIHelper.DoEvents();
+            ShowContextualHeaders(setup);
 
             setup.Ribbon.Tabs.Remove(setup.TabA1);
             setup.Ribbon.Tabs.Remove(setup.TabB1);
@@ -89,6 +87,19 @@ public class RibbonContextualTabGroupRemovedTabTests
             Assert.That(GetX(setup.GroupA, window), Is.EqualTo(GetX(setup.TabA1, window)).Within(Tolerance), "The header of group A must start above its re-added first tab");
             Assert.That(GetX(setup.GroupB, window), Is.EqualTo(GetX(setup.TabB1, window)).Within(Tolerance), "The header of group B must start above its re-added tab");
         }
+    }
+
+    // The title bar hides the contextual headers by default (HideContextTabs is true), apps that want them set it to false.
+    private static void ShowContextualHeaders(Setup setup)
+    {
+        UIHelper.DoEvents();
+
+        Assert.That(setup.Ribbon.TitleBar, Is.Not.Null, "Precondition: the ribbon uses the title bar of the window");
+
+        setup.Ribbon.TitleBar!.HideContextTabs = false;
+
+        UIHelper.DoEvents();
+        UIHelper.DoEvents();
     }
 
     // Layout details for the failure message, so a failure on CI shows where the title bar put the headers.
