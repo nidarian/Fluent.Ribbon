@@ -204,12 +204,16 @@ public class RibbonTabsContainer : Panel, IScrollInfo
                 continue;
             }
 
+            // Contextual tabs are never reduced, so they never get separators.
+            // The else is required, otherwise the regular opacity would overwrite the 0 for contextual tabs.
             if (tab.IsContextual)
             {
                 tab.SeparatorOpacity = 0D;
             }
-
-            tab.SeparatorOpacity = opacity;
+            else
+            {
+                tab.SeparatorOpacity = opacity;
+            }
         }
     }
 
