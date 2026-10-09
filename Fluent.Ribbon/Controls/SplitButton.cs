@@ -385,7 +385,26 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
     {
         this.UnSubscribeEvents();
 
+        if (this.button is not null)
+        {
+            this.button.Checked -= this.OnButtonIsCheckedChanged;
+            this.button.Unchecked -= this.OnButtonIsCheckedChanged;
+            this.button.Indeterminate -= this.OnButtonIsCheckedChanged;
+        }
+
         this.button = this.GetTemplateChild("PART_Button") as ToggleButton;
+
+        // The template binds the inner button OneWay to IsChecked. When the inner button toggles itself (click, button group)
+        // we write the value back with SetCurrentValue. A TwoWay binding would use SetValue and replace a OneWay binding the app
+        // has on IsChecked (state from the view model, change through a command).
+        // Not tied to Loaded/Unloaded like the other events, so a button group can uncheck us while we are not loaded.
+        if (this.button is not null)
+        {
+            this.button.Checked += this.OnButtonIsCheckedChanged;
+            this.button.Unchecked += this.OnButtonIsCheckedChanged;
+            this.button.Indeterminate += this.OnButtonIsCheckedChanged;
+        }
+
         if (this.button is ISimplifiedStateControl control)
         {
             control.UpdateSimplifiedState(this.IsSimplified);
@@ -438,6 +457,14 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
         this.button?.InvokeClick();
     }
 
+    private void OnButtonIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        if (ReferenceEquals(e.OriginalSource, sender))
+        {
+            RibbonControl.WriteIsCheckedBack((DependencyObject)sender, System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, this, IsCheckedProperty);
+        }
+    }
+
     private void OnButtonClick(object sender, RoutedEventArgs e)
     {
         e.Handled = true;
@@ -474,7 +501,7 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
         RibbonControl.BindQuickAccessItem(this, element);
 
         RibbonControl.Bind(this, element, nameof(this.MaxDropDownHeight), MaxDropDownHeightProperty, BindingMode.OneWay);
-        RibbonControl.Bind(this, element, nameof(this.IsChecked), IsCheckedProperty, BindingMode.TwoWay);
+        RibbonControl.BindIsChecked(this, IsCheckedProperty, element, IsCheckedProperty);
         RibbonControl.Bind(this, element, nameof(this.DropDownToolTip), DropDownToolTipProperty, BindingMode.TwoWay);
         RibbonControl.Bind(this, element, nameof(this.IsCheckable), IsCheckableProperty, BindingMode.Default);
         RibbonControl.Bind(this, element, nameof(this.IsButtonEnabled), IsButtonEnabledProperty, BindingMode.Default);

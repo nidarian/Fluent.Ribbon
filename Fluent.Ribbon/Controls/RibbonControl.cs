@@ -313,7 +313,11 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
         if (source is System.Windows.Controls.Primitives.ToggleButton or System.Windows.Controls.MenuItem
             && target is System.Windows.Controls.Primitives.ToggleButton)
         {
-            Bind(source, target, nameof(System.Windows.Controls.Primitives.ToggleButton.IsChecked), System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, BindingMode.TwoWay);
+            var sourceIsCheckedProperty = source is System.Windows.Controls.MenuItem
+                ? System.Windows.Controls.MenuItem.IsCheckedProperty
+                : System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty;
+
+            BindIsChecked(source, sourceIsCheckedProperty, target, System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty);
         }
 
         if (source is ItemsControl sourceItemsControl
@@ -493,6 +497,58 @@ public abstract class RibbonControl : Control, ICommandSource, IQuickAccessItemP
             UpdateSourceTrigger = updateSourceTrigger
         };
         target.SetBinding(property, binding);
+    }
+
+    /// <summary>
+    /// Keeps the IsChecked property of <paramref name="target"/> (a quick access copy) in sync with the IsChecked property of <paramref name="source"/>.
+    /// </summary>
+    /// <remarks>
+    /// A TwoWay binding would write <paramref name="source"/> with SetValue when the copy is clicked.
+    /// That replaces a OneWay binding the app has on the original (state from the view model, change through a command) with a local value,
+    /// so the original would no longer follow the view model. So we bind OneWay and write back with SetCurrentValue, which keeps such bindings
+    /// (and still updates TwoWay bindings).
+    /// </remarks>
+    internal static void BindIsChecked(DependencyObject source, DependencyProperty sourceIsCheckedProperty, FrameworkElement target, DependencyProperty targetIsCheckedProperty)
+    {
+        Bind(source, target, new PropertyPath(sourceIsCheckedProperty), targetIsCheckedProperty, BindingMode.OneWay);
+
+        var handler = new RoutedEventHandler((_, e) =>
+        {
+            // Checked etc. bubble, so ignore the ones raised by elements inside the copy (for example the inner button of a SplitButton).
+            if (ReferenceEquals(e.OriginalSource, target))
+            {
+                WriteIsCheckedBack(target, targetIsCheckedProperty, source, sourceIsCheckedProperty);
+            }
+        });
+
+        target.AddHandler(System.Windows.Controls.Primitives.ToggleButton.CheckedEvent, handler);
+        target.AddHandler(System.Windows.Controls.Primitives.ToggleButton.UncheckedEvent, handler);
+        target.AddHandler(System.Windows.Controls.Primitives.ToggleButton.IndeterminateEvent, handler);
+    }
+
+    /// <summary>
+    /// Writes the IsChecked value of <paramref name="target"/> to <paramref name="source"/> with SetCurrentValue, so bindings on <paramref name="source"/> are kept.
+    /// If <paramref name="source"/> doesn't take the value (coercion), <paramref name="target"/> is reset to the value of <paramref name="source"/>.
+    /// </summary>
+    internal static void WriteIsCheckedBack(DependencyObject target, DependencyProperty targetIsCheckedProperty, DependencyObject source, DependencyProperty sourceIsCheckedProperty)
+    {
+        var value = (bool?)target.GetValue(targetIsCheckedProperty);
+
+        // MenuItem.IsChecked is a bool, not a bool?
+        var sourceValue = sourceIsCheckedProperty.PropertyType == typeof(bool)
+            ? BooleanBoxes.Box(value == true)
+            : BooleanBoxes.Box(value);
+
+        if (Equals(source.GetValue(sourceIsCheckedProperty), sourceValue) == false)
+        {
+            source.SetCurrentValue(sourceIsCheckedProperty, sourceValue);
+        }
+
+        var actualValue = (bool?)source.GetValue(sourceIsCheckedProperty);
+        if (actualValue != value)
+        {
+            target.SetCurrentValue(targetIsCheckedProperty, BooleanBoxes.Box(actualValue));
+        }
     }
 
     #endregion
