@@ -163,6 +163,7 @@ public class Ribbon : Control, ILogicalChildSupport
     {
         contextMenus.Add(Thread.CurrentThread.ManagedThreadId, new ContextMenu());
         RibbonContextMenu.Opened += OnContextMenuOpened;
+        RibbonContextMenu.Closed += OnContextMenuClosed;
     }
 
     private static void InitRibbonContextMenuItems()
@@ -457,6 +458,21 @@ public class Ribbon : Control, ILogicalChildSupport
         if (RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>().All(x => x.Visibility == Visibility.Collapsed))
         {
             RibbonContextMenu.IsOpen = false;
+        }
+    }
+
+    // Occurs when context menu is closed
+    private static void OnContextMenuClosed(object sender, RoutedEventArgs e)
+    {
+        // The context menu is static and shared by all ribbons of the thread.
+        // Forget the ribbon it was opened on, otherwise the menu items keep that ribbon and its whole window
+        // alive after the window was closed (until another ribbon opens the menu).
+        // WPF raises Closed after it ran the command of a clicked item, and OnContextMenuOpened sets the target again on the next opening.
+        contextMenuOwner = null;
+
+        foreach (var menuItem in RibbonContextMenu.Items.OfType<System.Windows.Controls.MenuItem>())
+        {
+            menuItem.ClearValue(System.Windows.Controls.MenuItem.CommandTargetProperty);
         }
     }
 
