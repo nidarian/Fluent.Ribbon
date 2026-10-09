@@ -474,6 +474,28 @@ public class Ribbon : Control, ILogicalChildSupport
         {
             menuItem.ClearValue(System.Windows.Controls.MenuItem.CommandTargetProperty);
         }
+
+        // While open, the popup of the menu uses the PlacementTarget as its parent, so the menu and its items take over
+        // inherited values from it, like the DataContext and the window (Window.GetWindow).
+        // WPF only resets them if the PlacementTarget is still set when it destroys the popup right after this event,
+        // but WPF clears the PlacementTarget (by forgetting the menu's owner) during this event already.
+        // So keep the PlacementTarget until the popup is destroyed and remove it afterwards.
+        var menu = (System.Windows.Controls.ContextMenu)sender;
+        var placementTarget = menu.PlacementTarget;
+
+        if (placementTarget is not null
+            && menu.ReadLocalValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty) == DependencyProperty.UnsetValue)
+        {
+            menu.PlacementTarget = placementTarget;
+
+            menu.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Send, new Action(() =>
+            {
+                if (ReferenceEquals(menu.ReadLocalValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty), placementTarget))
+                {
+                    menu.ClearValue(System.Windows.Controls.ContextMenu.PlacementTargetProperty);
+                }
+            }));
+        }
     }
 
     #endregion
