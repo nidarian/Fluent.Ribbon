@@ -1441,7 +1441,8 @@ public class Ribbon : Control, ILogicalChildSupport
     {
         if (sender is Ribbon ribbon)
         {
-            ribbon.IsMinimized = !ribbon.IsMinimized;
+            // SetCurrentValue keeps an app's OneWay binding on IsMinimized (SetValue would replace it with a local value).
+            ribbon.SetCurrentValue(IsMinimizedProperty, BooleanBoxes.Box(!ribbon.IsMinimized));
         }
     }
 
@@ -1459,7 +1460,8 @@ public class Ribbon : Control, ILogicalChildSupport
     {
         if (sender is Ribbon ribbon)
         {
-            ribbon.IsSimplified = false;
+            // SetCurrentValue keeps an app's OneWay binding on IsSimplified (SetValue would replace it with a local value).
+            ribbon.SetCurrentValue(IsSimplifiedProperty, BooleanBoxes.FalseBox);
         }
     }
 
@@ -1468,7 +1470,8 @@ public class Ribbon : Control, ILogicalChildSupport
     {
         if (sender is Ribbon ribbon)
         {
-            ribbon.IsSimplified = true;
+            // SetCurrentValue keeps an app's OneWay binding on IsSimplified (SetValue would replace it with a local value).
+            ribbon.SetCurrentValue(IsSimplifiedProperty, BooleanBoxes.TrueBox);
         }
     }
 
@@ -1482,7 +1485,8 @@ public class Ribbon : Control, ILogicalChildSupport
             return;
         }
 
-        ribbon.ShowQuickAccessToolBarAboveRibbon = false;
+        // SetCurrentValue keeps an app's OneWay binding on ShowQuickAccessToolBarAboveRibbon (SetValue would replace it with a local value).
+        ribbon.SetCurrentValue(ShowQuickAccessToolBarAboveRibbonProperty, BooleanBoxes.FalseBox);
     }
 
     // Occurs when show quick access above command executed
@@ -1495,7 +1499,8 @@ public class Ribbon : Control, ILogicalChildSupport
             return;
         }
 
-        ribbon.ShowQuickAccessToolBarAboveRibbon = true;
+        // SetCurrentValue keeps an app's OneWay binding on ShowQuickAccessToolBarAboveRibbon (SetValue would replace it with a local value).
+        ribbon.SetCurrentValue(ShowQuickAccessToolBarAboveRibbonProperty, BooleanBoxes.TrueBox);
     }
 
     // Occurs when remove from quick access command executed
@@ -2028,7 +2033,8 @@ public class Ribbon : Control, ILogicalChildSupport
                     {
                         if (this.CanMinimize)
                         {
-                            this.IsMinimized = !this.IsMinimized;
+                            // SetCurrentValue keeps an app's OneWay binding on IsMinimized.
+                            this.SetCurrentValue(IsMinimizedProperty, BooleanBoxes.Box(!this.IsMinimized));
                         }
                     }
 
@@ -2041,7 +2047,8 @@ public class Ribbon : Control, ILogicalChildSupport
                     {
                         if (this.CanUseSimplified)
                         {
-                            this.IsSimplified = !this.IsSimplified;
+                            // SetCurrentValue keeps an app's OneWay binding on IsSimplified.
+                            this.SetCurrentValue(IsSimplifiedProperty, BooleanBoxes.Box(!this.IsSimplified));
                         }
                     }
 
