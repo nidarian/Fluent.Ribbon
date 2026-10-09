@@ -325,6 +325,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 var toggleButton = new ToggleButton();
 
                 RibbonControl.BindQuickAccessItem(this, toggleButton);
+                ToggleButton.BindQuickAccessGroupName(this, toggleButton);
 
                 return toggleButton;
             }
