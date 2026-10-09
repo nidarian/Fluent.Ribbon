@@ -1745,6 +1745,7 @@ public class Ribbon : Control, ILogicalChildSupport
         if (this.TabControl is not null)
         {
             this.TabControl.SelectionChanged -= this.OnTabControlSelectionChanged;
+            ((INotifyCollectionChanged)this.TabControl.Items).CollectionChanged -= this.OnTabControlItemsCollectionChanged;
             selectedTab = this.TabControl.SelectedItem as RibbonTabItem;
 
             // Detach the old helpers before clearing their targets, otherwise they keep forwarding
@@ -1769,6 +1770,9 @@ public class Ribbon : Control, ILogicalChildSupport
             this.Tabs.CollectionChanged += this.OnTabItemsCollectionChangedAfterSync;
 
             this.TabControl.SelectedItem = selectedTab;
+
+            // Subscribed after the initial sync, so this only reacts to later changes of Tabs.
+            ((INotifyCollectionChanged)this.TabControl.Items).CollectionChanged += this.OnTabControlItemsCollectionChanged;
 
             this.toolBarItemsSync = new CollectionSyncHelper<UIElement>(this.ToolBarItems, this.TabControl.ToolBarItems);
         }
@@ -2062,6 +2066,27 @@ public class Ribbon : Control, ILogicalChildSupport
         this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
 
         this.SelectedTabChanged?.Invoke(this, e);
+    }
+
+    // The tab control shifts its SelectedIndex when tabs are inserted or removed before the selected tab,
+    // but it doesn't raise SelectionChanged for that because the selected tab stays the same.
+    // Without this SelectedTabIndex would keep the old index, pointing to another tab or past the end,
+    // and setting it to that old index (for example to select a newly inserted tab) would do nothing.
+    // This runs after Tabs has been mirrored into the tab control, so both have the same order here.
+    private void OnTabControlItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        var selectedTab = this.SelectedTabItem;
+        if (selectedTab is null)
+        {
+            return;
+        }
+
+        var index = this.Tabs.IndexOf(selectedTab);
+        if (index >= 0
+            && index != this.SelectedTabIndex)
+        {
+            this.SelectedTabIndex = index;
+        }
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
