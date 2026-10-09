@@ -196,12 +196,15 @@ public class WindowCommands : ItemsControl, IDisposable
         }
 
         var chars = new char[256];
-        if (PInvoke.LoadString(this.user32, id, chars.AsSpan(), 256) == 0)
+        var length = PInvoke.LoadString(this.user32, id, chars.AsSpan(), 256);
+        if (length <= 0)
         {
             return $"String with id '{id}' could not be found.";
         }
+
+        // Only use the characters LoadString copied. The rest of the buffer is '\0' and would otherwise end up in the caption (Uid, automation name, tooltip).
 #pragma warning disable CA1307 // Specify StringComparison for clarity
-        return new string(chars).Replace("&", string.Empty);
+        return new string(chars, 0, length).Replace("&", string.Empty);
 #pragma warning restore CA1307 // Specify StringComparison for clarity
     }
 
