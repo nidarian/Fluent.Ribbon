@@ -10,6 +10,7 @@ using System.IO.IsolatedStorage;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using Fluent.Internal.KnownBoxes;
 
 /// <summary>
 /// Handles loading and saving the state of a <see cref="Ribbon"/> from/to a <see cref="MemoryStream"/>, for temporary storage, and from/to <see cref="IsolatedStorage"/>, for persistent storage.
@@ -263,6 +264,8 @@ public class RibbonStateStorage : IRibbonStateStorage
     protected virtual void LoadState(string data)
     {
         // Load Ribbon State
+        // The values are written with SetCurrentValue, so an app's OneWay bindings on these properties survive loading
+        // (SetValue would replace them with local values and the app could no longer change the ribbon).
         var ribbonProperties = data.Split(',');
 
         if (ribbonProperties.Length <= 0)
@@ -273,7 +276,7 @@ public class RibbonStateStorage : IRibbonStateStorage
         if (this.ribbon.CanMinimize
             && bool.TryParse(ribbonProperties[0], out var isMinimized))
         {
-            this.ribbon.IsMinimized = isMinimized;
+            this.ribbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.Box(isMinimized));
         }
 
         if (ribbonProperties.Length <= 1)
@@ -283,7 +286,7 @@ public class RibbonStateStorage : IRibbonStateStorage
 
         if (bool.TryParse(ribbonProperties[1], out var showQuickAccessToolBarAboveRibbon))
         {
-            this.ribbon.ShowQuickAccessToolBarAboveRibbon = showQuickAccessToolBarAboveRibbon;
+            this.ribbon.SetCurrentValue(Ribbon.ShowQuickAccessToolBarAboveRibbonProperty, BooleanBoxes.Box(showQuickAccessToolBarAboveRibbon));
         }
 
         if (ribbonProperties.Length <= 2)
@@ -294,7 +297,7 @@ public class RibbonStateStorage : IRibbonStateStorage
         if (this.ribbon.CanUseSimplified
             && bool.TryParse(ribbonProperties[2], out var isSimplified))
         {
-            this.ribbon.IsSimplified = isSimplified;
+            this.ribbon.SetCurrentValue(Ribbon.IsSimplifiedProperty, BooleanBoxes.Box(isSimplified));
         }
     }
 

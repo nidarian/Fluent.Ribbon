@@ -297,7 +297,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 RibbonControl.BindQuickAccessItem(this, button);
 
                 RibbonControl.Bind(this, button, nameof(this.IsCheckable), SplitButton.IsCheckableProperty, BindingMode.OneWay);
-                RibbonControl.Bind(this, button, nameof(this.IsChecked), SplitButton.IsCheckedProperty, BindingMode.TwoWay);
+                RibbonControl.BindIsChecked(this, IsCheckedProperty, button, SplitButton.IsCheckedProperty);
 
                 RibbonControl.Bind(this, button, nameof(this.ResizeMode), DropDownButton.ResizeModeProperty, BindingMode.OneWay);
                 RibbonControl.Bind(this, button, nameof(this.MaxDropDownHeight), DropDownButton.MaxDropDownHeightProperty, BindingMode.OneWay);
@@ -325,6 +325,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
                 var toggleButton = new ToggleButton();
 
                 RibbonControl.BindQuickAccessItem(this, toggleButton);
+                ToggleButton.BindQuickAccessGroupName(this, toggleButton);
 
                 return toggleButton;
             }

@@ -286,7 +286,10 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
 
         if (imageSource is null)
         {
-            return value;
+            // A path or uri that could not be loaded shows no icon instead of the path as text.
+            return value is string or Uri
+                ? null
+                : value;
         }
 
         if (typeof(ImageSource).IsAssignableFrom(targetType))
@@ -395,26 +398,17 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
             if (targetVisual is not null // to get values for resource expressions we need a DependencyObject
                 && value is Expression expression)
             {
-                var type = expression.GetType();
-                var method = type.GetMethod("GetValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                var field = type.GetField("_targetObject", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    ?? type.GetField("targetObject", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                // Only look up the resource key of the expression (ResourceReferenceExpression.ResourceKey) and find that resource from the target.
+                // Do not evaluate the expression itself: an expression from a style (like the one for the ApplicationMenu header)
+                // is a single instance shared by all controls using that style.
+                // Evaluating it stored the first target as mentor and cached the resource found for it inside the shared expression.
+                // That kept the first target (and its window) alive forever and made all other targets show the resource found for the first one.
+                var resourceKeyProperty = expression.GetType().GetProperty("ResourceKey", BindingFlags.Instance | BindingFlags.Public);
 
-                if (method is not null
-                    && field is not null)
+                if (resourceKeyProperty is not null
+                    && resourceKeyProperty.GetValue(expression, null) is { } resourceKey)
                 {
-                    // We have to set the target object. otherwise we might hit debug asserts.
-                    if (field.GetValue(expression) is null)
-                    {
-                        field.SetValue(expression, targetVisual);
-                    }
-
-                    var valueFromExpression = method.Invoke(expression, new object[]
-                    {
-                        targetVisual,
-                        // to get values from resource expressions we need a DependencyProperty, so just pass a random one
-                        RibbonProperties.SizeProperty
-                    });
+                    var valueFromExpression = FindResource(targetVisual, resourceKey);
 
                     return CreateImageSource(valueFromExpression, targetVisual, desiredSize);
                 }
@@ -440,7 +434,25 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
         return null;
     }
 
-    private static ImageSource CreateImageSource(string imagePath, Visual? targetVisual, Size desiredSize)
+    private static object? FindResource(Visual targetVisual, object resourceKey)
+    {
+        // Search from the nearest FrameworkElement, like WPF does for DynamicResource, so resources of the window etc. are found.
+        DependencyObject? current = targetVisual;
+
+        while (current is not null)
+        {
+            if (current is FrameworkElement frameworkElement)
+            {
+                return frameworkElement.TryFindResource(resourceKey);
+            }
+
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        return Application.Current?.TryFindResource(resourceKey);
+    }
+
+    private static ImageSource? CreateImageSource(string imagePath, Visual? targetVisual, Size desiredSize)
     {
         var imageUri = new Uri(imagePath, UriKind.RelativeOrAbsolute);
 
@@ -464,7 +476,7 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
         return CreateImageSource(imageUri, targetVisual, desiredSize);
     }
 
-    private static ImageSource CreateImageSource(Uri imageUri, Visual? targetVisual, Size desiredSize)
+    private static ImageSource? CreateImageSource(Uri imageUri, Visual? targetVisual, Size desiredSize)
     {
         try
         {
@@ -477,6 +489,15 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
             Trace.WriteLine(exception);
 
             return imageNotFoundImageSource;
+        }
+        catch (Exception exception) when (exception is IOException or NotSupportedException or FileFormatException or UnauthorizedAccessException)
+        {
+            // The path often comes from a binding (e.g. Icon="{Binding IconPath}") and can be empty, point to a deleted file or to a file that is not an image.
+            // WPF does not catch exceptions thrown by converters, so throwing here would crash the application.
+            // Show no icon instead and report the failure in the debug output.
+            Trace.WriteLine($"Fluent.Ribbon: Could not load image from \"{imageUri}\". {exception}");
+
+            return null;
         }
     }
 

@@ -1,6 +1,9 @@
 namespace Fluent.Tests.Controls;
 
 using System.Windows.Controls;
+using System.Windows.Data;
+using Fluent.Tests.Helper;
+using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 [TestFixture]
@@ -99,5 +102,36 @@ public class IconPresenterTests
 
         control.IsEnabled = true;
         Assert.That(control.Effect, Is.Null);
+    }
+
+    /// <summary>
+    /// An app that binds Icon to a path, e.g. Icon="{Binding IconPath}", crashed while the window
+    /// was laid out when the bound value was an empty string: IconPresenter runs the icon through
+    /// ObjectToImageConverter, the converter threw and WPF does not catch converter exceptions.
+    /// The button should just show no icon.
+    /// </summary>
+    [Test]
+    public void Button_with_icon_bound_to_empty_path_does_not_crash()
+    {
+        var button = new Fluent.Button
+        {
+            Header = "Button"
+        };
+
+        button.SetBinding(Fluent.Button.IconProperty, new Binding { Source = string.Empty });
+
+        using (var window = new TestRibbonWindow())
+        {
+            Assert.That(() =>
+            {
+                window.Content = button;
+                UIHelper.DoEvents();
+            }, Throws.Nothing);
+
+            var iconPresenter = (IconPresenter)button.Template.FindName("iconImage", button);
+
+            Assert.That(iconPresenter, Is.Not.Null, "Precondition: the button template must contain the icon presenter.");
+            Assert.That(iconPresenter.Content, Is.Null);
+        }
     }
 }

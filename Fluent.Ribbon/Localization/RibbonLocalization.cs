@@ -77,7 +77,10 @@ public class RibbonLocalization : INotifyPropertyChanged
 
         set
         {
-            if (!Equals(this.localization, value))
+            // Compare references, not Equals: RibbonLocalizationBase.Equals only compares the CultureName.
+            // A custom localization derived from English (it inherits the attribute and so the culture "en"),
+            // or one without the attribute (no culture name), would otherwise be ignored and its texts never shown.
+            if (!ReferenceEquals(this.localization, value))
             {
                 this.localization = value;
                 this.RaisePropertyChanged();

@@ -209,7 +209,8 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
         if (DoubleUtil.AreClose(value, spinner.Value) == false)
         {
-            spinner.Value = value;
+            // SetCurrentValue keeps a OneWay binding on Value (SetValue would replace it with a local value).
+            spinner.SetCurrentValue(ValueProperty, value);
         }
     }
 
@@ -256,7 +257,8 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
         if (DoubleUtil.AreClose(value, spinner.Value) == false)
         {
-            spinner.Value = value;
+            // SetCurrentValue keeps a OneWay binding on Value (SetValue would replace it with a local value).
+            spinner.SetCurrentValue(ValueProperty, value);
         }
     }
 
@@ -515,12 +517,13 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
     private void OnButtonUpClick(object sender, RoutedEventArgs e)
     {
-        this.Value = GetLimitedValue(this, this.Value + this.Increment);
+        // SetCurrentValue keeps a OneWay binding on Value (SetValue would replace it with a local value).
+        this.SetCurrentValue(ValueProperty, GetLimitedValue(this, this.Value + this.Increment));
     }
 
     private void OnButtonDownClick(object sender, RoutedEventArgs e)
     {
-        this.Value = GetLimitedValue(this, this.Value - this.Increment);
+        this.SetCurrentValue(ValueProperty, GetLimitedValue(this, this.Value - this.Increment));
     }
 
     private void OnTextBoxLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -575,7 +578,8 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
         var converterParam = new Tuple<string, double>(this.Format, this.Value);
         var newValue = (double)this.TextToValueConverter.Convert(this.textBox!.Text, typeof(double), converterParam, CultureInfo.CurrentCulture);
 
-        this.Value = GetLimitedValue(this, newValue);
+        // SetCurrentValue keeps a OneWay binding on Value (SetValue would replace it with a local value).
+        this.SetCurrentValue(ValueProperty, GetLimitedValue(this, newValue));
 
         this.ValueToTextBoxText();
     }
