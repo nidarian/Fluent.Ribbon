@@ -177,8 +177,7 @@ public class RibbonTabsContainer : Panel, IScrollInfo
             X = -this.HorizontalOffset
         };
 
-        var orderedChildren = this.InternalChildren.OfType<RibbonTabItem>()
-            .OrderBy(x => x.IsContextual);
+        var orderedChildren = OrderByArrangement(this.InternalChildren.OfType<RibbonTabItem>());
 
         foreach (var item in orderedChildren)
         {
@@ -189,6 +188,17 @@ public class RibbonTabsContainer : Panel, IScrollInfo
         }
 
         return finalSize;
+    }
+
+    /// <summary>
+    /// Orders tabs the way <see cref="ArrangeOverride"/> places them from left to right:
+    /// normal tabs first, then contextual tabs, each in their collection order.
+    /// The keyboard and mouse wheel navigation in <see cref="RibbonTabControl"/> use this too,
+    /// so they move through the tabs in the order the user sees them.
+    /// </summary>
+    internal static IEnumerable<RibbonTabItem> OrderByArrangement(IEnumerable<RibbonTabItem> tabs)
+    {
+        return tabs.OrderBy(x => x.IsContextual);
     }
 
     /// <summary>
