@@ -99,6 +99,32 @@ public class RibbonContextMenuLeakTests
         }
     }
 
+    /// <summary>
+    /// A menu item only asks its command again whether it can execute when Command or CommandParameter change,
+    /// not when CommandTarget changes. The ribbon sets the target when the menu opens (and it's cleared on close),
+    /// so the items must be asked again right then, not only when WPF re-checks all commands after the next input.
+    /// </summary>
+    [Test]
+    public void Applicable_items_are_enabled_as_soon_as_the_context_menu_opened()
+    {
+        using (CreateWindow(out _, out var button))
+        {
+            // No dispatcher pumping and no requery: the menu opens synchronously in this call.
+            RaiseContextMenuOpening(button);
+
+            var isOpen = Ribbon.RibbonContextMenu.IsOpen;
+            var menuItem = GetAddToQuickAccessToolBarMenuItem();
+            var visibility = menuItem.Visibility;
+            var isEnabled = menuItem.IsEnabled;
+
+            CloseContextMenu();
+
+            Assert.That(isOpen, Is.True, "Precondition: the ribbon context menu is open");
+            Assert.That(visibility, Is.EqualTo(Visibility.Visible), "Precondition: the menu offers adding the button");
+            Assert.That(isEnabled, Is.True, "\"Add to Quick Access Toolbar\" should be enabled right after opening");
+        }
+    }
+
     [Test]
     public void Context_menu_commands_target_the_ribbon_it_was_opened_on()
     {
@@ -207,14 +233,7 @@ public class RibbonContextMenuLeakTests
     // with the element as its owner (which makes the element the menu's PlacementTarget).
     private static void OpenContextMenu(UIElement element)
     {
-        var serviceType = typeof(FrameworkElement).Assembly.GetType("System.Windows.Controls.PopupControlService", true);
-        var currentProperty = serviceType.GetProperty("Current", BindingFlags.Static | BindingFlags.NonPublic);
-        var raiseMethod = serviceType.GetMethod("RaiseContextMenuOpeningEvent", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(IInputElement), typeof(double), typeof(double), typeof(bool) }, null);
-
-        Assert.That(currentProperty, Is.Not.Null, "Precondition: PopupControlService.Current exists");
-        Assert.That(raiseMethod, Is.Not.Null, "Precondition: PopupControlService.RaiseContextMenuOpeningEvent exists");
-
-        raiseMethod.Invoke(currentProperty.GetValue(null, null), new object[] { element, -1.0, -1.0, false });
+        RaiseContextMenuOpening(element);
 
         // A real right click or key press is input, and after input WPF asks all commands again whether they can execute,
         // which enables or disables the menu items. Nothing here is real input, so ask for that explicitly.
@@ -223,6 +242,19 @@ public class RibbonContextMenuLeakTests
 
         Assert.That(Ribbon.RibbonContextMenu.IsOpen, Is.True, "Precondition: the ribbon context menu is open");
         Assert.That(Ribbon.RibbonContextMenu.PlacementTarget, Is.SameAs(element), "Precondition: the menu was opened on the element");
+    }
+
+    // Only the WPF call that opens the menu, without pumping the dispatcher or asking commands again.
+    private static void RaiseContextMenuOpening(UIElement element)
+    {
+        var serviceType = typeof(FrameworkElement).Assembly.GetType("System.Windows.Controls.PopupControlService", true);
+        var currentProperty = serviceType.GetProperty("Current", BindingFlags.Static | BindingFlags.NonPublic);
+        var raiseMethod = serviceType.GetMethod("RaiseContextMenuOpeningEvent", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(IInputElement), typeof(double), typeof(double), typeof(bool) }, null);
+
+        Assert.That(currentProperty, Is.Not.Null, "Precondition: PopupControlService.Current exists");
+        Assert.That(raiseMethod, Is.Not.Null, "Precondition: PopupControlService.RaiseContextMenuOpeningEvent exists");
+
+        raiseMethod.Invoke(currentProperty.GetValue(null, null), new object[] { element, -1.0, -1.0, false });
     }
 
     // Closes the menu like WPF does (for example on a click outside of it) and waits until it is really closed.
