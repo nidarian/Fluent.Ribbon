@@ -978,7 +978,8 @@ public class ColorGallery : Control
             listBox.SelectedItem = null;
         }
 
-        this.SelectedColor = null;
+        // SetCurrentValue keeps an app's OneWay binding on SelectedColor (see CommitColor).
+        this.SetCurrentValue(SelectedColorProperty, null);
         this.isSelectionChanging = false;
     }
 
@@ -1002,7 +1003,8 @@ public class ColorGallery : Control
             listBox.SelectedItem = null;
         }
 
-        this.SelectedColor = Colors.Transparent;
+        // SetCurrentValue keeps an app's OneWay binding on SelectedColor (see CommitColor).
+        this.SetCurrentValue(SelectedColorProperty, Colors.Transparent);
         this.isSelectionChanging = false;
     }
 
@@ -1087,7 +1089,9 @@ public class ColorGallery : Control
             }
         }
 
-        this.SelectedColor = color;
+        // SetCurrentValue instead of the CLR setter: SetValue would replace an app's OneWay binding on SelectedColor with a local value,
+        // so the view model could no longer update the gallery after the user picked a color.
+        this.SetCurrentValue(SelectedColorProperty, color);
         PopupService.RaiseDismissPopupEvent(this, DismissPopupMode.Always);
 
         this.isSelectionChanging = false;
