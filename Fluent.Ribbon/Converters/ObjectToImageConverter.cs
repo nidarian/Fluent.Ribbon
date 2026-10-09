@@ -286,7 +286,10 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
 
         if (imageSource is null)
         {
-            return value;
+            // A path or uri that could not be loaded shows no icon instead of the path as text.
+            return value is string or Uri
+                ? null
+                : value;
         }
 
         if (typeof(ImageSource).IsAssignableFrom(targetType))
@@ -440,7 +443,7 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
         return null;
     }
 
-    private static ImageSource CreateImageSource(string imagePath, Visual? targetVisual, Size desiredSize)
+    private static ImageSource? CreateImageSource(string imagePath, Visual? targetVisual, Size desiredSize)
     {
         var imageUri = new Uri(imagePath, UriKind.RelativeOrAbsolute);
 
@@ -464,7 +467,7 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
         return CreateImageSource(imageUri, targetVisual, desiredSize);
     }
 
-    private static ImageSource CreateImageSource(Uri imageUri, Visual? targetVisual, Size desiredSize)
+    private static ImageSource? CreateImageSource(Uri imageUri, Visual? targetVisual, Size desiredSize)
     {
         try
         {
@@ -477,6 +480,15 @@ public class ObjectToImageConverter : MarkupExtension, IValueConverter, IMultiVa
             Trace.WriteLine(exception);
 
             return imageNotFoundImageSource;
+        }
+        catch (Exception exception) when (exception is IOException or NotSupportedException or FileFormatException or UnauthorizedAccessException)
+        {
+            // The path often comes from a binding (e.g. Icon="{Binding IconPath}") and can be empty, point to a deleted file or to a file that is not an image.
+            // WPF does not catch exceptions thrown by converters, so throwing here would crash the application.
+            // Show no icon instead and report the failure in the debug output.
+            Trace.WriteLine($"Fluent.Ribbon: Could not load image from \"{imageUri}\". {exception}");
+
+            return null;
         }
     }
 
