@@ -83,6 +83,7 @@ conflict later.
 | `README.md` | This page. Start here. |
 | `FORK-BACKUP.md` | A sync or archive run failed |
 | `UPSTREAM-FIXES.md` | What each early fix does and its proof. Written for sending upstream, which is no longer planned |
+| `OPEN-ITEMS.md` | **What is still open:** bugs not fixed yet, small gaps, decisions, unchecked suspicions and checks for a person, on one page |
 | `APP-REVIEW-CHECKLIST.md` | Trying the fixes in my app |
 | `MEMORY-CHECK.md` | A program seems to eat memory over time: how to check for a leak with Task Manager, no coding needed |
 | `architecture/` | Before changing the library: state diagrams of the 7 main parts, each claim tied to a code line. Run `python3 .github/scripts/check-citations.py` to check they still match the code. |
