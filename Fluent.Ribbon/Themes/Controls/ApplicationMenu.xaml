@@ -123,6 +123,8 @@
     <Style x:Key="Fluent.Ribbon.Styles.ApplicationMenu"
            TargetType="{x:Type Fluent:ApplicationMenu}">
         <Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.AccentBase}" />
+        <!-- Bound like the Backstage button so the default KeyTip follows a runtime language switch. ApplicationMenu.CoerceKeys only covers the case without this style. -->
+        <Setter Property="Fluent:KeyTip.Keys" Value="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.BackstageButtonKeyTip, Mode=OneWay}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource Fluent.Ribbon.Styles.FocusVisual}" />
         <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.IdealForeground}" />
         <Setter Property="Header" Value="{converters:ObjectToImageConverter {DynamicResource Fluent.Ribbon.Images.ApplicationMenu}, '40,16', {Binding RelativeSource={RelativeSource Self}}}" />
