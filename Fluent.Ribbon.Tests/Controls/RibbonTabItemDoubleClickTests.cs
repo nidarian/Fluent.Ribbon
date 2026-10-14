@@ -14,6 +14,7 @@ using NUnit.Framework;
 /// The double-click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter (SetValue). A local value replaces
 /// a binding that comes from a style, so after one double-click the tabs no longer follow <see cref="Ribbon.IsMinimized"/>:
 /// minimizing or restoring the ribbon from code (or from an app setting bound to it) no longer changes what the user sees.
+/// The ribbons here turn <see cref="Ribbon.AutomaticStateManagement"/> off, so they don't load a minimized state saved by another test.
 /// </summary>
 [TestFixture]
 public class RibbonTabItemDoubleClickTests
@@ -22,7 +23,7 @@ public class RibbonTabItemDoubleClickTests
     public void Double_click_on_a_tab_keeps_the_tabs_following_Ribbon_IsMinimized()
     {
         var tab = new RibbonTabItem { Header = "Home" };
-        var ribbon = new Ribbon { CanMinimize = true };
+        var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
         ribbon.Tabs.Add(tab);
 
         using (new TestRibbonWindow(ribbon))
@@ -52,7 +53,7 @@ public class RibbonTabItemDoubleClickTests
     {
         var settings = new RibbonSettings();
         var tab = new RibbonTabItem { Header = "Home" };
-        var ribbon = new Ribbon { CanMinimize = true };
+        var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
         ribbon.Tabs.Add(tab);
         ribbon.SetBinding(Ribbon.IsMinimizedProperty, new Binding(nameof(RibbonSettings.IsMinimized)) { Source = settings, Mode = BindingMode.OneWay });
 
@@ -87,7 +88,7 @@ public class RibbonTabItemDoubleClickTests
     {
         var settings = new RibbonSettings();
         var tab = new RibbonTabItem { Header = "Home" };
-        var ribbon = new Ribbon { CanMinimize = true };
+        var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
         ribbon.Tabs.Add(tab);
         ribbon.SetBinding(Ribbon.IsMinimizedProperty, new Binding(nameof(RibbonSettings.IsMinimized)) { Source = settings, Mode = BindingMode.TwoWay });
 
@@ -121,7 +122,7 @@ public class RibbonTabItemDoubleClickTests
         var group = new RibbonContextualTabGroup { Header = "Tools", Visibility = Visibility.Visible };
         var tab = new RibbonTabItem { Header = "Home" };
         var contextualTab = new RibbonTabItem { Header = "Design", Group = group };
-        var ribbon = new Ribbon { CanMinimize = true };
+        var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
         ribbon.ContextualGroups.Add(group);
         ribbon.Tabs.Add(tab);
         ribbon.Tabs.Add(contextualTab);
@@ -156,7 +157,7 @@ public class RibbonTabItemDoubleClickTests
         var group = new RibbonContextualTabGroup { Header = "Tools", Visibility = Visibility.Visible };
         var tab = new RibbonTabItem { Header = "Home" };
         var contextualTab = new RibbonTabItem { Header = "Design", Group = group };
-        var ribbon = new Ribbon { CanMinimize = true };
+        var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
         ribbon.ContextualGroups.Add(group);
         ribbon.Tabs.Add(tab);
         ribbon.Tabs.Add(contextualTab);
