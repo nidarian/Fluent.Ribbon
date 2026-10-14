@@ -859,7 +859,12 @@ public class Ribbon : Control, ILogicalChildSupport
 
         if (e.OldValue is RibbonTitleBar oldValue)
         {
-            oldValue.ItemsSource = null;
+            // Only take our own contextual groups out: the old title bar may already show the groups of another ribbon
+            // (this ribbon was moved to another window and the app put a new ribbon into the old one).
+            if (ReferenceEquals(oldValue.ItemsSource, ribbon.ContextualGroups))
+            {
+                oldValue.ItemsSource = null;
+            }
 
             ribbon.RemoveQuickAccessToolBarFromTitleBar(oldValue);
         }
@@ -2119,6 +2124,18 @@ public class Ribbon : Control, ILogicalChildSupport
 
         this.AttachToWindow();
 
+        // The TitleBar and QuickAccessToolBarHeight bindings (FindAncestor IRibbonWindow, set in our style) keep the window
+        // they found first. When the ribbon was moved to another window they still point to the title bar of the old window:
+        // the new window would not show our toolbar and contextual groups, and the ribbon would keep the old (closed) window alive.
+        // Setting the bindings again makes them look for our current window.
+        if (this.TitleBar is not null
+            && this.ownerWindow is not null
+            && ReferenceEquals(Window.GetWindow(this.TitleBar), this.ownerWindow) == false)
+        {
+            RefreshBinding(this, TitleBarProperty);
+            RefreshBinding(this, QuickAccessToolBarHeightProperty);
+        }
+
         // Show our toolbar and contextual groups in the title bar again, if they were removed from it in OnUnloaded.
         // OnTitleBarChanged does not run again when the ribbon comes back to the same window.
         // Only for the title bar of our current window: the binding can still hold the title bar of an old window.
@@ -2137,6 +2154,16 @@ public class Ribbon : Control, ILogicalChildSupport
         this.LoadInitialState();
 
         this.TitleBar?.ScheduleForceMeasureAndArrange();
+    }
+
+    private static void RefreshBinding(DependencyObject target, DependencyProperty property)
+    {
+        var bindingExpression = BindingOperations.GetBindingExpression(target, property);
+
+        if (bindingExpression is not null)
+        {
+            BindingOperations.SetBinding(target, property, bindingExpression.ParentBinding);
+        }
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
