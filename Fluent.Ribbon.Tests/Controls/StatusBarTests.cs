@@ -1,8 +1,10 @@
 ﻿namespace Fluent.Tests.Controls;
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
@@ -207,6 +209,85 @@ public class StatusBarTests
         }
     }
 
+    // An app can also hide or show a status bar item by setting its Visibility directly (or through a binding)
+    // instead of unchecking it. The separators were only recalculated on Checked/Unchecked, menu rebuilds and
+    // collection changes, so hiding B left the two separators around it showing as a doubled gap.
+    [Test]
+    public void Setting_Item_Visibility_Should_Update_Separators()
+    {
+        var (statusBar, _, _, b, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            b.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }), "B is collapsed, so the second separator directly follows the first one and should be collapsed.");
+
+            b.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "B is visible again, so both separators should be visible again.");
+        }
+    }
+
+    [Test]
+    public void Binding_Item_Visibility_Should_Update_Separators()
+    {
+        var (statusBar, _, _, b, _, _) = CreateStatusBarWithSeparators();
+        var state = new VisibilityState { Visibility = Visibility.Visible };
+        b.SetBinding(UIElement.VisibilityProperty, new Binding(nameof(VisibilityState.Visibility)) { Source = state, Mode = BindingMode.OneWay });
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            state.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(b.Visibility, Is.EqualTo(Visibility.Collapsed), "Precondition: the binding collapsed B.");
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }), "B is collapsed through the binding, so the second separator should be collapsed.");
+
+            state.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "B is visible again through the binding, so both separators should be visible again.");
+        }
+    }
+
+    [Test]
+    public void Collapsing_First_Item_Should_Collapse_Leading_Separator()
+    {
+        var (statusBar, a, s1, _, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            a.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Collapsed), "Nothing visible stands before the first separator now, so it should be collapsed.");
+
+            a.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Visible), "A is visible again, so the first separator should be visible again.");
+        }
+    }
+
     private static (StatusBar StatusBar, StatusBarItem A, System.Windows.Controls.Separator S1, StatusBarItem B, System.Windows.Controls.Separator S2, StatusBarItem C) CreateStatusBarWithSeparators()
     {
         var a = new StatusBarItem { Title = "A", Value = "A" };
@@ -276,5 +357,27 @@ public class StatusBarTests
                 ? statusBar.ItemContainerGenerator.ItemFromContainer(menuItem.StatusBarItem)
                 : x)
             .ToArray();
+    }
+
+    private sealed class VisibilityState : INotifyPropertyChanged
+    {
+        private Visibility visibility;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Visibility Visibility
+        {
+            get => this.visibility;
+            set
+            {
+                if (this.visibility == value)
+                {
+                    return;
+                }
+
+                this.visibility = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Visibility)));
+            }
+        }
     }
 }
