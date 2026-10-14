@@ -147,6 +147,73 @@ public class SpinnerOneWayBindingTests
         Assert.That(model.Zoom, Is.EqualTo(3), "The view model should receive the limited value.");
     }
 
+    [Test]
+    public void QuickAccessCopy_ButtonUp_Should_Keep_OneWay_Binding()
+    {
+        var model = new SpinnerModel { Zoom = 5 };
+        var spinner = CreateSpinner(model, BindingMode.OneWay);
+        var copy = (Spinner)spinner.CreateQuickAccessItem();
+
+        using (new TestRibbonWindow(new System.Windows.Controls.StackPanel { Children = { spinner, copy } }))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(copy.Value, Is.EqualTo(5), "Precondition: the copy should show the value of the original.");
+
+            ClickButton(copy, "PART_ButtonUp");
+
+            Assert.That(copy.Value, Is.EqualTo(6), "Precondition: the up button of the copy should increment the value.");
+            Assert.That(spinner.Value, Is.EqualTo(6), "Precondition: the original should get the value of the copy.");
+
+            AssertSpinnerFollowsModel(spinner, model);
+            Assert.That(copy.Value, Is.EqualTo(2), "The copy should follow the original again.");
+        }
+    }
+
+    [Test]
+    public void QuickAccessCopy_Typed_Text_Should_Keep_OneWay_Binding()
+    {
+        var model = new SpinnerModel { Zoom = 5 };
+        var spinner = CreateSpinner(model, BindingMode.OneWay);
+        var copy = (Spinner)spinner.CreateQuickAccessItem();
+
+        using (new TestRibbonWindow(new System.Windows.Controls.StackPanel { Children = { spinner, copy } }))
+        {
+            UIHelper.DoEvents();
+
+            TypeText(copy, "7");
+
+            Assert.That(copy.Value, Is.EqualTo(7), "Precondition: the typed text should be committed to the Value of the copy.");
+            Assert.That(spinner.Value, Is.EqualTo(7), "Precondition: the original should get the value of the copy.");
+
+            AssertSpinnerFollowsModel(spinner, model);
+            Assert.That(copy.Value, Is.EqualTo(2), "The copy should follow the original again.");
+        }
+    }
+
+    [Test]
+    public void QuickAccessCopy_ButtonUp_Should_Still_Update_TwoWay_Source()
+    {
+        var model = new SpinnerModel { Zoom = 5 };
+        var spinner = CreateSpinner(model, BindingMode.TwoWay);
+        var copy = (Spinner)spinner.CreateQuickAccessItem();
+
+        using (new TestRibbonWindow(new System.Windows.Controls.StackPanel { Children = { spinner, copy } }))
+        {
+            UIHelper.DoEvents();
+
+            ClickButton(copy, "PART_ButtonUp");
+
+            Assert.That(model.Zoom, Is.EqualTo(6), "The view model should receive the value from the up button of the copy.");
+            Assert.That(spinner.Value, Is.EqualTo(6), "The original should get the value of the copy.");
+
+            model.Zoom = 2;
+
+            Assert.That(spinner.Value, Is.EqualTo(2), "Spinner should follow the view model.");
+            Assert.That(copy.Value, Is.EqualTo(2), "The copy should follow the original.");
+        }
+    }
+
     private static Spinner CreateSpinner(SpinnerModel model, BindingMode mode)
     {
         var spinner = new Spinner
