@@ -1,4 +1,4 @@
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -370,6 +370,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
 
         DefaultStyleKeyProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(type));
         SelectedItemProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(OnSelectedItemChanged, CoerceSelectedItem));
+        TextProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(OnTextChangedForQuickAccess));
         MaxDropDownHeightProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(double.NaN, null, DropDownHelper.CoerceMaxDropDownHeight));
 
         ToolTipService.Attach(type);
@@ -385,6 +386,19 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
             && combo.quickAccessCombo is not null)
         {
             combo.UpdateQuickAccessCombo();
+        }
+    }
+
+    private static void OnTextChangedForQuickAccess(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        // A quick access copy writes its text (typed by the user or set from its selection) back to its original.
+        // SetCurrentValue keeps a OneWay binding on the original's Text (a TwoWay binding from the copy would write it with SetValue and replace it with a local value).
+        // TwoWay bindings on the original still get the new text.
+        var combo = (ComboBox)d;
+        if (combo.quickAccessOriginal is not null
+            && Equals(combo.quickAccessOriginal.Text, e.NewValue) == false)
+        {
+            combo.quickAccessOriginal.SetCurrentValue(TextProperty, e.NewValue);
         }
     }
 
@@ -423,7 +437,9 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         RibbonControl.Bind(this, combo, nameof(this.IsEditable), IsEditableProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, combo, nameof(this.IsReadOnly), IsReadOnlyProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, combo, nameof(this.ResizeMode), ResizeModeProperty, BindingMode.OneWay);
-        RibbonControl.Bind(this, combo, nameof(this.Text), TextProperty, BindingMode.TwoWay);
+        // OneWay: the copy writes its text back in OnTextChangedForQuickAccess, so bindings on the original's Text are kept.
+        RibbonControl.Bind(this, combo, nameof(this.Text), TextProperty, BindingMode.OneWay);
+        combo.quickAccessOriginal = this;
 
         RibbonControl.Bind(this, combo, nameof(this.MaxDropDownHeight), MaxDropDownHeightProperty, BindingMode.OneWay);
 
@@ -475,6 +491,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
     private bool isQuickAccessOpened;
     private object? selectedItem;
     private ComboBox? quickAccessCombo;
+    private ComboBox? quickAccessOriginal;
 
     private void OnQuickAccessOpened(object? sender, EventArgs e)
     {
@@ -563,7 +580,8 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         this.Menu = this.quickAccessCombo.Menu;
         this.quickAccessCombo.Menu = null;
         this.IsSnapped = false;
-        this.Text = text;
+        // SetCurrentValue keeps a OneWay binding on Text (SetValue would replace it with a local value).
+        this.SetCurrentValue(TextProperty, text);
         this.UpdateLayout();
     }
 
