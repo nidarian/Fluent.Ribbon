@@ -890,6 +890,30 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
     }
 
     /// <summary>
+    /// Minimizes or restores the tabs for a user action (double-click on a tab, click on a contextual group header).
+    /// </summary>
+    /// <remarks>
+    /// The style binds <see cref="IsMinimized"/> TwoWay to <see cref="Ribbon.IsMinimized"/>.
+    /// Writing <see cref="IsMinimized"/> here would go through that binding, which sets <see cref="Ribbon.IsMinimized"/> with SetValue
+    /// and so replaces an app's OneWay binding on it (the app's setting would no longer minimize or restore the ribbon).
+    /// So the owning ribbon is changed with SetCurrentValue and the style binding brings the value to the tabs.
+    /// SetCurrentValue on the tabs themselves is only needed if they don't follow the ribbon (no ribbon, or a custom style without that binding).
+    /// </remarks>
+    internal void SetIsMinimizedFromUserAction(bool value)
+    {
+        if (this.TemplatedParent is Ribbon ribbon
+            && ReferenceEquals(ribbon.TabControl, this))
+        {
+            ribbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.Box(value));
+        }
+
+        if (this.IsMinimized != value)
+        {
+            this.SetCurrentValue(IsMinimizedProperty, BooleanBoxes.Box(value));
+        }
+    }
+
+    /// <summary>
     /// Selects the first tab if <see cref="IsMinimized"/> is <c>false</c>.
     /// </summary>
     public void SelectFirstTab()
