@@ -250,6 +250,58 @@ public class RibbonTests
     }
 
     /// <summary>
+    /// The remove command's executed handler looks up the toolbar copy with First(...), which would throw
+    /// an InvalidOperationException for a parameter that isn't a toolbar copy. Apps can call
+    /// RemoveFromQuickAccessCommand.Execute(parameter, ribbon) directly, so this checks that such a call
+    /// is refused quietly (WPF checks the command's can-execute before running the handler) and removes nothing,
+    /// while removing a real toolbar copy still works.
+    /// </summary>
+    [Test]
+    public void RemoveFromQuickAccessCommand_with_a_parameter_not_on_the_toolbar_does_nothing()
+    {
+        var pinned = new Fluent.Button { Header = "Pinned" };
+        var notPinned = new Fluent.Button { Header = "NotPinned" };
+        var ribbon = new Ribbon
+        {
+            Tabs =
+            {
+                new RibbonTabItem
+                {
+                    Header = "Tab",
+                    Groups = { new RibbonGroupBox { Header = "Group", Items = { pinned, notPinned } } }
+                }
+            }
+        };
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.QuickAccessToolBar, Is.Not.Null, "Precondition: the ribbon has its toolbar");
+
+            ribbon.AddToQuickAccessToolBar(pinned);
+            Assert.That(ribbon.IsInQuickAccessToolBar(pinned), Is.True, "Precondition: the element is pinned");
+            var copy = ribbon.GetQuickAccessElements()[pinned];
+
+            // A control that isn't on the toolbar at all, the original of a pinned control (the command expects
+            // the toolbar copy), and no parameter.
+            foreach (var parameter in new object[] { notPinned, pinned, null })
+            {
+                Assert.That(Ribbon.RemoveFromQuickAccessCommand.CanExecute(parameter, ribbon), Is.False, $"Removing {parameter ?? "null"} must not be offered");
+                Assert.That(() => Ribbon.RemoveFromQuickAccessCommand.Execute(parameter, ribbon), Throws.Nothing, $"Executing for {parameter ?? "null"} must not throw");
+                Assert.That(ribbon.IsInQuickAccessToolBar(pinned), Is.True, $"Executing for {parameter ?? "null"} must not remove anything");
+                Assert.That(ribbon.QuickAccessToolBar.Items, Does.Contain(copy), $"Executing for {parameter ?? "null"} must keep the toolbar copy");
+            }
+
+            // The command still removes a real toolbar copy, so the calls above did reach the command.
+            Assert.That(Ribbon.RemoveFromQuickAccessCommand.CanExecute(copy, ribbon), Is.True, "Removing the toolbar copy must be offered");
+            Ribbon.RemoveFromQuickAccessCommand.Execute(copy, ribbon);
+            Assert.That(ribbon.IsInQuickAccessToolBar(pinned), Is.False, "Executing for the toolbar copy removes it");
+            Assert.That(ribbon.QuickAccessToolBar.Items, Does.Not.Contain(copy));
+        }
+    }
+
+    /// <summary>
     /// Apps often restore their Quick Access Toolbar in the window's constructor, right after
     /// InitializeComponent. The Ribbon has no template yet at that point, so it has no toolbar:
     /// AddToQuickAccessToolBar recorded the element but had nowhere to put its toolbar copy, and
