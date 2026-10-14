@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -437,6 +437,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         RibbonControl.Bind(this, combo, nameof(this.IsEditable), IsEditableProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, combo, nameof(this.IsReadOnly), IsReadOnlyProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, combo, nameof(this.ResizeMode), ResizeModeProperty, BindingMode.OneWay);
+
         // OneWay: the copy writes its text back in OnTextChangedForQuickAccess, so bindings on the original's Text are kept.
         RibbonControl.Bind(this, combo, nameof(this.Text), TextProperty, BindingMode.OneWay);
         combo.quickAccessOriginal = this;
@@ -580,6 +581,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         this.Menu = this.quickAccessCombo.Menu;
         this.quickAccessCombo.Menu = null;
         this.IsSnapped = false;
+
         // SetCurrentValue keeps a OneWay binding on Text (SetValue would replace it with a local value).
         this.SetCurrentValue(TextProperty, text);
         this.UpdateLayout();
