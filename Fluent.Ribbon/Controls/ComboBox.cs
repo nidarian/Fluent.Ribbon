@@ -370,7 +370,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
 
         DefaultStyleKeyProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(type));
         SelectedItemProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(OnSelectedItemChanged, CoerceSelectedItem));
-        TextProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(OnTextChangedForQuickAccess));
+        TextProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(OnTextChanged));
         MaxDropDownHeightProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(double.NaN, null, DropDownHelper.CoerceMaxDropDownHeight));
 
         ToolTipService.Attach(type);
@@ -389,7 +389,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         }
     }
 
-    private static void OnTextChangedForQuickAccess(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         // A quick access copy writes its text (typed by the user or set from its selection) back to its original.
         // SetCurrentValue keeps a OneWay binding on the original's Text (a TwoWay binding from the copy would write it with SetValue and replace it with a local value).
@@ -438,7 +438,7 @@ public class ComboBox : System.Windows.Controls.ComboBox, IQuickAccessItemProvid
         RibbonControl.Bind(this, combo, nameof(this.IsReadOnly), IsReadOnlyProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, combo, nameof(this.ResizeMode), ResizeModeProperty, BindingMode.OneWay);
 
-        // OneWay: the copy writes its text back in OnTextChangedForQuickAccess, so bindings on the original's Text are kept.
+        // OneWay: the copy writes its text back in OnTextChanged, so bindings on the original's Text are kept.
         RibbonControl.Bind(this, combo, nameof(this.Text), TextProperty, BindingMode.OneWay);
         combo.quickAccessOriginal = this;
 
