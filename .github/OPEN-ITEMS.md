@@ -1,7 +1,8 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-10-10, after round 6 (package
-build #383, 1179/1179 tests). Each item points to the note with the details.
+One page for all loose ends. Status: 2026-10-14, after round 7 (round 7 is on
+`integration/next`, see `architecture/ROUND7.md`; the package branch is still at
+round 6, build #383). Each item points to the note with the details.
 When an item is done, delete it here and record it in that note.
 
 The older lists in `architecture/FINDINGS.md` ("Confirmed, not fixed") and
@@ -10,20 +11,16 @@ The older lists in `architecture/FINDINGS.md` ("Confirmed, not fixed") and
 
 ## 1. Proven bugs without a fix yet
 
-| Bug | Proof | Details |
-|---|---|---|
-| Double-clicking a tab can cut the tabs off from `Ribbon.IsMinimized`, so the app's "minimized" setting stops working | Tests-only build #376 failed; branch `fix/tab-doubleclick-keeps-minimized-binding` has the test, no fix yet | `ROUND6.md` |
+None. The tab double-click item was fixed in round 7, and corrected: build #376
+had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-All the same kind as fixes already made: the control stops following the app's
-data (a OneWay binding is replaced) or a value isn't refreshed.
-
-- A Spinner's toolbar copy: its arrows can drop a OneWay `Value` binding on the original. (`ROUND6.md`)
-- A ComboBox's toolbar copy can drop a OneWay `Text` binding on the original. (`ROUND6.md`)
 - Opening an InRibbonGallery's toolbar copy can push `SelectedItem = null` into the app's binding. Needs a redesign of how the copy borrows the items. (`ROUND4.md`, "Not fixed")
-- The ApplicationMenu's default KeyTip doesn't follow a runtime language switch. (`ROUND4.md`, "Not fixed")
-- Hiding a status bar item through `Visibility` (not the status bar's menu) doesn't tidy the separators. (`ROUND6.md`)
+- UI Automation Expand/Collapse of the Ribbon (`RibbonAutomationPeer`) can drop an app's OneWay binding on `Ribbon.IsMinimized`. (`ROUND7.md`)
+
+The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
+StatusBar `Visibility` gaps were fixed in round 7.
 
 ## 3. Decisions for the owner
 
@@ -37,13 +34,12 @@ data (a OneWay binding is replaced) or a value isn't refreshed.
 
 ## 4. Suspicions not checked yet (need a test)
 
-From code reading only; any of them may turn out fine.
+All five were tested in round 7 (`architecture/ROUND7.md`): the Backstage reopen
+and the moved ribbon were real bugs and are fixed; DismissOnClickOutside, the
+RemoveFromQuickAccess command and the StatusBar menu order were ruled out.
 
-- Reopening the Backstage during its close animation may hide it while `IsOpen` is true. (`FINDINGS.md`, "Still open")
-- `DropDownButton.DismissOnClickOutside = false` keeps mouse capture, so clicks elsewhere do nothing until Esc. Maybe intended. (`FINDINGS.md`)
-- `RemoveFromQuickAccessCommand` with a parameter that isn't on the toolbar could throw if WPF skipped its can-execute check (it normally doesn't). (`FINDINGS.md`)
-- A StatusBar item added at runtime may land one place too early in the "Customize" menu; round 6 reading says the menu rebuild puts it right, but it was never tested. (`ROUND4.md`, `ROUND6.md`)
-- A ribbon moved from one window to another (memory and title bar). (`MEMORY-LEAKS.md`)
+Left untested: a ribbon moved from a plain window into a RibbonWindow, and
+back-and-forth moves.
 
 ## 5. Checks only a person can do (on a Windows PC)
 
