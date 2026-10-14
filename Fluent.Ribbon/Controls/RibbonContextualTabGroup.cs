@@ -309,7 +309,8 @@ public class RibbonContextualTabGroup : Control
             {
                 if (firstVisibleItem.TabControlParent.IsMinimized)
                 {
-                    firstVisibleItem.TabControlParent.IsMinimized = false;
+                    // Not the CLR setter: it would cut the tabs off from Ribbon.IsMinimized (see SetIsMinimizedFromUserAction).
+                    firstVisibleItem.TabControlParent.SetIsMinimizedFromUserAction(false);
                 }
 
                 firstVisibleItem.IsSelected = true;

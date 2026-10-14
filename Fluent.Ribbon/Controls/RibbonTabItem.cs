@@ -645,7 +645,8 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
                 var canMinimize = this.TabControlParent.CanMinimize;
                 if (canMinimize)
                 {
-                    this.TabControlParent.IsMinimized = !this.TabControlParent.IsMinimized;
+                    // Not the CLR setter: it would cut the tabs off from Ribbon.IsMinimized (see SetIsMinimizedFromUserAction).
+                    this.TabControlParent.SetIsMinimizedFromUserAction(!this.TabControlParent.IsMinimized);
                 }
             }
         }
