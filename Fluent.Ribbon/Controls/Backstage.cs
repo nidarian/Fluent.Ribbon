@@ -398,6 +398,10 @@ public class Backstage : RibbonControl
             {
                 this.parentRibbon.TabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
                 this.parentRibbon.TabControl.HighlightSelectedItem = false;
+
+                // Unsubscribe first: when the backstage is reopened during its close animation, the ribbon was never restored
+                // (see HideAdornerAndRestoreParentProperties), so the handler is still attached.
+                this.parentRibbon.TabControl.RequestBackstageClose -= this.HandleTabControlRequestBackstageClose;
                 this.parentRibbon.TabControl.RequestBackstageClose += this.HandleTabControlRequestBackstageClose;
             }
 
@@ -422,6 +426,8 @@ public class Backstage : RibbonControl
 
         if (this.ownerWindow is not null)
         {
+            // Unsubscribe first, for the same reason as RequestBackstageClose above.
+            this.ownerWindow.KeyDown -= this.HandleOwnerWindowKeyDown;
             this.ownerWindow.KeyDown += this.HandleOwnerWindowKeyDown;
 
             // We are using an Adorner, so we have to collapse WindowsFormsHost while Backstage is open to draw above them.
@@ -556,6 +562,16 @@ public class Backstage : RibbonControl
 
         void HandleStoryboardOnCompleted(object? sender, EventArgs args)
         {
+            storyboard.Completed -= HandleStoryboardOnCompleted;
+
+            // The backstage was opened again while this close animation was still running.
+            // The open animation replaced this one, but this handler still runs when the old animation ends.
+            // Hiding the adorner and restoring the ribbon now would hide the open backstage.
+            if (this.IsOpen)
+            {
+                return;
+            }
+
             if (this.adorner is not null)
             {
                 this.adorner.Visibility = Visibility.Collapsed;
@@ -567,8 +583,6 @@ public class Backstage : RibbonControl
             }
 
             this.RestoreParentProperties();
-
-            storyboard.Completed -= HandleStoryboardOnCompleted;
 
             this.Focus();
         }
