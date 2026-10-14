@@ -240,6 +240,18 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
         this.UpdateSeparartorsVisibility();
     }
 
+    // Called by StatusBarItem when its Visibility changes (set directly or through a binding, not only via IsChecked).
+    // While containers are being generated the menu rebuild queued afterwards updates the separators anyway.
+    internal void OnItemVisibilityChanged()
+    {
+        if (this.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+        {
+            return;
+        }
+
+        this.UpdateSeparartorsVisibility();
+    }
+
     #endregion
 
     #region Private Methods
