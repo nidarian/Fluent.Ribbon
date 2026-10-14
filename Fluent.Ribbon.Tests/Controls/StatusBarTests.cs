@@ -40,6 +40,54 @@ public class StatusBarTests
         }
     }
 
+    // When an item is added at runtime, the Add branch of OnItemsChanged inserts the new context menu entry at the
+    // item's index, while Move/Remove/Replace use index + 1, because entry 0 of the menu is the "Customize Status Bar"
+    // header. So the new entry could land one place too early (before the entry of the item it was inserted before).
+    // The menu is also rebuilt from scratch when the generator finishes generating containers (queued on the
+    // dispatcher), which might put it right again. These tests check the menu after that queued work has run, which
+    // is the state the user sees when opening the menu.
+    [Test]
+    public void Inserting_Item_At_Runtime_Should_Put_Context_Menu_Entry_At_Same_Position()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Insert(1, d);
+            UIHelper.DoEvents();
+
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should follow the order of the status bar items.");
+            AssertEachMenuEntryTogglesItsItem(statusBar);
+        }
+    }
+
+    [Test]
+    public void Adding_Item_At_End_At_Runtime_Should_Put_Context_Menu_Entry_At_End()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Add(d);
+            UIHelper.DoEvents();
+
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c, d }), "Context menu entries should follow the order of the status bar items.");
+            AssertEachMenuEntryTogglesItsItem(statusBar);
+        }
+    }
+
     // Issue #708: an app wants a ToolTip ("Zoom") and a ContextMenu (zoom presets) on the zoom slider in the status bar.
     // WPF shows a ContextMenu when a right click (MouseUp, right button) stays unhandled; it then uses the ContextMenu
     // of the nearest element up from the clicked one. So neither the ZoomSlider template parts nor the StatusBar
@@ -223,6 +271,59 @@ public class StatusBarTests
         statusBar.Items.Add(c);
 
         return (statusBar, a, s1, b, s2, c);
+    }
+
+    private static (StatusBar StatusBar, StatusBarItem A, StatusBarItem B, StatusBarItem C) CreateStatusBarWithItems()
+    {
+        var a = new StatusBarItem { Title = "A", Value = "A" };
+        var b = new StatusBarItem { Title = "B", Value = "B" };
+        var c = new StatusBarItem { Title = "C", Value = "C" };
+
+        var statusBar = new StatusBar();
+        statusBar.Items.Add(a);
+        statusBar.Items.Add(b);
+        statusBar.Items.Add(c);
+
+        return (statusBar, a, b, c);
+    }
+
+    // Opens the "Customize Status Bar" menu and unchecks/checks every entry like a click does
+    // (SetCurrentValue keeps the style's two-way binding), then checks that exactly the status bar item
+    // at the same position was hidden and shown again.
+    private static void AssertEachMenuEntryTogglesItsItem(StatusBar statusBar)
+    {
+        var contextMenu = statusBar.ContextMenu;
+        contextMenu.PlacementTarget = statusBar;
+        contextMenu.IsOpen = true;
+        UIHelper.DoEvents();
+
+        try
+        {
+            var entries = contextMenu.Items.Cast<object>().Skip(1).ToArray();
+
+            Assert.That(entries, Has.Length.EqualTo(statusBar.Items.Count), "Header plus one menu entry per status bar item.");
+
+            for (var i = 0; i < entries.Length; i++)
+            {
+                var entry = (StatusBarMenuItem)entries[i];
+
+                entry.SetCurrentValue(System.Windows.Controls.MenuItem.IsCheckedProperty, false);
+                UIHelper.DoEvents();
+
+                var hidden = statusBar.Items.Cast<StatusBarItem>().Where(x => x.IsChecked == false).ToArray();
+                Assert.That(hidden, Is.EqualTo(new[] { statusBar.Items[i] }), $"Unchecking menu entry {i + 1} should hide only status bar item {i}.");
+
+                entry.SetCurrentValue(System.Windows.Controls.MenuItem.IsCheckedProperty, true);
+                UIHelper.DoEvents();
+
+                Assert.That(statusBar.Items.Cast<StatusBarItem>().All(x => x.IsChecked), Is.True, $"Checking menu entry {i + 1} again should show status bar item {i} again.");
+            }
+        }
+        finally
+        {
+            contextMenu.IsOpen = false;
+            UIHelper.DoEvents();
+        }
     }
 
     private static Visibility[] GetSeparatorVisibilities(StatusBar statusBar)
