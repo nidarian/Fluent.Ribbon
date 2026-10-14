@@ -47,7 +47,7 @@ fixed.
 ## Combined
 
 All 10 branches are merged into `integration/next` (on top of
-`integration/all-fixes` b0470d30) at 6714e6c7. Combined build: pending.
+`integration/all-fixes` b0470d30) at 6714e6c7. Combined build **#405: 1207/1207 on net462, net6.0 and net8.0**.
 
 ## Still open after this round
 
