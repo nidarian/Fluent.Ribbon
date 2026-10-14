@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Fluent.Helpers;
+using Fluent.Internal;
 using Fluent.Internal.KnownBoxes;
 using Windows.Win32;
 
@@ -196,12 +197,15 @@ public class WindowCommands : ItemsControl, IDisposable
         }
 
         var chars = new char[256];
-        if (PInvoke.LoadString(this.user32, id, chars.AsSpan(), 256) == 0)
+        var length = PInvoke.LoadString(this.user32, id, chars.AsSpan(), 256);
+        if (length <= 0)
         {
             return $"String with id '{id}' could not be found.";
         }
+
+        // Only use the characters LoadString copied. The rest of the buffer is '\0' and would otherwise end up in the caption (Uid, automation name, tooltip).
 #pragma warning disable CA1307 // Specify StringComparison for clarity
-        return new string(chars).Replace("&", string.Empty);
+        return new string(chars, 0, length).Replace("&", string.Empty);
 #pragma warning restore CA1307 // Specify StringComparison for clarity
     }
 
@@ -242,7 +246,29 @@ public class WindowCommands : ItemsControl, IDisposable
     {
         base.OnMouseRightButtonDown(e);
 
+        // Right clicks on the app's own items (PART_Items) belong to those items, for example to open their context menu.
+        // The system menu is modal and swallows the button up, so their context menu could never open.
+        if (e.Handled
+            || this.IsInsideItems(e.OriginalSource as DependencyObject))
+        {
+            return;
+        }
+
         WindowSteeringHelper.ShowSystemMenu(this, e);
+    }
+
+    private bool IsInsideItems(DependencyObject? element)
+    {
+        var itemsControl = this.ItemsControl;
+
+        if (itemsControl is null
+            || element is null)
+        {
+            return false;
+        }
+
+        return ReferenceEquals(element, itemsControl)
+               || UIHelper.GetParent<ItemsControl>(element, x => ReferenceEquals(x, itemsControl)) is not null;
     }
 
     private void MinimizeClick(object sender, RoutedEventArgs e)

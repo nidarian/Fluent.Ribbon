@@ -306,16 +306,43 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
 
             {
                 var isSimplified = this.IsSimplified;
-                foreach (var item in e.NewItems.NullSafe().OfType<UIElement>())
-                {
-                    this.groupsInnerContainer.Children.Add(item);
 
-                    if (item is ISimplifiedStateControl control)
+                // Groups[i] = x must show the new group at index i, not at the end of the tab.
+                for (var i = 0; i < e.NewItems?.Count; i++)
+                {
+                    var element = (UIElement?)e.NewItems![i];
+
+                    if (element is not null)
+                    {
+                        this.groupsInnerContainer.Children.Insert(e.NewStartingIndex + i, element);
+                    }
+
+                    if (element is ISimplifiedStateControl control)
                     {
                         control.UpdateSimplifiedState(isSimplified);
                     }
                 }
             }
+
+                break;
+
+            case NotifyCollectionChangedAction.Move:
+                // Groups.Move only changes the order. The groups are shown in the order of the panel's children,
+                // so they have to be moved there too.
+                foreach (var item in e.OldItems.NullSafe().OfType<UIElement>())
+                {
+                    this.groupsInnerContainer.Children.Remove(item);
+                }
+
+                for (var i = 0; i < e.NewItems?.Count; i++)
+                {
+                    var element = (UIElement?)e.NewItems![i];
+
+                    if (element is not null)
+                    {
+                        this.groupsInnerContainer.Children.Insert(e.NewStartingIndex + i, element);
+                    }
+                }
 
                 break;
 
@@ -567,6 +594,21 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
         }
 
         return baseConstraint;
+    }
+
+    /// <inheritdoc />
+    protected override void OnVisualParentChanged(DependencyObject oldParent)
+    {
+        base.OnVisualParentChanged(oldParent);
+
+        // A contextual tab only counts for its group while it is shown in the ribbon (see RibbonContextualTabGroup.IsVisibleInRibbon).
+        // Removing it from the ribbon or adding it again changes that, so the group and the title bar have to be updated.
+        if (this.Group is not null)
+        {
+            this.Group.UpdateInnerVisiblityAndGroupBorders();
+
+            UIHelper.GetParent<RibbonTitleBar>(this.Group)?.ScheduleForceMeasureAndArrange();
+        }
     }
 
     /// <inheritdoc />

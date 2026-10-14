@@ -113,20 +113,55 @@ public class CollectionSyncHelper<TItem>
                 break;
 
             case NotifyCollectionChangedAction.Replace:
-                if (e.OldItems is not null)
+                // The new items have to take the place of the old ones.
+                // Adding them at the end put Target in another order than Source.
+                if (e.OldStartingIndex >= 0
+                    && e.NewStartingIndex >= 0)
                 {
-                    foreach (var item in e.OldItems)
+                    for (var i = 0; i < e.OldItems?.Count; i++)
                     {
-                        this.Target.Remove(item);
+                        this.Target.RemoveAt(e.OldStartingIndex);
+                    }
+
+                    for (var i = 0; i < e.NewItems?.Count; i++)
+                    {
+                        this.Target.Insert(e.NewStartingIndex + i, e.NewItems![i]);
+                    }
+                }
+                else
+                {
+                    // Without indexes (only possible for custom collections) the place is unknown.
+                    if (e.OldItems is not null)
+                    {
+                        foreach (var item in e.OldItems)
+                        {
+                            this.Target.Remove(item);
+                        }
+                    }
+
+                    if (e.NewItems is not null)
+                    {
+                        foreach (var item in e.NewItems)
+                        {
+                            this.Target.Add(item);
+                        }
                     }
                 }
 
-                if (e.NewItems is not null)
+                break;
+
+            case NotifyCollectionChangedAction.Move:
+                // ObservableCollection<T>.Move moves a single item, but a derived collection could move a block of items.
+                // The block is taken out at its old index and put back so that it starts at its new index (as in Source).
+                // Without this case Target kept the old order.
+                for (var i = 0; i < e.OldItems?.Count; i++)
                 {
-                    foreach (var item in e.NewItems)
-                    {
-                        this.Target.Add(item);
-                    }
+                    this.Target.RemoveAt(e.OldStartingIndex);
+                }
+
+                for (var i = 0; i < e.NewItems?.Count; i++)
+                {
+                    this.Target.Insert(e.NewStartingIndex + i, e.NewItems![i]);
                 }
 
                 break;

@@ -56,8 +56,9 @@ public class RibbonContextualGroupsContainer : Panel
             // Calculate width of tab items of the group
             var tabsWidth = 0D;
 
-            // We have to look at visible and items which already got measured only
-            var visibleItems = contextualGroup.Items.Where(item => item.Visibility == Visibility.Visible && DoubleUtil.AreClose(item.DesiredSize.Width, 0) == false).ToList();
+            // We have to look at visible and items which already got measured only.
+            // Tabs removed from the ribbon keep their old DesiredSize, so they must not count.
+            var visibleItems = contextualGroup.Items.Where(item => RibbonContextualTabGroup.IsVisibleInRibbon(item) && DoubleUtil.AreClose(item.DesiredSize.Width, 0) == false).ToList();
 
             foreach (var item in visibleItems)
             {

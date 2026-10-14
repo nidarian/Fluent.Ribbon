@@ -711,9 +711,21 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
         VisibilityProperty.AddOwner(type, new PropertyMetadata(OnVisibilityChanged));
         FontSizeProperty.AddOwner(type, new FrameworkPropertyMetadata(OnFontSizeChanged));
         FontFamilyProperty.AddOwner(type, new FrameworkPropertyMetadata(OnFontFamilyChanged));
+        System.Windows.Controls.ToolTipService.IsEnabledProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(null, CoerceToolTipIsEnabled));
 
         PopupService.Attach(type);
         ContextMenuService.Attach(type);
+    }
+
+    private static object CoerceToolTipIsEnabled(DependencyObject d, object basevalue)
+    {
+        var box = (RibbonGroupBox)d;
+
+        // The tooltip would cover the open drop down, so it is always off while the drop down is open.
+        // Otherwise keep the app's value (local value, style setter or binding, for example a "Show ScreenTips" setting).
+        return box.IsDropDownOpen
+            ? BooleanBoxes.FalseBox
+            : basevalue;
     }
 
     private static void OnVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -1136,7 +1148,8 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
         var oldValue = (bool)e.OldValue;
         var newValue = (bool)e.NewValue;
 
-        groupBox.SetValue(System.Windows.Controls.ToolTipService.IsEnabledProperty, BooleanBoxes.Box(!newValue));
+        // Coerce instead of SetValue, so the app's value or binding for ToolTipService.IsEnabled isn't replaced.
+        groupBox.CoerceValue(System.Windows.Controls.ToolTipService.IsEnabledProperty);
 
         groupBox.OnIsDropDownOpenChanged();
 

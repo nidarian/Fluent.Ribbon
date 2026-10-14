@@ -1,9 +1,11 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace Fluent;
 
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
@@ -296,10 +298,56 @@ public class ToggleButton : System.Windows.Controls.Primitives.ToggleButton, ITo
         var button = new ToggleButton();
 
         RibbonControl.BindQuickAccessItem(this, button);
+        BindQuickAccessGroupName(this, button);
 
         button.Click += (sender, e) => this.RaiseEvent(e);
 
         return button;
+    }
+
+    /// <summary>
+    /// Binds the <see cref="GroupName"/> of a quick access item to the GroupName of the control it was created from.
+    /// </summary>
+    /// <remarks>
+    /// A checked control with a GroupName stays checked when it is clicked again (#481).
+    /// Without a GroupName the quick access item would toggle itself off instead and uncheck the source through the IsChecked binding,
+    /// leaving the group without any checked control.
+    /// The item can't simply reuse the GroupName of the source either: it would then be in the same group as the source
+    /// and uncheck it as soon as it gets checked through the IsChecked binding.
+    /// So items of controls sharing a group get a group name of their own, like the quick access items of <see cref="RadioButton"/>.
+    /// </remarks>
+    internal static void BindQuickAccessGroupName(FrameworkElement source, ToggleButton quickAccessItem)
+    {
+        var groupNameBinding = new Binding(nameof(GroupName))
+        {
+            Source = source,
+            Mode = BindingMode.OneWay,
+            Converter = QuickAccessGroupNameConverterInstance
+        };
+        quickAccessItem.SetBinding(GroupNameProperty, groupNameBinding);
+    }
+
+    private static readonly QuickAccessGroupNameConverter QuickAccessGroupNameConverterInstance = new();
+
+    /// <summary>
+    /// Maps the GroupName of a source control to the GroupName of its quick access item.
+    /// </summary>
+    private sealed class QuickAccessGroupNameConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            var groupName = value as string;
+
+            // Controls without GroupName are plain toggles, so their quick access items must stay plain toggles, too.
+            return string.IsNullOrEmpty(groupName)
+                ? null
+                : "Fluent.QuickAccess.Group." + groupName;
+        }
+
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            return Binding.DoNothing;
+        }
     }
 
     /// <inheritdoc />

@@ -809,7 +809,11 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
     {
         var control = (DropDownButton)d;
 
-        return BooleanBoxes.Box(!control.IsDropDownOpen);
+        // The tooltip would cover the open drop down, so it is always off while the drop down is open.
+        // Otherwise keep the app's value (local value, style setter or binding, for example a "Show ScreenTips" setting).
+        return control.IsDropDownOpen
+            ? BooleanBoxes.FalseBox
+            : basevalue;
     }
 
     #endregion
@@ -856,7 +860,8 @@ public class DropDownButton : ItemsControl, IQuickAccessItemProvider, IRibbonCon
         // Any open or close invalidates delayed closes that were scheduled before it.
         this.dropDownOpenGeneration++;
 
-        this.SetValue(System.Windows.Controls.ToolTipService.IsEnabledProperty, BooleanBoxes.Box(!newValue));
+        // Coerce instead of SetValue, so the app's value or binding for ToolTipService.IsEnabled isn't replaced.
+        this.CoerceValue(System.Windows.Controls.ToolTipService.IsEnabledProperty);
 
         Debug.WriteLine($"{this.Header} IsDropDownOpen: {newValue.ToString()}");
 

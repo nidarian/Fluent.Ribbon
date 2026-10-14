@@ -223,6 +223,11 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
                 break;
             }
         }
+
+        // Removing, replacing or moving items can leave a separator leading or directly after another separator
+        // (or make a collapsed one necessary again), so the separators have to be recalculated here too.
+        // Removing doesn't regenerate containers, so the menu rebuild (which also does this) doesn't run then.
+        this.UpdateSeparartorsVisibility();
     }
 
     private void OnItemUnchecked(object sender, RoutedEventArgs e)

@@ -152,6 +152,59 @@ public class CreateQuickAccessItemTests
         }
     }
 
+    // A checked ToggleButton with a GroupName stays checked when it is clicked again (#481),
+    // so a group like "align left/center/right" always has exactly one selected button.
+    // The quick access item must behave the same, otherwise clicking it unchecks the original through the IsChecked binding.
+    [Test]
+    public void ToggleButton_With_GroupName_Stays_Checked_When_Its_Checked_Quick_Access_Item_Is_Clicked()
+    {
+        var sourceA = new ToggleButton { GroupName = "g", IsChecked = true };
+        var sourceB = new ToggleButton { GroupName = "g" };
+
+        var itemA = (ToggleButton)sourceA.CreateQuickAccessItem();
+        var itemB = (ToggleButton)sourceB.CreateQuickAccessItem();
+
+        using (CreateWindow(sourceA, sourceB, itemA, itemB))
+        {
+            Assert.That(itemA.IsChecked, Is.True, "Precondition: item A mirrors source A.");
+
+            itemA.InvokeClick();
+            UIHelper.DoEvents();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(sourceA.IsChecked, Is.True, "Clicking the checked quick access item must not uncheck the original.");
+                Assert.That(itemA.IsChecked, Is.True);
+                Assert.That(sourceB.IsChecked, Is.False);
+                Assert.That(itemB.IsChecked, Is.False);
+            }
+        }
+    }
+
+    [Test]
+    public void ToggleButton_With_GroupName_Clicking_Unchecked_Quick_Access_Item_Checks_Its_Source_And_Unchecks_Others()
+    {
+        var sourceA = new ToggleButton { GroupName = "g", IsChecked = true };
+        var sourceB = new ToggleButton { GroupName = "g" };
+
+        var itemA = (ToggleButton)sourceA.CreateQuickAccessItem();
+        var itemB = (ToggleButton)sourceB.CreateQuickAccessItem();
+
+        using (CreateWindow(sourceA, sourceB, itemA, itemB))
+        {
+            itemB.InvokeClick();
+            UIHelper.DoEvents();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(sourceB.IsChecked, Is.True);
+                Assert.That(itemB.IsChecked, Is.True);
+                Assert.That(sourceA.IsChecked, Is.False);
+                Assert.That(itemA.IsChecked, Is.False);
+            }
+        }
+    }
+
     #endregion
 
     #region TextBox
@@ -736,6 +789,58 @@ public class CreateQuickAccessItemTests
 
         Assert.That(((IHeaderedControl)item).Header, Is.EqualTo("Header"));
         Assert.That(item.ToolTip, Is.EqualTo("Header"));
+    }
+
+    // Same as for ToggleButton: a checkable MenuItem with a GroupName stays checked when it is clicked again,
+    // so its quick access item must not uncheck it either.
+    [Test]
+    public void MenuItem_Checkable_With_GroupName_Stays_Checked_When_Its_Checked_Quick_Access_Item_Is_Clicked()
+    {
+        var sourceA = new MenuItem { IsCheckable = true, GroupName = "g", IsChecked = true };
+        var sourceB = new MenuItem { IsCheckable = true, GroupName = "g" };
+
+        var itemA = (ToggleButton)sourceA.CreateQuickAccessItem();
+        var itemB = (ToggleButton)sourceB.CreateQuickAccessItem();
+
+        using (CreateWindow(sourceA, sourceB, itemA, itemB))
+        {
+            Assert.That(itemA.IsChecked, Is.True, "Precondition: item A mirrors source A.");
+
+            itemA.InvokeClick();
+            UIHelper.DoEvents();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(sourceA.IsChecked, Is.True, "Clicking the checked quick access item must not uncheck the original.");
+                Assert.That(itemA.IsChecked, Is.True);
+                Assert.That(sourceB.IsChecked, Is.False);
+                Assert.That(itemB.IsChecked, Is.False);
+            }
+        }
+    }
+
+    [Test]
+    public void MenuItem_Checkable_With_GroupName_Clicking_Unchecked_Quick_Access_Item_Checks_Its_Source_And_Unchecks_Others()
+    {
+        var sourceA = new MenuItem { IsCheckable = true, GroupName = "g", IsChecked = true };
+        var sourceB = new MenuItem { IsCheckable = true, GroupName = "g" };
+
+        var itemA = (ToggleButton)sourceA.CreateQuickAccessItem();
+        var itemB = (ToggleButton)sourceB.CreateQuickAccessItem();
+
+        using (CreateWindow(sourceA, sourceB, itemA, itemB))
+        {
+            itemB.InvokeClick();
+            UIHelper.DoEvents();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(sourceB.IsChecked, Is.True);
+                Assert.That(itemB.IsChecked, Is.True);
+                Assert.That(sourceA.IsChecked, Is.False);
+                Assert.That(itemA.IsChecked, Is.False);
+            }
+        }
     }
 
     #endregion

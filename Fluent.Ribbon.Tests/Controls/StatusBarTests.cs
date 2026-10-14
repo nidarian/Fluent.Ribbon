@@ -101,6 +101,163 @@ public class StatusBarTests
         }
     }
 
+    // StatusBar hides a Separator when nothing visible stands before it (leading) or when the
+    // visible element before it is another Separator (doubled gap). That rule ran only when an
+    // item was checked/unchecked or the context menu was rebuilt, not when items were removed,
+    // so removing an item left a doubled or leading separator gap visible.
+    [Test]
+    public void Removing_Item_Between_Separators_Should_Collapse_Doubled_Separator()
+    {
+        var (statusBar, _, s1, b, s2, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            statusBar.Items.Remove(b);
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s2.Visibility, Is.EqualTo(Visibility.Collapsed), "The second separator directly follows the first one now and should be collapsed.");
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Visible));
+        }
+    }
+
+    [Test]
+    public void Removing_First_Item_Should_Collapse_Leading_Separator()
+    {
+        var (statusBar, a, s1, _, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            statusBar.Items.Remove(a);
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Collapsed), "The first separator is the leading element now and should be collapsed.");
+        }
+    }
+
+    [Test]
+    public void Removing_Separator_Should_Show_Separator_That_Was_Collapsed_As_Doubled()
+    {
+        var (statusBar, _, s1, b, s2, _) = CreateStatusBarWithSeparators();
+        b.IsChecked = false;
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }), "Precondition: the second separator is collapsed because B is hidden.");
+
+            statusBar.Items.Remove(s1);
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s2.Visibility, Is.EqualTo(Visibility.Visible), "The remaining separator now stands between A and C and should be visible.");
+        }
+    }
+
+    [Test]
+    public void Replacing_Item_With_Hidden_Item_Should_Collapse_Doubled_Separator()
+    {
+        var (statusBar, _, _, _, s2, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            statusBar.Items[2] = new StatusBarItem { Title = "Hidden", Value = "Hidden", IsChecked = false };
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s2.Visibility, Is.EqualTo(Visibility.Collapsed), "Only a hidden item stands between the separators now, so the second one should be collapsed.");
+        }
+    }
+
+    // Guard for the existing behaviour: unchecking/checking an item updates the separators.
+    [Test]
+    public void Unchecking_And_Checking_Item_Should_Update_Separators()
+    {
+        var (statusBar, _, _, b, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            b.IsChecked = false;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }));
+
+            b.IsChecked = true;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }));
+        }
+    }
+
+    private static (StatusBar StatusBar, StatusBarItem A, System.Windows.Controls.Separator S1, StatusBarItem B, System.Windows.Controls.Separator S2, StatusBarItem C) CreateStatusBarWithSeparators()
+    {
+        var a = new StatusBarItem { Title = "A", Value = "A" };
+        var s1 = new System.Windows.Controls.Separator();
+        var b = new StatusBarItem { Title = "B", Value = "B" };
+        var s2 = new System.Windows.Controls.Separator();
+        var c = new StatusBarItem { Title = "C", Value = "C" };
+
+        var statusBar = new StatusBar();
+        statusBar.Items.Add(a);
+        statusBar.Items.Add(s1);
+        statusBar.Items.Add(b);
+        statusBar.Items.Add(s2);
+        statusBar.Items.Add(c);
+
+        return (statusBar, a, s1, b, s2, c);
+    }
+
+    private static Visibility[] GetSeparatorVisibilities(StatusBar statusBar)
+    {
+        return statusBar.Items
+            .OfType<System.Windows.Controls.Separator>()
+            .Select(x => x.Visibility)
+            .ToArray();
+    }
+
+    // The rule StatusBar applies: a separator is collapsed when no visible item stands before it,
+    // either at the start or since the previous separator; otherwise it is visible.
+    private static void AssertSeparatorsFollowRule(StatusBar statusBar)
+    {
+        var visibleItemSinceLastSeparator = false;
+
+        for (var i = 0; i < statusBar.Items.Count; i++)
+        {
+            if (statusBar.Items[i] is System.Windows.Controls.Separator separator)
+            {
+                var expected = visibleItemSinceLastSeparator
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+
+                Assert.That(separator.Visibility, Is.EqualTo(expected), $"Separator at index {i} should be {expected}.");
+
+                visibleItemSinceLastSeparator = false;
+            }
+            else if (statusBar.Items[i] is StatusBarItem { Visibility: Visibility.Visible })
+            {
+                visibleItemSinceLastSeparator = true;
+            }
+        }
+    }
+
     private static MouseButtonEventArgs RightButtonArgs(RoutedEvent routedEvent)
     {
         return new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)

@@ -66,10 +66,11 @@ public class ScreenTip : ToolTip, ILogicalChildSupport
         // Exclude QAT items
         var notQuickAccessItem = !IsQuickAccessItem(this.PlacementTarget);
         var notContextMenuChild = !IsContextMenuChild(this.PlacementTarget);
+
+        // popupSize is already in device pixels, so it must not be scaled by the DPI again (same as popupSize.Height below)
         var rightToLeftOffset = this.FlowDirection == FlowDirection.RightToLeft
             ? -popupSize.Width
             : 0;
-        var rightToLeftOffsetScaled = rightToLeftOffset * dpiScale.DpiScaleX;
 
         var decoratorChild = GetDecoratorChild(topLevelElement);
 
@@ -81,8 +82,8 @@ public class ScreenTip : ToolTip, ILogicalChildSupport
             belowY *= dpiScale.DpiScaleY;
             var aboveY = (ribbon.TranslatePoint(new Point(0, 0), this.PlacementTarget).Y * dpiScale.DpiScaleY) - popupSize.Height;
 
-            var below = new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, belowY + 1), PopupPrimaryAxis.Horizontal);
-            var above = new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, aboveY - 1), PopupPrimaryAxis.Horizontal);
+            var below = new CustomPopupPlacement(new Point(rightToLeftOffset, belowY + 1), PopupPrimaryAxis.Horizontal);
+            var above = new CustomPopupPlacement(new Point(rightToLeftOffset, aboveY - 1), PopupPrimaryAxis.Horizontal);
             return new[] { below, above };
         }
 
@@ -97,15 +98,15 @@ public class ScreenTip : ToolTip, ILogicalChildSupport
             belowY *= dpiScale.DpiScaleY;
             var aboveY = (decoratorChild.TranslatePoint(new Point(0, 0), this.PlacementTarget).Y * dpiScale.DpiScaleY) - popupSize.Height;
 
-            var below = new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, belowY + 1), PopupPrimaryAxis.Horizontal);
-            var above = new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, aboveY - 1), PopupPrimaryAxis.Horizontal);
+            var below = new CustomPopupPlacement(new Point(rightToLeftOffset, belowY + 1), PopupPrimaryAxis.Horizontal);
+            var above = new CustomPopupPlacement(new Point(rightToLeftOffset, aboveY - 1), PopupPrimaryAxis.Horizontal);
             return new[] { below, above };
         }
 
         return new[]
         {
-            new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, (this.PlacementTarget.RenderSize.Height + 1) * dpiScale.DpiScaleY), PopupPrimaryAxis.Horizontal),
-            new CustomPopupPlacement(new Point(rightToLeftOffsetScaled, -popupSize.Height - 1), PopupPrimaryAxis.Horizontal)
+            new CustomPopupPlacement(new Point(rightToLeftOffset, (this.PlacementTarget.RenderSize.Height + 1) * dpiScale.DpiScaleY), PopupPrimaryAxis.Horizontal),
+            new CustomPopupPlacement(new Point(rightToLeftOffset, -popupSize.Height - 1), PopupPrimaryAxis.Horizontal)
         };
     }
 

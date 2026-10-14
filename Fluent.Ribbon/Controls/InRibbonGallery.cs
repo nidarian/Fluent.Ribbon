@@ -65,6 +65,11 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
     private bool isButtonClicked;
 
+    // Set when Reduce collapsed the gallery to a button (all columns were already removed).
+    // OnSizePropertyChanged must keep such a gallery collapsed even when its size is Large again,
+    // until Enlarge or ResetScale undoes that reduce step.
+    private bool isCollapsedByReduce;
+
     private ResizeableContentControl? popupContentControl;
 
     internal GalleryPanelState? CurrentGalleryPanelState { get; private set; }
@@ -804,6 +809,19 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
                 return;
             }
 
+            // Unsnapping must always discard the snapshot, even when invisible or collapsed.
+            // OnUnloaded closes the drop down when the gallery is already invisible (e.g. tab switch).
+            // Keeping the snapshot there would show the old picture with its old size on the next opening.
+            if (value == false)
+            {
+                this.snappedImage.Source = null;
+                this.snappedImage.Width = 0;
+                this.snappedImage.Height = 0;
+
+                this.isSnapped = false;
+                return;
+            }
+
             if (this.IsCollapsed)
             {
                 return;
@@ -1295,8 +1313,11 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     {
         if (this.CanAutomaticallyChangeIsCollapsed())
         {
+            // Reduce and Enlarge only change galleryPanel.MaxItemsInRow, so galleryPanel.MinItemsInRow
+            // always equals MinItemsInRow and can't tell whether the gallery was reduced to a button.
+            // Use the flag set by Reduce instead, otherwise the gallery stays collapsed when its group becomes Large again.
             if (current == RibbonControlSize.Large
-                && this.galleryPanel?.MinItemsInRow > this.MinItemsInRow)
+                && this.isCollapsedByReduce == false)
             {
                 this.SetCurrentValue(IsCollapsedProperty, BooleanBoxes.FalseBox);
             }
@@ -1520,6 +1541,8 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
     /// <inheritdoc />
     public void ResetScale()
     {
+        this.isCollapsedByReduce = false;
+
         if (this.CanAutomaticallyChangeIsCollapsed()
             && RibbonProperties.GetSize(this) == RibbonControlSize.Large)
         {
@@ -1542,7 +1565,14 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
             && this.IsCollapsed
             && RibbonProperties.GetSize(this) == RibbonControlSize.Large)
         {
+            this.isCollapsedByReduce = false;
             this.SetCurrentValue(IsCollapsedProperty, BooleanBoxes.FalseBox);
+        }
+        else if (this.isCollapsedByReduce)
+        {
+            // Undo the reduce step that collapsed the gallery while it is not Large (it stays a button for now).
+            // OnSizePropertyChanged expands it when its size becomes Large again.
+            this.isCollapsedByReduce = false;
         }
         else if (this.galleryPanel is not null
                  && this.galleryPanel.MaxItemsInRow < this.MaxItemsInRow)
@@ -1570,6 +1600,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
         else if (this.CanAutomaticallyChangeIsCollapsed()
                  && this.IsCollapsed == false)
         {
+            this.isCollapsedByReduce = true;
             this.SetCurrentValue(IsCollapsedProperty, BooleanBoxes.TrueBox);
         }
         else
