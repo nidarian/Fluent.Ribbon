@@ -11,9 +11,11 @@ using NUnit.Framework;
 /// <summary>
 /// Double-clicking a tab minimizes or restores the ribbon. The ribbon's <see cref="RibbonTabControl"/> gets its
 /// <see cref="RibbonTabControl.IsMinimized"/> from <see cref="Ribbon.IsMinimized"/> through a TwoWay binding set in its style.
-/// The double-click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter (SetValue). A local value replaces
-/// a binding that comes from a style, so after one double-click the tabs no longer follow <see cref="Ribbon.IsMinimized"/>:
-/// minimizing or restoring the ribbon from code (or from an app setting bound to it) no longer changes what the user sees.
+/// The double-click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter (SetValue). That keeps the style binding
+/// (it is TwoWay, so the value goes through it), but the binding then writes <see cref="Ribbon.IsMinimized"/> with SetValue as well,
+/// and that replaces an app's OneWay binding on <see cref="Ribbon.IsMinimized"/>: after one double-click the app's setting no longer
+/// minimizes or restores the ribbon. The tests without an app binding or with a TwoWay one guard the behaviour that already worked
+/// (the tabs keep following <see cref="Ribbon.IsMinimized"/>, the double-click reaches a TwoWay source).
 /// The ribbons here turn <see cref="Ribbon.AutomaticStateManagement"/> off, so they don't load a minimized state saved by another test.
 /// </summary>
 [TestFixture]
@@ -114,7 +116,8 @@ public class RibbonTabItemDoubleClickTests
 
     /// <summary>
     /// Clicking the header of a contextual tab group while the ribbon is minimized restores the tabs.
-    /// That click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter too, with the same result as the double-click.
+    /// That click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter too, with the same result as the double-click
+    /// (an app's OneWay binding on <see cref="Ribbon.IsMinimized"/> is replaced).
     /// </summary>
     [Test]
     public void Click_on_a_contextual_group_header_keeps_the_tabs_following_Ribbon_IsMinimized()
