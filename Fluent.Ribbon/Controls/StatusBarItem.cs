@@ -143,6 +143,21 @@ public class StatusBarItem : System.Windows.Controls.Primitives.StatusBarItem
         ContentProperty.AddOwner(typeof(StatusBarItem), new FrameworkPropertyMetadata(OnContentChanged, CoerceContent));
     }
 
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        // An app can hide or show the item by setting Visibility directly (or through a binding) instead of IsChecked.
+        // The parent StatusBar has to recalculate its separators then too, otherwise leading or doubled separator gaps stay visible.
+        // The StatusBar only changes the Visibility of separators, which are no StatusBarItems, so this can't loop.
+        if (e.Property == VisibilityProperty
+            && System.Windows.Controls.ItemsControl.ItemsControlFromItemContainer(this) is StatusBar statusBar)
+        {
+            statusBar.OnItemVisibilityChanged();
+        }
+    }
+
     // Content changing handler
     private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
