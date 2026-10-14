@@ -1,6 +1,7 @@
 ﻿namespace Fluent.Tests.Controls;
 
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using Fluent.Tests.Helper;
@@ -110,6 +111,80 @@ public class RibbonTabItemDoubleClickTests
         }
     }
 
+    /// <summary>
+    /// Clicking the header of a contextual tab group while the ribbon is minimized restores the tabs.
+    /// That click wrote <see cref="RibbonTabControl.IsMinimized"/> with its CLR setter too, with the same result as the double-click.
+    /// </summary>
+    [Test]
+    public void Click_on_a_contextual_group_header_keeps_the_tabs_following_Ribbon_IsMinimized()
+    {
+        var group = new RibbonContextualTabGroup { Header = "Tools", Visibility = Visibility.Visible };
+        var tab = new RibbonTabItem { Header = "Home" };
+        var contextualTab = new RibbonTabItem { Header = "Design", Group = group };
+        var ribbon = new Ribbon { CanMinimize = true };
+        ribbon.ContextualGroups.Add(group);
+        ribbon.Tabs.Add(tab);
+        ribbon.Tabs.Add(contextualTab);
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var tabControl = Prepare(ribbon, tab);
+
+            ribbon.IsMinimized = true;
+            UIHelper.DoEvents();
+            Assert.That(tabControl.IsMinimized, Is.True, "Precondition: minimizing the ribbon from code must minimize the tabs.");
+            Assert.That(group.FirstVisibleAndEnabledItem, Is.SameAs(contextualTab), "Precondition: the contextual tab must be shown in the ribbon.");
+
+            ClickGroupHeader(group);
+
+            Assert.That(tabControl.IsMinimized, Is.False, "Precondition: the click on the group header must restore the tabs.");
+            Assert.That(ribbon.IsMinimized, Is.False, "The click on the group header must reach Ribbon.IsMinimized.");
+            Assert.That(contextualTab.IsSelected, Is.True, "Precondition: the click on the group header must select its first tab.");
+
+            ribbon.IsMinimized = true;
+            Assert.That(tabControl.IsMinimized, Is.True, "After the click on the group header the tabs must still follow Ribbon.IsMinimized (minimize from code).");
+
+            ribbon.IsMinimized = false;
+            Assert.That(tabControl.IsMinimized, Is.False, "After the click on the group header the tabs must still follow Ribbon.IsMinimized (restore from code).");
+        }
+    }
+
+    [Test]
+    public void Click_on_a_contextual_group_header_keeps_a_OneWay_binding_on_Ribbon_IsMinimized()
+    {
+        var settings = new RibbonSettings { IsMinimized = true };
+        var group = new RibbonContextualTabGroup { Header = "Tools", Visibility = Visibility.Visible };
+        var tab = new RibbonTabItem { Header = "Home" };
+        var contextualTab = new RibbonTabItem { Header = "Design", Group = group };
+        var ribbon = new Ribbon { CanMinimize = true };
+        ribbon.ContextualGroups.Add(group);
+        ribbon.Tabs.Add(tab);
+        ribbon.Tabs.Add(contextualTab);
+        ribbon.SetBinding(Ribbon.IsMinimizedProperty, new Binding(nameof(RibbonSettings.IsMinimized)) { Source = settings, Mode = BindingMode.OneWay });
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            ribbon.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            var tabControl = ribbon.TabControl;
+            Assert.That(tabControl, Is.Not.Null, "Precondition: the ribbon template must create its RibbonTabControl.");
+            Assert.That(tabControl!.IsMinimized, Is.True, "Precondition: the app's settings minimize the tabs.");
+
+            ClickGroupHeader(group);
+
+            Assert.That(tabControl.IsMinimized, Is.False, "Precondition: the click on the group header must restore the tabs.");
+            Assert.That(ribbon.IsMinimized, Is.False, "The click on the group header must reach Ribbon.IsMinimized.");
+            Assert.That(BindingOperations.GetBindingExpression(ribbon, Ribbon.IsMinimizedProperty), Is.Not.Null, "The app's OneWay binding on Ribbon.IsMinimized was lost.");
+
+            // The settings still hold the old value (OneWay never wrote back), so set the changed value first to get a change notification through.
+            settings.IsMinimized = false;
+            settings.IsMinimized = true;
+            Assert.That(ribbon.IsMinimized, Is.True, "The app's settings must still minimize the ribbon.");
+            Assert.That(tabControl.IsMinimized, Is.True, "The app's settings must still minimize the tabs.");
+        }
+    }
+
     private static RibbonTabControl Prepare(Ribbon ribbon, RibbonTabItem tab)
     {
         ribbon.ApplyTemplate();
@@ -145,6 +220,31 @@ public class RibbonTabItemDoubleClickTests
             UIHelper.DoEvents();
 
             Assert.That(down.Handled, Is.True, "Precondition: the tab must handle the double-click.");
+        }
+        finally
+        {
+            Mouse.Capture(null);
+        }
+    }
+
+    // Simulates the release of a single click on the group header: MouseUp bubbles from the group and
+    // UIElement re-raises it as MouseLeftButtonUp with the same args (RibbonContextualTabGroup handles ClickCount == 1 in OnMouseLeftButtonUp).
+    private static void ClickGroupHeader(RibbonContextualTabGroup group)
+    {
+        try
+        {
+            var up = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+            {
+                RoutedEvent = Mouse.MouseUpEvent
+            };
+
+            typeof(MouseButtonEventArgs).GetProperty(nameof(MouseButtonEventArgs.ClickCount)).SetValue(up, 1);
+            Assert.That(up.ClickCount, Is.EqualTo(1), "Precondition: the simulated release must be a single click.");
+
+            group.RaiseEvent(up);
+            UIHelper.DoEvents();
+
+            Assert.That(up.Handled, Is.True, "Precondition: the group header must handle the click.");
         }
         finally
         {
