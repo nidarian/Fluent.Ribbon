@@ -13,47 +13,50 @@ using NUnit.Framework;
 /// (<see cref="BackstageReopenDuringCloseTests"/>), assuming that the reopen started a new open animation.
 /// A <see cref="StartScreen"/> is only shown once: setting IsOpen again after that shows nothing.
 /// So a StartScreen closed and set open again during its close animation was left half drawn over the window,
-/// with the ribbon still in start screen mode. Found by a review of round 7.
+/// with the ribbon still in start screen mode. Found by a review of round 7. The first test reproduces the same mechanism
+/// with a Backstage; the StartScreen itself goes through the same code but is not tested here.
 /// </summary>
 [TestFixture]
 public class StartScreenReopenDuringCloseTests
 {
+    /// <summary>
+    /// The same mechanism without a StartScreen (whose setup isn't reliable in these tests): IsOpen becomes true again during the
+    /// close animation, but Show returns early and starts no new open animation, here because the backstage has no content any more.
+    /// The end of the close animation must still hide the backstage and give the ribbon back its normal state.
+    /// </summary>
     [Test]
-    public void StartScreen_set_open_again_during_its_close_animation_is_still_hidden()
+    public void Backstage_set_open_again_during_its_close_animation_without_a_new_show_is_still_hidden()
     {
-        var startScreen = new StartScreen
-        {
-            Content = new StartScreenTabControl(),
-            AreAnimationsEnabled = true,
-            IsOpen = true
-        };
-
-        var ribbon = new Ribbon { StartScreen = startScreen };
+        var backstage = new Backstage { Content = new System.Windows.Controls.Button { Content = "Inside" }, AreAnimationsEnabled = true };
+        var ribbon = new Ribbon { Menu = backstage };
 
         using (new TestRibbonWindow(ribbon))
         {
-            PumpDispatcherFor(TimeSpan.FromSeconds(1));
-
-            Assert.That(startScreen.Shown, Is.True, "Precondition: the start screen was shown");
-            Assert.That(GetAdorner(startScreen).Visibility, Is.EqualTo(Visibility.Visible), "Precondition: the start screen is displayed");
-
-            startScreen.IsOpen = false;
             UIHelper.DoEvents();
 
-            if (GetAdorner(startScreen).Visibility != Visibility.Visible)
+            backstage.IsOpen = true;
+            PumpDispatcherFor(TimeSpan.FromSeconds(1));
+            Assert.That(GetAdorner(backstage), Is.Not.Null, "Precondition: the backstage has its adorner after opening");
+            Assert.That(GetAdorner(backstage).Visibility, Is.EqualTo(Visibility.Visible), "Precondition: the backstage is displayed after opening");
+
+            backstage.IsOpen = false;
+            UIHelper.DoEvents();
+
+            if (GetAdorner(backstage).Visibility != Visibility.Visible)
             {
-                Assert.Inconclusive("The close animation already completed before the start screen could be set open again.");
+                Assert.Inconclusive("The close animation already completed before the backstage could be set open again.");
             }
 
-            // A start screen is shown only once, so this shows nothing.
-            startScreen.IsOpen = true;
+            // Show returns early without content (like a StartScreen that was already shown), so nothing new is shown.
+            backstage.Content = null;
+            backstage.IsOpen = true;
 
             PumpDispatcherFor(TimeSpan.FromSeconds(2));
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(GetAdorner(startScreen).Visibility, Is.EqualTo(Visibility.Collapsed), "The start screen must not stay drawn over the window after its close animation");
-                Assert.That(ribbon.IsBackstageOrStartScreenOpen, Is.False, "The ribbon must leave start screen mode");
+                Assert.That(GetAdorner(backstage).Visibility, Is.EqualTo(Visibility.Collapsed), "The backstage must not stay drawn over the window after its close animation");
+                Assert.That(ribbon.IsBackstageOrStartScreenOpen, Is.False, "The ribbon must leave backstage mode");
             }
         }
     }
