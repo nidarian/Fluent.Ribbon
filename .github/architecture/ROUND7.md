@@ -63,6 +63,7 @@ not touched.
 | A ribbon moved from a plain `Window` into a `RibbonWindow` never found the new title bar | The new window's title bar showed neither the Quick Access Toolbar nor the contextual group headers | `fix/ribbon-moved-from-plain-window` | #408 → #413 |
 | A StatusBar item inserted at runtime got its "Customize Status Bar" entry one place too early until the queued menu rebuild ran | Nothing a user could see (the rebuild runs first); code reading the menu right after the insert saw the wrong order. Now consistent with Move, Remove and Replace | `fix/statusbar-add-menu-index-immediate` | #409 → #411 |
 | Opening an InRibbonGallery's toolbar copy pushed `null` into the app's `SelectedItem` binding (`-1` into `SelectedIndex`) and back, and replaced a OneWay binding | Each time the copy opened, the app was told "nothing selected" (an app applying the selection, a font or a style, applied nothing for a moment); with a OneWay binding the gallery stopped following the app | `fix/inribbongallery-qat-copy-keeps-selection-binding` | #418 → #422 (#420: first try didn't fix TwoWay bindings) |
+| `Ribbon.SelectedTabIndex` and `SelectedTabItem` replaced an app's OneWay binding (their default: neither binds TwoWay by default) | An app with `SelectedTabIndex="{Binding CurrentTab}"` could never select tabs from its view model: the binding was already gone once the ribbon had loaded | `fix/selectedtab-keeps-oneway-binding` | #428 → #430 |
 
 Tests that already passed and stay as guards (in
 `RibbonMovedToOtherWindowTests`): a ribbon moved from a `RibbonWindow` into a
@@ -75,7 +76,8 @@ Re-checked: `fix/spinner-qat-copy-keeps-oneway-value` built green again (#407).
 
 Combined: the first three branches are merged into `integration/next` at 1a601e90,
 combined build **#414 green** on net462, net6.0 and net8.0. The gallery fix
-followed at 2fe5e15b, combined build **#424 green**.
+followed at 2fe5e15b, combined build **#424 green**; the selected-tab fix at
+e959bfb4, combined build running (result recorded here when done).
 
 ### The InRibbonGallery fix: no redesign needed
 

@@ -97,5 +97,5 @@ conflict later.
 | `architecture/HIGH-CONTRAST.md` | Turning on Windows High Contrast support, and what it doesn't cover yet |
 | `architecture/ROUND5.md` | Round 5: the window, contextual tabs and galleries (11 fixes, each with its fail and pass build), what was rejected, and what's left for the owner |
 | `architecture/ROUND6.md` | Round 6: input controls, simplified ribbon, status bar, tooltips, robustness (16 fixes), and what's still open |
-| `architecture/ROUND7.md` | Round 7: the code items from `OPEN-ITEMS.md` (7 fixes, 3 suspicions ruled out) and its follow-up (4 fixes), on `integration/next` |
+| `architecture/ROUND7.md` | Round 7: the code items from `OPEN-ITEMS.md` (7 fixes, 3 suspicions ruled out) and its follow-up (5 fixes), on `integration/next` |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |
