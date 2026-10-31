@@ -40,3 +40,18 @@ owner first.
   the new test on net462, net6.0 and net8.0, then the fix, whose build passes.
   Never weaken, skip or delete a test to get green.
 - Questions for the owner go in the chat, not as GitHub comments.
+
+## Reviews are Claude's job (permanent rule from the owner)
+
+The owner and the people helping with this fork are not programmers. They can't
+review code, so don't wait for a code review from them, and don't hand them a
+pull request as "the next step" without saying in plain words what it changes,
+how sure you are, and what could go wrong.
+
+- Review every change yourself before asking anyone to merge it: read the code,
+  check the proof builds, and look for regressions.
+- For larger changes, also run independent reviewers (subagents) that don't see
+  your conclusions: one pessimistic (assume it's wrong), one adversarial (try to
+  break it). Fix or answer what they find before asking for a merge.
+- Merging is the owner's step: tell them exactly which button to press and why
+  it's safe.
