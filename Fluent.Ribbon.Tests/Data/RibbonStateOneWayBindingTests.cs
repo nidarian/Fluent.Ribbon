@@ -3,6 +3,8 @@
 using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Data;
 using NUnit.Framework;
 
@@ -57,6 +59,58 @@ public class RibbonStateOneWayBindingTests
     }
 
     /// <summary>
+    /// A screen reader (or any UI Automation client) collapses the ribbon through the ExpandCollapse pattern of its automation peer.
+    /// That wrote <see cref="Ribbon.IsMinimized"/> with its CLR setter, like the commands did before they were fixed.
+    /// </summary>
+    [Test]
+    public void Collapse_through_UI_Automation_keeps_a_OneWay_binding_on_IsMinimized()
+    {
+        AssertOneWayBindingSurvives(Ribbon.IsMinimizedProperty, nameof(RibbonSettings.IsMinimized), expectedValue: true, ribbon => GetExpandCollapseProvider(ribbon).Collapse());
+    }
+
+    /// <summary>
+    /// Expanding through UI Automation, with the app's settings keeping the ribbon minimized.
+    /// </summary>
+    [Test]
+    public void Expand_through_UI_Automation_keeps_a_OneWay_binding_on_IsMinimized()
+    {
+        var settings = new RibbonSettings { IsMinimized = true };
+        var ribbon = CreateRibbon(settings, BindingMode.OneWay);
+
+        Assert.That(ribbon.IsMinimized, Is.True, "Precondition: IsMinimized starts with the value from the settings.");
+
+        GetExpandCollapseProvider(ribbon).Expand();
+
+        Assert.That(ribbon.IsMinimized, Is.False, "IsMinimized must be changed by the ribbon.");
+        Assert.That(settings.IsMinimized, Is.True, "Precondition: a OneWay binding never writes back to the settings.");
+        Assert.That(BindingOperations.GetBindingExpression(ribbon, Ribbon.IsMinimizedProperty), Is.Not.Null, "The app's OneWay binding on IsMinimized was lost.");
+
+        // The settings still hold the old value (OneWay never wrote back), so set the changed value first to get a change notification through.
+        settings.IsMinimized = false;
+        settings.IsMinimized = true;
+        Assert.That(ribbon.IsMinimized, Is.True, "The app's settings must still minimize the ribbon.");
+    }
+
+    /// <summary>
+    /// Guard for apps with a TwoWay binding: collapsing and expanding through UI Automation must still reach their settings.
+    /// </summary>
+    [Test]
+    public void TwoWay_binding_receives_IsMinimized_changed_through_UI_Automation()
+    {
+        var settings = new RibbonSettings();
+        var ribbon = CreateRibbon(settings, BindingMode.TwoWay);
+        var provider = GetExpandCollapseProvider(ribbon);
+
+        provider.Collapse();
+        Assert.That(settings.IsMinimized, Is.True, "Collapse must reach the TwoWay source.");
+
+        provider.Expand();
+        Assert.That(settings.IsMinimized, Is.False, "Expand must reach the TwoWay source.");
+
+        Assert.That(BindingOperations.GetBindingExpression(ribbon, Ribbon.IsMinimizedProperty), Is.Not.Null, "TwoWay binding on IsMinimized must still exist.");
+    }
+
+    /// <summary>
     /// Guard for apps with TwoWay bindings: they must still get the loaded and toggled values written back to their settings.
     /// </summary>
     [Test]
@@ -106,6 +160,17 @@ public class RibbonStateOneWayBindingTests
 
         settings.Set(settingsPropertyName, expectedValue);
         Assert.That((bool)ribbon.GetValue(property), Is.EqualTo(expectedValue), $"The app's settings must still change {property.Name} back.");
+    }
+
+    private static IExpandCollapseProvider GetExpandCollapseProvider(Ribbon ribbon)
+    {
+        var peer = UIElementAutomationPeer.CreatePeerForElement(ribbon);
+        Assert.That(peer, Is.InstanceOf<Fluent.Automation.Peers.RibbonAutomationPeer>(), "Precondition: the ribbon has its own automation peer.");
+
+        var provider = peer as IExpandCollapseProvider;
+        Assert.That(provider, Is.Not.Null, "Precondition: the ribbon's automation peer supports the ExpandCollapse pattern.");
+
+        return provider!;
     }
 
     private static Ribbon CreateRibbon(RibbonSettings settings, BindingMode mode)
