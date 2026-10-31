@@ -16,11 +16,12 @@ had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-- Opening an InRibbonGallery's toolbar copy can push `SelectedItem = null` into the app's binding. Needs a redesign of how the copy borrows the items. (`ROUND4.md`, "Not fixed")
+None.
 
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
 StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
-dropping an app's OneWay binding on `Ribbon.IsMinimized` in its follow-up.
+dropping an app's OneWay binding on `Ribbon.IsMinimized` and the InRibbonGallery
+toolbar copy writing `null` into the app's selection in its follow-up.
 
 ## 3. Decisions for the owner
 
