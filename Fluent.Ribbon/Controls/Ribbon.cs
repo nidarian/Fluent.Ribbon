@@ -763,11 +763,11 @@ public class Ribbon : Control, ILogicalChildSupport
         if (e.NewValue is RibbonTabItem selectedItem
             && ribbon.Tabs.Contains(selectedItem))
         {
-            ribbon.SelectedTabIndex = ribbon.Tabs.IndexOf(selectedItem);
+            ribbon.SetCurrentValue(SelectedTabIndexProperty, ribbon.Tabs.IndexOf(selectedItem));
         }
         else
         {
-            ribbon.SelectedTabIndex = -1;
+            ribbon.SetCurrentValue(SelectedTabIndexProperty, -1);
         }
     }
 
@@ -784,6 +784,8 @@ public class Ribbon : Control, ILogicalChildSupport
     public static readonly DependencyProperty SelectedTabIndexProperty =
         DependencyProperty.Register(nameof(SelectedTabIndex), typeof(int), typeof(Ribbon), new PropertyMetadata(-1, OnSelectedTabIndexChanged));
 
+    // SelectedTabIndex and SelectedTabItem are kept in sync with the tab control and with each other through SetCurrentValue:
+    // they don't bind TwoWay by default, so an app's plain binding on them is OneWay, and SetValue would replace it with a local value.
     private static void OnSelectedTabIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var ribbon = (Ribbon)d;
@@ -797,11 +799,11 @@ public class Ribbon : Control, ILogicalChildSupport
         if (selectedIndex >= 0
             && selectedIndex < ribbon.Tabs.Count)
         {
-            ribbon.SelectedTabItem = ribbon.Tabs[selectedIndex];
+            ribbon.SetCurrentValue(SelectedTabItemProperty, ribbon.Tabs[selectedIndex]);
         }
         else
         {
-            ribbon.SelectedTabItem = null;
+            ribbon.SetCurrentValue(SelectedTabItemProperty, null);
         }
     }
 
@@ -1035,10 +1037,10 @@ public class Ribbon : Control, ILogicalChildSupport
             this.tabSelectedBeforeSync = null;
         }
 
-        this.SelectedTabItem = this.TabControl?.SelectedItem as RibbonTabItem;
+        this.SetCurrentValue(SelectedTabItemProperty, this.TabControl?.SelectedItem as RibbonTabItem);
 
         // Moving tabs can change the index of the selected tab.
-        this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
+        this.SetCurrentValue(SelectedTabIndexProperty, this.TabControl?.SelectedIndex ?? -1);
 
         if (ReferenceEquals(previousSelectedTab, this.SelectedTabItem) == false)
         {
@@ -2091,8 +2093,8 @@ public class Ribbon : Control, ILogicalChildSupport
             return;
         }
 
-        this.SelectedTabItem = this.TabControl?.SelectedItem as RibbonTabItem;
-        this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
+        this.SetCurrentValue(SelectedTabItemProperty, this.TabControl?.SelectedItem as RibbonTabItem);
+        this.SetCurrentValue(SelectedTabIndexProperty, this.TabControl?.SelectedIndex ?? -1);
 
         this.SelectedTabChanged?.Invoke(this, e);
     }
@@ -2114,7 +2116,7 @@ public class Ribbon : Control, ILogicalChildSupport
         if (index >= 0
             && index != this.SelectedTabIndex)
         {
-            this.SelectedTabIndex = index;
+            this.SetCurrentValue(SelectedTabIndexProperty, index);
         }
     }
 
