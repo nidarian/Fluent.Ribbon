@@ -201,13 +201,16 @@
                                          Template="{DynamicResource Fluent.Ribbon.Templates.MenuItem.HeaderOnly}"
                                          Visibility="{Binding CanMinimize, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}"
                                          Opacity="1" />
-                        <Fluent:MenuItem Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandRibbon, Mode=OneWay}"
+                        <!-- IsChecked is OneWay: RibbonTabControl handles the click (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsMinimized). -->
+                        <Fluent:MenuItem x:Name="PART_ExpandRibbonMenuItem"
+                                         Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandRibbon, Mode=OneWay}"
                                          IsCheckable="True"
-                                         IsChecked="{Binding IsMinimized, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static converters:StaticConverters.InverseBoolConverter}}"
+                                         IsChecked="{Binding IsMinimized, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static converters:StaticConverters.InverseBoolConverter}, Mode=OneWay}"
                                          Visibility="{Binding CanMinimize, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}" />
-                        <Fluent:MenuItem Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeRibbon, Mode=OneWay}"
+                        <Fluent:MenuItem x:Name="PART_MinimizeRibbonMenuItem"
+                                         Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeRibbon, Mode=OneWay}"
                                          IsCheckable="True"
-                                         IsChecked="{Binding IsMinimized, RelativeSource={RelativeSource TemplatedParent}}"
+                                         IsChecked="{Binding IsMinimized, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                          Visibility="{Binding CanMinimize, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}" />
                         <Separator x:Name="DisplayOptionsButtonMenuSeparator"
                                    Style="{x:Null}"
