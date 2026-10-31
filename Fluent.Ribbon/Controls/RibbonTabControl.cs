@@ -32,6 +32,8 @@ using Windows.Win32.Graphics.Gdi;
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 [TemplatePart(Name = "PART_TabsContainer", Type = typeof(Panel))]
 [TemplatePart(Name = "PART_DisplayOptionsButton", Type = typeof(Control))]
+[TemplatePart(Name = "PART_ExpandRibbonMenuItem", Type = typeof(System.Windows.Controls.MenuItem))]
+[TemplatePart(Name = "PART_MinimizeRibbonMenuItem", Type = typeof(System.Windows.Controls.MenuItem))]
 [TemplatePart(Name = "PART_ToolbarPanel", Type = typeof(Panel))]
 [TemplatePart(Name = "PART_SelectedContent", Type = typeof(FrameworkElement))]
 public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
