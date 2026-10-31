@@ -2130,12 +2130,13 @@ public class Ribbon : Control, ILogicalChildSupport
         // they found first. When the ribbon was moved to another window they still point to the title bar of the old window:
         // the new window would not show our toolbar and contextual groups, and the ribbon would keep the old (closed) window alive.
         // Setting the bindings again makes them look for our current window.
-        // A ribbon without a title bar (it was in a plain Window before, where the bindings found no IRibbonWindow) needs this too:
-        // the bindings don't look again by themselves, so a ribbon moved into a RibbonWindow would never show its toolbar there.
-        // In a plain Window the bindings find nothing again, so nothing changes.
+        // A ribbon without a title bar (it was in a plain Window before, where the bindings found no IRibbonWindow) needs this too
+        // once it is in a RibbonWindow: the bindings don't look again by themselves, so it would never show its toolbar there.
+        // Only then: setting the bindings again turns the style's bindings into local values, which an app's style could no longer change.
         if (this.ownerWindow is not null
             && (this.TitleBar is null
-                || ReferenceEquals(Window.GetWindow(this.TitleBar), this.ownerWindow) == false))
+                ? this.ownerWindow is IRibbonWindow
+                : ReferenceEquals(Window.GetWindow(this.TitleBar), this.ownerWindow) == false))
         {
             RefreshBinding(this, TitleBarProperty);
             RefreshBinding(this, QuickAccessToolBarHeightProperty);

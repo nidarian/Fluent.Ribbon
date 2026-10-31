@@ -291,6 +291,37 @@ public class RibbonMovedToOtherWindowTests
         }
     }
 
+    /// <summary>
+    /// The bindings are set again on Loaded only for a ribbon in a RibbonWindow. In a plain Window that would turn the style's
+    /// TitleBar binding into a local value on every Loaded, and a style or trigger of the app could no longer change it.
+    /// Found by a review of the follow-up to round 7.
+    /// </summary>
+    [Test]
+    public void Ribbon_in_a_plain_Window_keeps_the_TitleBar_binding_from_its_style()
+    {
+        var ribbon = new Ribbon();
+        var window = CreatePlainWindow();
+
+        try
+        {
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded in the plain window");
+            Assert.That(ribbon.TitleBar, Is.Null, "Precondition: a ribbon in a plain window has no title bar");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(DependencyPropertyHelper.GetValueSource(ribbon, Ribbon.TitleBarProperty).BaseValueSource, Is.Not.EqualTo(BaseValueSource.Local), "TitleBar must still come from the style");
+                Assert.That(DependencyPropertyHelper.GetValueSource(ribbon, Ribbon.QuickAccessToolBarHeightProperty).BaseValueSource, Is.Not.EqualTo(BaseValueSource.Local), "QuickAccessToolBarHeight must still come from the style");
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static void AssertShownInTitleBarOf(Ribbon ribbon, TestRibbonWindow window)
     {
         Assert.That(window.TitleBar, Is.Not.Null, "Precondition: the window provides a title bar");
