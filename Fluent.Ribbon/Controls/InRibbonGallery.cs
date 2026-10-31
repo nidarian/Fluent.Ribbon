@@ -1554,9 +1554,11 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
         }, DispatcherPriority.SystemIdle);
     }
 
-    // Replaces the app's bindings on the selection with their current values (so nothing changes and nothing is written to the app)
-    // and keeps them until RestoreSelectionBindings. ClearBinding would not do: the value would fall back to its default,
-    // and that change could reach the app through the binding on another selection property.
+    // Replaces the app's bindings on the selection with OneTime bindings to their current values and keeps them until RestoreSelectionBindings.
+    // Replacing a binding doesn't write to its source, the values don't change, and a OneTime binding never writes back,
+    // so lending the items writes nothing to the app.
+    // Not ClearBinding: the value would fall back to its default, and that change would reach the app through a binding on another selection property.
+    // Not SetValue: on a TwoWay binding it writes the value to the source and keeps the binding.
     private void SetSelectionBindingsAside()
     {
         if (this.lentSelectionBindings.Count > 0)
@@ -1576,7 +1578,9 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
         foreach (var lentBinding in this.lentSelectionBindings)
         {
-            this.SetValue(lentBinding.Key, this.GetValue(lentBinding.Key));
+            // In a Tuple: a Binding whose Source is null would look at the DataContext instead.
+            var currentValue = Tuple.Create(this.GetValue(lentBinding.Key));
+            BindingOperations.SetBinding(this, lentBinding.Key, new Binding(nameof(currentValue.Item1)) { Source = currentValue, Mode = BindingMode.OneTime });
         }
     }
 
