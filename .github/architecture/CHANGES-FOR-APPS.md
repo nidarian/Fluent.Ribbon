@@ -153,3 +153,21 @@ searches by the old value stops finding the control.
   - A bad icon path shows no icon (and a debug-output line) instead of
     crashing. A typo in a fixed XAML icon path no longer fails at startup.
   - Moving a tab group (`Groups.Move`) briefly unloads and reloads it.
+
+## Round 7 and its follow-up: OneWay bindings now stay
+
+Several properties used to lose an app's OneWay binding after the first change
+by the user (or, for `SelectedTabIndex`/`SelectedTabItem`, already while the
+ribbon loaded): `Ribbon.IsMinimized` (tab double-click, contextual header click,
+display options menu, UI Automation), `Ribbon.SelectedTabIndex`,
+`Ribbon.SelectedTabItem`, a Spinner's `Value` and a ComboBox's `Text` changed
+through their toolbar copies, and an InRibbonGallery's selection while its
+toolbar copy is open.
+
+Now the binding stays. That is the point, but it also means the control follows
+the view model again whenever the view model reports a change, including a
+"refresh everything" (`PropertyChanged` with an empty name, or a new
+DataContext). An app that bound, for example, `SelectedTabIndex` only to choose
+the first tab will see the ribbon go back to that tab on such a refresh. Use
+`Mode=OneTime` for a start value, or `TwoWay` to keep the view model up to date.
+

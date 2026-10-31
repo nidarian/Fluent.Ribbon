@@ -109,6 +109,27 @@ them from). The run page only said "Test Run Failed" three times. So
 test, with its message, as an error annotation on the run page. It only runs
 when the build failed. Pull request for review: [#28](https://github.com/nidarian/Fluent.Ribbon/pull/28).
 
+## Independent review (2026-10-31)
+
+Before asking the owner to merge, everything on `integration/next` was reviewed
+three times: by the session that wrote the follow-up, and by two independent
+reviewer agents that didn't see its conclusions, one pessimistic (assume each
+change is wrong) and one adversarial (try to break it). They read the code; they
+can't run the Windows build. Their findings, checked against the code:
+
+| Finding | Verdict | What was done | Tests only → with fix |
+|---|---|---|---|
+| The display options menu ("Expand ribbon" / "Minimize ribbon") replaced an app's OneWay binding on `Ribbon.IsMinimized`, the 4th way to minimize the ribbon that round 7 had missed | Real bug, the most likely one to be hit (the button is visible by default) | `fix/display-options-keeps-minimized-binding`: the items bind OneWay and the tab control handles their click like the tab double-click | #438 → #451 (#444: missing `TemplatePart` attributes, analyzer WPF0130) |
+| Round 7's Backstage fix skipped hiding at the end of a close animation whenever `IsOpen` was true again, also when nothing was shown again (a StartScreen is only shown once; a show without content returns early) | Real regression of round 7: the screen stayed half drawn over the window | `fix/backstage-close-skips-only-after-new-show`: real shows are counted; the close only skips hiding when a new show happened | #449 → #450 (the first test, with a StartScreen, crashed in its setup in #441 and was replaced; the StartScreen itself takes the same path but isn't tested directly) |
+| The follow-up set the title bar bindings again on every Loaded in a plain Window, turning the style's bindings into local values | Small regression of the follow-up | `fix/titlebar-refresh-only-in-ribbonwindow`: only in a RibbonWindow | #442 → #446 |
+| InRibbonGallery: bindings from a style become local values after the copy opened | Not a regression: the old code already set `SelectedItem` locally there | Known limit, no change | - |
+| InRibbonGallery: opening the copy twice without closing it would lose the saved selection | Can't happen from outside (the copy can't open while open), so no failing test is possible | Known limit, no change | - |
+| OneWay bindings that now survive (selected tab, minimized, spinner, combo box) follow a "refresh everything" of the view model | Correct OneWay behaviour, but new: before, the binding was gone after the first change | Noted for apps (`CHANGES-FOR-APPS.md`) | - |
+| A custom Ribbon template that nests the tab control in another template keeps the old double-click behaviour | Not a regression | Known limit | - |
+| Round 7's Backstage test can end "Inconclusive" when timing doesn't allow the reopen | True; the proof build #393 failed, so a real failure happened then | Known limit | - |
+
+Combined build of everything, review fixes included: **#453 green** on net462, net6.0 and net8.0 (`integration/next` at 79ed364e).
+
 ## Still open after this round
 
 - Cheap hardening, not a bug: `First(...)` in the RemoveFromQuickAccess handler could become `FirstOrDefault` + null check. Not done: no test can fail on it (WPF checks CanExecute first).
