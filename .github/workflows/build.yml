@@ -48,6 +48,27 @@ jobs:
         # the Release configuration automatically.
         run: .\build.cmd CI
 
+      # Lists each failed test (name and first part of its message) as an error
+      # annotation, so failures can be read on the run page and through the
+      # GitHub API without downloading the logs or the test-results artifact.
+      - name: Show failed tests
+        if: failure()
+        shell: pwsh
+        run: |
+          $ns = @{ t = 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010' }
+          foreach ($file in Get-ChildItem TestResults -Filter *.trx -ErrorAction SilentlyContinue) {
+            [xml]$trx = Get-Content -Raw $file.FullName
+            $title = $file.BaseName -replace '%', '%25' -replace ':', '%3A' -replace ',', '%2C'
+            foreach ($node in (Select-Xml -Xml $trx -XPath '//t:UnitTestResult[@outcome="Failed"]' -Namespace $ns)) {
+              $result = $node.Node
+              $message = [string]$result.Output.ErrorInfo.Message
+              $message = ($message -replace '\s+', ' ').Trim()
+              if ($message.Length -gt 500) { $message = $message.Substring(0, 500) + '...' }
+              $message = $message -replace '%', '%25'
+              Write-Output "::error title=$title::$($result.testName): $message"
+            }
+          }
+
       # Uploaded even if the build fails ("always()"), so failing test
       # reports can be downloaded from the run page and read.
       - name: Upload test results
