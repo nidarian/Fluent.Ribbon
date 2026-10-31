@@ -1,8 +1,8 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-10-14, after round 7 (round 7 is on
-`integration/next`, see `architecture/ROUND7.md`; the package branch is still at
-round 6, build #383). Each item points to the note with the details.
+One page for all loose ends. Status: 2026-10-31, after round 7 and its
+follow-up (both on `integration/next`, see `architecture/ROUND7.md`; the package
+branch is still at round 6, build #383). Each item points to the note with the details.
 When an item is done, delete it here and record it in that note.
 
 The older lists in `architecture/FINDINGS.md` ("Confirmed, not fixed") and
@@ -17,10 +17,10 @@ had not really proven it (`architecture/ROUND7.md`).
 ## 2. Known small gaps (real, not fixed)
 
 - Opening an InRibbonGallery's toolbar copy can push `SelectedItem = null` into the app's binding. Needs a redesign of how the copy borrows the items. (`ROUND4.md`, "Not fixed")
-- UI Automation Expand/Collapse of the Ribbon (`RibbonAutomationPeer`) can drop an app's OneWay binding on `Ribbon.IsMinimized`. (`ROUND7.md`)
 
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
-StatusBar `Visibility` gaps were fixed in round 7.
+StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
+dropping an app's OneWay binding on `Ribbon.IsMinimized` in its follow-up.
 
 ## 3. Decisions for the owner
 
@@ -38,8 +38,9 @@ All five were tested in round 7 (`architecture/ROUND7.md`): the Backstage reopen
 and the moved ribbon were real bugs and are fixed; DismissOnClickOutside, the
 RemoveFromQuickAccess command and the StatusBar menu order were ruled out.
 
-Left untested: a ribbon moved from a plain window into a RibbonWindow, and
-back-and-forth moves.
+The follow-up tested the rest: a ribbon moved from a plain window into a
+RibbonWindow was a real bug (fixed), moves into a plain window and back and
+forth were fine (tests kept as guards).
 
 ## 5. Checks only a person can do (on a Windows PC)
 

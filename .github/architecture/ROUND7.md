@@ -49,10 +49,42 @@ fixed.
 All 10 branches are merged into `integration/next` (on top of
 `integration/all-fixes` b0470d30) at 6714e6c7. Combined build **#405: 1207/1207 on net462, net6.0 and net8.0**.
 
+## Follow-up (2026-10-31)
+
+**AI (Claude) was used** for all of it. Nothing was sent to the original
+project. Same rules: a tests-only build that fails in the new tests on net462,
+net6.0 and net8.0, then the fix, whose build passes. Merged into
+`integration/next` only; `integration/all-fixes`, `develop` and `master` were
+not touched.
+
+| Problem | What a user saw | Branch | Tests only → with fix |
+|---|---|---|---|
+| Collapsing or expanding the ribbon through UI Automation (`RibbonAutomationPeer`, used by screen readers) replaced an app's OneWay binding on `Ribbon.IsMinimized` | After a screen reader collapsed or expanded the ribbon, the app's "minimized" setting stopped controlling it | `fix/uia-expandcollapse-keeps-minimized-binding` | #406 → #410 |
+| A ribbon moved from a plain `Window` into a `RibbonWindow` never found the new title bar | The new window's title bar showed neither the Quick Access Toolbar nor the contextual group headers | `fix/ribbon-moved-from-plain-window` | #408 → #413 |
+| A StatusBar item inserted at runtime got its "Customize Status Bar" entry one place too early until the queued menu rebuild ran | Nothing a user could see (the rebuild runs first); code reading the menu right after the insert saw the wrong order. Now consistent with Move, Remove and Replace | `fix/statusbar-add-menu-index-immediate` | #409 → #411 |
+
+Tests that already passed and stay as guards (in
+`RibbonMovedToOtherWindowTests`): a ribbon moved from a `RibbonWindow` into a
+plain `Window` leaves the old title bar, and a ribbon moved to another
+`RibbonWindow` and back uses the first title bar again. #412 (a diagnostic
+copy of #408) named the two failing tests on all three frameworks; the other
+two passed.
+
+Re-checked: `fix/spinner-qat-copy-keeps-oneway-value` built green again (#407).
+
+Combined: the three branches are merged into `integration/next` at 1a601e90,
+combined build running (result recorded below when it is done).
+
+### Build logs: a CI change for review
+
+From the cloud session, the build logs and the test-results artifact could not
+be downloaded (the session's network blocks the storage host GitHub serves
+them from). The run page only said "Test Run Failed" three times. So
+`ci/show-failed-tests` (based on `develop`) adds a step that lists each failed
+test, with its message, as an error annotation on the run page. It only runs
+when the build failed. Pull request for review: [#28](https://github.com/nidarian/Fluent.Ribbon/pull/28).
+
 ## Still open after this round
 
-- `RibbonAutomationPeer` Expand/Collapse (screen readers and UI automation) sets `Ribbon.IsMinimized` with the plain setter, so it can drop an app's OneWay binding (found while fixing the tab double-click).
 - Opening an InRibbonGallery's toolbar copy can push `SelectedItem = null` into the app's binding. It needs a redesign; skipped on purpose.
-- A ribbon moved from a plain window into a RibbonWindow, and back-and-forth moves, are not tested.
-- Cheap hardening, not a bug: `First(...)` in the RemoveFromQuickAccess handler could become `FirstOrDefault` + null check.
-- StatusBar: the menu is briefly one place off right after an Add (index + 1 would fix even that instant).
+- Cheap hardening, not a bug: `First(...)` in the RemoveFromQuickAccess handler could become `FirstOrDefault` + null check. Not done: no test can fail on it (WPF checks CanExecute first).
