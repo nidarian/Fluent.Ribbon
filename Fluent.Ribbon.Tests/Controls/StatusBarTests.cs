@@ -69,6 +69,33 @@ public class StatusBarTests
         }
     }
 
+    // Round 7 showed that the queued menu rebuild puts the order right before a user can open the menu.
+    // Until it runs, the entry inserted by the Add branch is one place too early (it ignores the header at index 0).
+    // Code that reads the menu in the same dispatcher turn as the insert saw that order. Small, but the other branches already use index + 1.
+    [Test]
+    public void Inserting_Item_At_Runtime_Should_Put_Context_Menu_Entry_At_Same_Position_Right_Away()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Insert(1, d);
+
+            // No DoEvents here: the menu must already be right before the queued rebuild runs.
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should follow the order of the status bar items right after the insert.");
+
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should still follow the order of the status bar items after the queued rebuild.");
+        }
+    }
+
     [Test]
     public void Adding_Item_At_End_At_Runtime_Should_Put_Context_Menu_Entry_At_End()
     {
