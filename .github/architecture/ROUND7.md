@@ -128,7 +128,7 @@ can't run the Windows build. Their findings, checked against the code:
 | A custom Ribbon template that nests the tab control in another template keeps the old double-click behaviour | Not a regression | Known limit | - |
 | Round 7's Backstage test can end "Inconclusive" when timing doesn't allow the reopen | True; the proof build #393 failed, so a real failure happened then | Known limit | - |
 
-Combined build of everything, review fixes included: running (recorded here when done).
+Combined build of everything, review fixes included: **#453 green** on net462, net6.0 and net8.0 (`integration/next` at 79ed364e).
 
 ## Still open after this round
 
