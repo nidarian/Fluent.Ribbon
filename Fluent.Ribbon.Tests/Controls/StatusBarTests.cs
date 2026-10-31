@@ -1,8 +1,10 @@
 ﻿namespace Fluent.Tests.Controls;
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Fluent.Tests.Helper;
 using Fluent.Tests.TestClasses;
@@ -37,6 +39,81 @@ public class StatusBarTests
             // A later, dispatcher-queued menu rebuild (triggered by container regeneration) could hide the problem.
             Assert.That(contextMenu.Items.Count, Is.EqualTo(1 + items.Count), "Header plus one menu item per status bar item.");
             Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new[] { "B", "C", "A" }));
+        }
+    }
+
+    // When an item is added at runtime, the Add branch of OnItemsChanged inserts the new context menu entry at the
+    // item's index, while Move/Remove/Replace use index + 1, because entry 0 of the menu is the "Customize Status Bar"
+    // header. So the new entry could land one place too early (before the entry of the item it was inserted before).
+    // The menu is also rebuilt from scratch when the generator finishes generating containers (queued on the
+    // dispatcher), which might put it right again. These tests check the menu after that queued work has run, which
+    // is the state the user sees when opening the menu.
+    [Test]
+    public void Inserting_Item_At_Runtime_Should_Put_Context_Menu_Entry_At_Same_Position()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Insert(1, d);
+            UIHelper.DoEvents();
+
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should follow the order of the status bar items.");
+            AssertEachMenuEntryTogglesItsItem(statusBar);
+        }
+    }
+
+    // Round 7 showed that the queued menu rebuild puts the order right before a user can open the menu.
+    // Until it runs, the entry inserted by the Add branch is one place too early (it ignores the header at index 0).
+    // Code that reads the menu in the same dispatcher turn as the insert saw that order. Small, but the other branches already use index + 1.
+    [Test]
+    public void Inserting_Item_At_Runtime_Should_Put_Context_Menu_Entry_At_Same_Position_Right_Away()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Insert(1, d);
+
+            // No DoEvents here: the menu must already be right before the queued rebuild runs.
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should follow the order of the status bar items right after the insert.");
+
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, d, b, c }), "Context menu entries should still follow the order of the status bar items after the queued rebuild.");
+        }
+    }
+
+    [Test]
+    public void Adding_Item_At_End_At_Runtime_Should_Put_Context_Menu_Entry_At_End()
+    {
+        var (statusBar, a, b, c) = CreateStatusBarWithItems();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c }), "Precondition: context menu should mirror the initial items.");
+
+            var d = new StatusBarItem { Title = "D", Value = "D" };
+            statusBar.Items.Add(d);
+            UIHelper.DoEvents();
+
+            Assert.That(statusBar.ContextMenu.Items[0], Is.InstanceOf<GroupSeparatorMenuItem>(), "First context menu item should stay the header.");
+            Assert.That(GetMenuItemsOrder(statusBar), Is.EqualTo(new object[] { a, b, c, d }), "Context menu entries should follow the order of the status bar items.");
+            AssertEachMenuEntryTogglesItsItem(statusBar);
         }
     }
 
@@ -207,6 +284,85 @@ public class StatusBarTests
         }
     }
 
+    // An app can also hide or show a status bar item by setting its Visibility directly (or through a binding)
+    // instead of unchecking it. The separators were only recalculated on Checked/Unchecked, menu rebuilds and
+    // collection changes, so hiding B left the two separators around it showing as a doubled gap.
+    [Test]
+    public void Setting_Item_Visibility_Should_Update_Separators()
+    {
+        var (statusBar, _, _, b, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            b.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }), "B is collapsed, so the second separator directly follows the first one and should be collapsed.");
+
+            b.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "B is visible again, so both separators should be visible again.");
+        }
+    }
+
+    [Test]
+    public void Binding_Item_Visibility_Should_Update_Separators()
+    {
+        var (statusBar, _, _, b, _, _) = CreateStatusBarWithSeparators();
+        var state = new VisibilityState { Visibility = Visibility.Visible };
+        b.SetBinding(UIElement.VisibilityProperty, new Binding(nameof(VisibilityState.Visibility)) { Source = state, Mode = BindingMode.OneWay });
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "Precondition: both separators are visible.");
+
+            state.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            Assert.That(b.Visibility, Is.EqualTo(Visibility.Collapsed), "Precondition: the binding collapsed B.");
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Collapsed }), "B is collapsed through the binding, so the second separator should be collapsed.");
+
+            state.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(GetSeparatorVisibilities(statusBar), Is.EqualTo(new[] { Visibility.Visible, Visibility.Visible }), "B is visible again through the binding, so both separators should be visible again.");
+        }
+    }
+
+    [Test]
+    public void Collapsing_First_Item_Should_Collapse_Leading_Separator()
+    {
+        var (statusBar, a, s1, _, _, _) = CreateStatusBarWithSeparators();
+
+        using (new TestRibbonWindow(statusBar))
+        {
+            UIHelper.DoEvents();
+
+            a.Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Collapsed), "Nothing visible stands before the first separator now, so it should be collapsed.");
+
+            a.Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+
+            AssertSeparatorsFollowRule(statusBar);
+            Assert.That(s1.Visibility, Is.EqualTo(Visibility.Visible), "A is visible again, so the first separator should be visible again.");
+        }
+    }
+
     private static (StatusBar StatusBar, StatusBarItem A, System.Windows.Controls.Separator S1, StatusBarItem B, System.Windows.Controls.Separator S2, StatusBarItem C) CreateStatusBarWithSeparators()
     {
         var a = new StatusBarItem { Title = "A", Value = "A" };
@@ -223,6 +379,59 @@ public class StatusBarTests
         statusBar.Items.Add(c);
 
         return (statusBar, a, s1, b, s2, c);
+    }
+
+    private static (StatusBar StatusBar, StatusBarItem A, StatusBarItem B, StatusBarItem C) CreateStatusBarWithItems()
+    {
+        var a = new StatusBarItem { Title = "A", Value = "A" };
+        var b = new StatusBarItem { Title = "B", Value = "B" };
+        var c = new StatusBarItem { Title = "C", Value = "C" };
+
+        var statusBar = new StatusBar();
+        statusBar.Items.Add(a);
+        statusBar.Items.Add(b);
+        statusBar.Items.Add(c);
+
+        return (statusBar, a, b, c);
+    }
+
+    // Opens the "Customize Status Bar" menu and unchecks/checks every entry like a click does
+    // (SetCurrentValue keeps the style's two-way binding), then checks that exactly the status bar item
+    // at the same position was hidden and shown again.
+    private static void AssertEachMenuEntryTogglesItsItem(StatusBar statusBar)
+    {
+        var contextMenu = statusBar.ContextMenu;
+        contextMenu.PlacementTarget = statusBar;
+        contextMenu.IsOpen = true;
+        UIHelper.DoEvents();
+
+        try
+        {
+            var entries = contextMenu.Items.Cast<object>().Skip(1).ToArray();
+
+            Assert.That(entries, Has.Length.EqualTo(statusBar.Items.Count), "Header plus one menu entry per status bar item.");
+
+            for (var i = 0; i < entries.Length; i++)
+            {
+                var entry = (StatusBarMenuItem)entries[i];
+
+                entry.SetCurrentValue(System.Windows.Controls.MenuItem.IsCheckedProperty, false);
+                UIHelper.DoEvents();
+
+                var hidden = statusBar.Items.Cast<StatusBarItem>().Where(x => x.IsChecked == false).ToArray();
+                Assert.That(hidden, Is.EqualTo(new[] { statusBar.Items[i] }), $"Unchecking menu entry {i + 1} should hide only status bar item {i}.");
+
+                entry.SetCurrentValue(System.Windows.Controls.MenuItem.IsCheckedProperty, true);
+                UIHelper.DoEvents();
+
+                Assert.That(statusBar.Items.Cast<StatusBarItem>().All(x => x.IsChecked), Is.True, $"Checking menu entry {i + 1} again should show status bar item {i} again.");
+            }
+        }
+        finally
+        {
+            contextMenu.IsOpen = false;
+            UIHelper.DoEvents();
+        }
     }
 
     private static Visibility[] GetSeparatorVisibilities(StatusBar statusBar)
@@ -276,5 +485,27 @@ public class StatusBarTests
                 ? statusBar.ItemContainerGenerator.ItemFromContainer(menuItem.StatusBarItem)
                 : x)
             .ToArray();
+    }
+
+    private sealed class VisibilityState : INotifyPropertyChanged
+    {
+        private Visibility visibility;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Visibility Visibility
+        {
+            get => this.visibility;
+            set
+            {
+                if (this.visibility == value)
+                {
+                    return;
+                }
+
+                this.visibility = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Visibility)));
+            }
+        }
     }
 }

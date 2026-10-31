@@ -134,17 +134,18 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
                 foreach (var newItem in e.NewItems.NullSafe())
                 {
                     var container = this.ItemContainerGenerator.ContainerFromItem(newItem);
-                    var containerIndex = this.ItemContainerGenerator.IndexFromContainer(container);
+                    // + 1: entry 0 of the menu is the "Customize Status Bar" header (Move, Remove and Replace below do the same).
+                    var menuIndex = this.ItemContainerGenerator.IndexFromContainer(container) + 1;
 
                     if (container is StatusBarItem item)
                     {
                         item.Checked += this.OnItemChecked;
                         item.Unchecked += this.OnItemUnchecked;
-                        this.contextMenu.Items.Insert(containerIndex, new StatusBarMenuItem(item));
+                        this.contextMenu.Items.Insert(menuIndex, new StatusBarMenuItem(item));
                     }
                     else
                     {
-                        this.contextMenu.Items.Insert(containerIndex, new Separator());
+                        this.contextMenu.Items.Insert(menuIndex, new Separator());
                     }
                 }
 
@@ -237,6 +238,18 @@ public class StatusBar : System.Windows.Controls.Primitives.StatusBar
 
     private void OnItemChecked(object sender, RoutedEventArgs e)
     {
+        this.UpdateSeparartorsVisibility();
+    }
+
+    // Called by StatusBarItem when its Visibility changes (set directly or through a binding, not only via IsChecked).
+    // While containers are being generated the menu rebuild queued afterwards updates the separators anyway.
+    internal void OnItemVisibilityChanged()
+    {
+        if (this.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+        {
+            return;
+        }
+
         this.UpdateSeparartorsVisibility();
     }
 

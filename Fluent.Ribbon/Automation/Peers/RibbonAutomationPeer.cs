@@ -8,6 +8,7 @@ using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using Fluent.Internal;
+using Fluent.Internal.KnownBoxes;
 
 /// <summary>
 /// Automation peer for <see cref="Ribbon"/>.
@@ -145,15 +146,22 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     #region IExpandCollapseProvider Members
 
     /// <inheritdoc />
+    /// <remarks>
+    /// SetCurrentValue, not the CLR setter: SetValue would replace an app's OneWay binding on <see cref="Ribbon.IsMinimized"/> with a local value
+    /// (the ribbon's own minimize commands use SetCurrentValue too).
+    /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
-        this.OwningRibbon.IsMinimized = true;
+        this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// SetCurrentValue, not the CLR setter, for the same reason as in Collapse.
+    /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
-        this.OwningRibbon.IsMinimized = false;
+        this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
     /// <inheritdoc />

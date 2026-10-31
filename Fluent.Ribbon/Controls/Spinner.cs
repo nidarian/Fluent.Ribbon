@@ -616,7 +616,7 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
         // Minimum and Maximum must be bound before Value.
         // Otherwise the copy coerces the incoming Value into its default range (0..double.MaxValue)
-        // and, because Value is bound TwoWay, writes the clamped value back to this spinner.
+        // and would show (and write back to this spinner) the clamped value.
         // Minimum goes first because the default Maximum (double.MaxValue) never clamps it.
         Bind(this, spinner, nameof(this.Minimum), MinimumProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.Maximum), MaximumProperty, BindingMode.OneWay);
@@ -624,7 +624,19 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
         Bind(this, spinner, nameof(this.Format), FormatProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.TextToValueConverter), TextToValueConverterProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.SelectAllTextOnFocus), SelectAllTextOnFocusProperty, BindingMode.OneWay);
-        Bind(this, spinner, nameof(this.Value), ValueProperty, BindingMode.TwoWay);
+
+        // Value is bound OneWay and the copy's changes (up/down buttons, typed text) are written back with SetCurrentValue.
+        // A TwoWay binding would write this spinner with SetValue, which replaces a OneWay binding the app has on Value with a local value,
+        // so this spinner would no longer follow the view model. SetCurrentValue keeps such bindings (and still updates TwoWay bindings).
+        Bind(this, spinner, nameof(this.Value), ValueProperty, BindingMode.OneWay);
+        spinner.ValueChanged += (_, e) =>
+        {
+            if (this.Value.Equals(e.NewValue) == false)
+            {
+                this.SetCurrentValue(ValueProperty, e.NewValue);
+            }
+        };
+
         Bind(this, spinner, nameof(this.Delay), DelayProperty, BindingMode.OneWay);
         Bind(this, spinner, nameof(this.Interval), IntervalProperty, BindingMode.OneWay);
     }

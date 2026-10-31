@@ -32,6 +32,8 @@ using Windows.Win32.Graphics.Gdi;
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 [TemplatePart(Name = "PART_TabsContainer", Type = typeof(Panel))]
 [TemplatePart(Name = "PART_DisplayOptionsButton", Type = typeof(Control))]
+[TemplatePart(Name = "PART_ExpandRibbonMenuItem", Type = typeof(System.Windows.Controls.MenuItem))]
+[TemplatePart(Name = "PART_MinimizeRibbonMenuItem", Type = typeof(System.Windows.Controls.MenuItem))]
 [TemplatePart(Name = "PART_ToolbarPanel", Type = typeof(Panel))]
 [TemplatePart(Name = "PART_SelectedContent", Type = typeof(FrameworkElement))]
 public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
@@ -60,6 +62,9 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
     // Collection of toolbar items
     private ObservableCollection<UIElement>? toolBarItems;
+
+    private System.Windows.Controls.MenuItem? expandRibbonMenuItem;
+    private System.Windows.Controls.MenuItem? minimizeRibbonMenuItem;
 
     // ToolBar panel
 
@@ -480,6 +485,29 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
         this.DisplayOptionsControl = this.GetTemplateChild("PART_DisplayOptionsButton") as Control;
 
+        if (this.expandRibbonMenuItem is not null)
+        {
+            this.expandRibbonMenuItem.Click -= this.OnExpandRibbonMenuItemClick;
+        }
+
+        if (this.minimizeRibbonMenuItem is not null)
+        {
+            this.minimizeRibbonMenuItem.Click -= this.OnMinimizeRibbonMenuItemClick;
+        }
+
+        this.expandRibbonMenuItem = this.GetTemplateChild("PART_ExpandRibbonMenuItem") as System.Windows.Controls.MenuItem;
+        this.minimizeRibbonMenuItem = this.GetTemplateChild("PART_MinimizeRibbonMenuItem") as System.Windows.Controls.MenuItem;
+
+        if (this.expandRibbonMenuItem is not null)
+        {
+            this.expandRibbonMenuItem.Click += this.OnExpandRibbonMenuItemClick;
+        }
+
+        if (this.minimizeRibbonMenuItem is not null)
+        {
+            this.minimizeRibbonMenuItem.Click += this.OnMinimizeRibbonMenuItemClick;
+        }
+
         this.SelectedContentPresenter = this.Template.FindName("PART_SelectedContent", this) as FrameworkElement;
 
         this.DropDownPopup = this.Template.FindName("PART_Popup", this) as Popup;
@@ -886,6 +914,53 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         if (this.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
         {
             this.UpdateSelectedContent();
+        }
+    }
+
+    /// <summary>
+    /// Minimizes or restores the tabs for a user action (double-click on a tab, click on a contextual group header).
+    /// </summary>
+    /// <remarks>
+    /// The style binds <see cref="IsMinimized"/> TwoWay to <see cref="Ribbon.IsMinimized"/>.
+    /// Writing <see cref="IsMinimized"/> here would go through that binding, which sets <see cref="Ribbon.IsMinimized"/> with SetValue
+    /// and so replaces an app's OneWay binding on it (the app's setting would no longer minimize or restore the ribbon).
+    /// So the owning ribbon is changed with SetCurrentValue and the style binding brings the value to the tabs.
+    /// SetCurrentValue on the tabs themselves is only needed if they don't follow the ribbon (no ribbon, or a custom style without that binding).
+    /// </remarks>
+    // "Expand ribbon" and "Minimize ribbon" in the display options menu. Their IsChecked is bound OneWay in the template, and a click has
+    // already toggled the item's check mark when Click is raised. The ribbon follows that new check mark, like the TwoWay binding did before.
+    private void OnExpandRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    {
+        this.ApplyDisplayOptionsMenuItemClick((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked == false);
+    }
+
+    private void OnMinimizeRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    {
+        this.ApplyDisplayOptionsMenuItemClick((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked);
+    }
+
+    private void ApplyDisplayOptionsMenuItemClick(System.Windows.Controls.MenuItem menuItem, bool isMinimized)
+    {
+        if (this.CanMinimize)
+        {
+            this.SetIsMinimizedFromUserAction(isMinimized);
+        }
+
+        // Show the actual state again, also when nothing changed (the click toggled the check mark on its own).
+        System.Windows.Data.BindingOperations.GetBindingExpression(menuItem, System.Windows.Controls.MenuItem.IsCheckedProperty)?.UpdateTarget();
+    }
+
+    internal void SetIsMinimizedFromUserAction(bool value)
+    {
+        if (this.TemplatedParent is Ribbon ribbon
+            && ReferenceEquals(ribbon.TabControl, this))
+        {
+            ribbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.Box(value));
+        }
+
+        if (this.IsMinimized != value)
+        {
+            this.SetCurrentValue(IsMinimizedProperty, BooleanBoxes.Box(value));
         }
     }
 

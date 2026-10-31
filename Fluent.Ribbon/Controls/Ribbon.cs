@@ -763,11 +763,11 @@ public class Ribbon : Control, ILogicalChildSupport
         if (e.NewValue is RibbonTabItem selectedItem
             && ribbon.Tabs.Contains(selectedItem))
         {
-            ribbon.SelectedTabIndex = ribbon.Tabs.IndexOf(selectedItem);
+            ribbon.SetCurrentValue(SelectedTabIndexProperty, ribbon.Tabs.IndexOf(selectedItem));
         }
         else
         {
-            ribbon.SelectedTabIndex = -1;
+            ribbon.SetCurrentValue(SelectedTabIndexProperty, -1);
         }
     }
 
@@ -784,6 +784,8 @@ public class Ribbon : Control, ILogicalChildSupport
     public static readonly DependencyProperty SelectedTabIndexProperty =
         DependencyProperty.Register(nameof(SelectedTabIndex), typeof(int), typeof(Ribbon), new PropertyMetadata(-1, OnSelectedTabIndexChanged));
 
+    // SelectedTabIndex and SelectedTabItem are kept in sync with the tab control and with each other through SetCurrentValue:
+    // they don't bind TwoWay by default, so an app's plain binding on them is OneWay, and SetValue would replace it with a local value.
     private static void OnSelectedTabIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var ribbon = (Ribbon)d;
@@ -797,11 +799,11 @@ public class Ribbon : Control, ILogicalChildSupport
         if (selectedIndex >= 0
             && selectedIndex < ribbon.Tabs.Count)
         {
-            ribbon.SelectedTabItem = ribbon.Tabs[selectedIndex];
+            ribbon.SetCurrentValue(SelectedTabItemProperty, ribbon.Tabs[selectedIndex]);
         }
         else
         {
-            ribbon.SelectedTabItem = null;
+            ribbon.SetCurrentValue(SelectedTabItemProperty, null);
         }
     }
 
@@ -859,7 +861,12 @@ public class Ribbon : Control, ILogicalChildSupport
 
         if (e.OldValue is RibbonTitleBar oldValue)
         {
-            oldValue.ItemsSource = null;
+            // Only take our own contextual groups out: the old title bar may already show the groups of another ribbon
+            // (this ribbon was moved to another window and the app put a new ribbon into the old one).
+            if (ReferenceEquals(oldValue.ItemsSource, ribbon.ContextualGroups))
+            {
+                oldValue.ItemsSource = null;
+            }
 
             ribbon.RemoveQuickAccessToolBarFromTitleBar(oldValue);
         }
@@ -1030,10 +1037,10 @@ public class Ribbon : Control, ILogicalChildSupport
             this.tabSelectedBeforeSync = null;
         }
 
-        this.SelectedTabItem = this.TabControl?.SelectedItem as RibbonTabItem;
+        this.SetCurrentValue(SelectedTabItemProperty, this.TabControl?.SelectedItem as RibbonTabItem);
 
         // Moving tabs can change the index of the selected tab.
-        this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
+        this.SetCurrentValue(SelectedTabIndexProperty, this.TabControl?.SelectedIndex ?? -1);
 
         if (ReferenceEquals(previousSelectedTab, this.SelectedTabItem) == false)
         {
@@ -2086,8 +2093,8 @@ public class Ribbon : Control, ILogicalChildSupport
             return;
         }
 
-        this.SelectedTabItem = this.TabControl?.SelectedItem as RibbonTabItem;
-        this.SelectedTabIndex = this.TabControl?.SelectedIndex ?? -1;
+        this.SetCurrentValue(SelectedTabItemProperty, this.TabControl?.SelectedItem as RibbonTabItem);
+        this.SetCurrentValue(SelectedTabIndexProperty, this.TabControl?.SelectedIndex ?? -1);
 
         this.SelectedTabChanged?.Invoke(this, e);
     }
@@ -2109,7 +2116,7 @@ public class Ribbon : Control, ILogicalChildSupport
         if (index >= 0
             && index != this.SelectedTabIndex)
         {
-            this.SelectedTabIndex = index;
+            this.SetCurrentValue(SelectedTabIndexProperty, index);
         }
     }
 
@@ -2118,6 +2125,22 @@ public class Ribbon : Control, ILogicalChildSupport
         this.keyTipService.Attach();
 
         this.AttachToWindow();
+
+        // The TitleBar and QuickAccessToolBarHeight bindings (FindAncestor IRibbonWindow, set in our style) keep the window
+        // they found first. When the ribbon was moved to another window they still point to the title bar of the old window:
+        // the new window would not show our toolbar and contextual groups, and the ribbon would keep the old (closed) window alive.
+        // Setting the bindings again makes them look for our current window.
+        // A ribbon without a title bar (it was in a plain Window before, where the bindings found no IRibbonWindow) needs this too
+        // once it is in a RibbonWindow: the bindings don't look again by themselves, so it would never show its toolbar there.
+        // Only then: setting the bindings again turns the style's bindings into local values, which an app's style could no longer change.
+        if (this.ownerWindow is not null
+            && (this.TitleBar is null
+                ? this.ownerWindow is IRibbonWindow
+                : ReferenceEquals(Window.GetWindow(this.TitleBar), this.ownerWindow) == false))
+        {
+            RefreshBinding(this, TitleBarProperty);
+            RefreshBinding(this, QuickAccessToolBarHeightProperty);
+        }
 
         // Show our toolbar and contextual groups in the title bar again, if they were removed from it in OnUnloaded.
         // OnTitleBarChanged does not run again when the ribbon comes back to the same window.
@@ -2137,6 +2160,16 @@ public class Ribbon : Control, ILogicalChildSupport
         this.LoadInitialState();
 
         this.TitleBar?.ScheduleForceMeasureAndArrange();
+    }
+
+    private static void RefreshBinding(DependencyObject target, DependencyProperty property)
+    {
+        var bindingExpression = BindingOperations.GetBindingExpression(target, property);
+
+        if (bindingExpression is not null)
+        {
+            BindingOperations.SetBinding(target, property, bindingExpression.ParentBinding);
+        }
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
