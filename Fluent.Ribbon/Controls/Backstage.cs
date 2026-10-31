@@ -355,6 +355,10 @@ public class Backstage : RibbonControl
     // We have to collapse WindowsFormsHost while Backstate is open
     private readonly Dictionary<FrameworkElement, Visibility> collapsedElements = new();
 
+    // Counts the times the backstage was really shown (see ShowAdorner), so the end of a close animation can tell
+    // whether the backstage was shown again while that animation was running.
+    private int showCount;
+
     private Window? ownerWindow;
     private Ribbon? parentRibbon;
 
@@ -472,6 +476,8 @@ public class Backstage : RibbonControl
             return;
         }
 
+        this.showCount++;
+
         if (this.AreAnimationsEnabled
             && this.TryFindResource("Fluent.Ribbon.Storyboards.Backstage.IsOpenTrueStoryboard") is Storyboard storyboard)
         {
@@ -541,6 +547,8 @@ public class Backstage : RibbonControl
             return;
         }
 
+        var showCountAtClose = this.showCount;
+
         if (this.AreAnimationsEnabled
             && this.TryFindResource("Fluent.Ribbon.Storyboards.Backstage.IsOpenFalseStoryboard") is Storyboard storyboard)
         {
@@ -564,10 +572,11 @@ public class Backstage : RibbonControl
         {
             storyboard.Completed -= HandleStoryboardOnCompleted;
 
-            // The backstage was opened again while this close animation was still running.
+            // The backstage was shown again while this close animation was still running.
             // The open animation replaced this one, but this handler still runs when the old animation ends.
             // Hiding the adorner and restoring the ribbon now would hide the open backstage.
-            if (this.IsOpen)
+            // Not "IsOpen": IsOpen can be true again without a new show (a StartScreen is only shown once, a show can be delayed until Loaded).
+            if (this.showCount != showCountAtClose)
             {
                 return;
             }
