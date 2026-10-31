@@ -73,7 +73,7 @@ two passed.
 Re-checked: `fix/spinner-qat-copy-keeps-oneway-value` built green again (#407).
 
 Combined: the three branches are merged into `integration/next` at 1a601e90,
-combined build running (result recorded below when it is done).
+combined build **#414 green** on net462, net6.0 and net8.0.
 
 ### Build logs: a CI change for review
 
