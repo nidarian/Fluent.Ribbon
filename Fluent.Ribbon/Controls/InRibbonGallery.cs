@@ -3,6 +3,7 @@ namespace Fluent;
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -1416,6 +1417,12 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
     private InRibbonGallery? quickAccessGallery;
 
+    // The app's bindings on the selection while our items are lent to the Quick Access Toolbar copy (see Freeze and Unfreeze).
+    private readonly List<KeyValuePair<DependencyProperty, BindingBase>> lentSelectionBindings = new();
+
+    // Our selection when the items were lent to the copy.
+    private object? selectedItemBeforeFreeze;
+
     private void OnQuickAccessOpened(object? sender, EventArgs e)
     {
         if (this.quickAccessGallery is not null)
@@ -1465,6 +1472,12 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
         // Move items and selected item
         var selectedItem = this.SelectedItem;
+        this.selectedItemBeforeFreeze = selectedItem;
+
+        // Lending the items clears our selection. Without this, a TwoWay binding (the default for SelectedItem) would get null
+        // (SelectedIndex -1) each time the copy opens, and a OneWay binding would be replaced by a local value.
+        this.SetSelectionBindingsAside();
+
         this.SelectedItem = null;
 
         ItemsControlHelper.MoveItemsToDifferentControl(this, this.quickAccessGallery);
@@ -1490,7 +1503,24 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
 
         ItemsControlHelper.MoveItemsToDifferentControl(this.quickAccessGallery, this);
 
-        this.SelectedItem = selectedItem;
+        if (this.lentSelectionBindings.Count == 0)
+        {
+            this.SelectedItem = selectedItem;
+        }
+        else
+        {
+            // Our selection from before, then the app's bindings again: they bring the view model's selection, without writing to it.
+            this.SelectedItem = this.selectedItemBeforeFreeze;
+            this.RestoreSelectionBindings();
+
+            // A selection made in the copy goes to the view model like any other selection (SetCurrentValue keeps a OneWay binding).
+            if (Equals(selectedItem, this.selectedItemBeforeFreeze) == false)
+            {
+                this.SetCurrentValue(SelectedItemProperty, selectedItem);
+            }
+        }
+
+        this.selectedItemBeforeFreeze = null;
 
         // Move menu
         var menu = this.quickAccessGallery.Menu;
@@ -1522,6 +1552,46 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
             var selectedContainer = this.ItemContainerGenerator.ContainerOrContainerContentFromItem<GalleryItem>(this.SelectedItem);
             selectedContainer?.BringIntoView();
         }, DispatcherPriority.SystemIdle);
+    }
+
+    // Replaces the app's bindings on the selection with OneTime bindings to their current values and keeps them until RestoreSelectionBindings.
+    // Replacing a binding doesn't write to its source, the values don't change, and a OneTime binding never writes back,
+    // so lending the items writes nothing to the app.
+    // Not ClearBinding: the value would fall back to its default, and that change would reach the app through a binding on another selection property.
+    // Not SetValue: on a TwoWay binding it writes the value to the source and keeps the binding.
+    private void SetSelectionBindingsAside()
+    {
+        if (this.lentSelectionBindings.Count > 0)
+        {
+            return;
+        }
+
+        foreach (var property in new[] { SelectedItemProperty, SelectedValueProperty, SelectedIndexProperty })
+        {
+            var binding = BindingOperations.GetBindingBase(this, property);
+
+            if (binding is not null)
+            {
+                this.lentSelectionBindings.Add(new KeyValuePair<DependencyProperty, BindingBase>(property, binding));
+            }
+        }
+
+        foreach (var lentBinding in this.lentSelectionBindings)
+        {
+            // In a Tuple: a Binding whose Source is null would look at the DataContext instead.
+            var currentValue = Tuple.Create(this.GetValue(lentBinding.Key));
+            BindingOperations.SetBinding(this, lentBinding.Key, new Binding(nameof(currentValue.Item1)) { Source = currentValue, Mode = BindingMode.OneTime });
+        }
+    }
+
+    private void RestoreSelectionBindings()
+    {
+        foreach (var lentBinding in this.lentSelectionBindings)
+        {
+            BindingOperations.SetBinding(this, lentBinding.Key, lentBinding.Value);
+        }
+
+        this.lentSelectionBindings.Clear();
     }
 
     /// <inheritdoc />
