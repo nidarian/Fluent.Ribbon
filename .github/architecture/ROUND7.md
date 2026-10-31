@@ -75,7 +75,7 @@ Re-checked: `fix/spinner-qat-copy-keeps-oneway-value` built green again (#407).
 
 Combined: the first three branches are merged into `integration/next` at 1a601e90,
 combined build **#414 green** on net462, net6.0 and net8.0. The gallery fix
-followed at 2fe5e15b, combined build running (result recorded here when done).
+followed at 2fe5e15b, combined build **#424 green**.
 
 ### The InRibbonGallery fix: no redesign needed
 
