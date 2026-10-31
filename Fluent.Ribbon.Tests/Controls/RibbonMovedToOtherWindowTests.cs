@@ -169,6 +169,140 @@ public class RibbonMovedToOtherWindowTests
         }
     }
 
+    /// <summary>
+    /// A ribbon that starts in a plain <see cref="Window"/> has no title bar. Moved into a RibbonWindow, it must use that window's title bar.
+    /// </summary>
+    [Test]
+    public void Ribbon_moved_from_a_plain_Window_to_a_RibbonWindow_shows_its_toolbar_in_the_new_title_bar()
+    {
+        var ribbon = new Ribbon();
+        var windowA = CreatePlainWindow();
+
+        try
+        {
+            using (var windowB = new TestRibbonWindow())
+            {
+                windowA.Content = ribbon;
+                UIHelper.DoEvents();
+
+                Assert.That(ribbon.IsLoaded, Is.True, "Precondition: the ribbon is loaded in the plain window");
+                Assert.That(ribbon.TitleBar, Is.Null, "Precondition: a ribbon in a plain window has no title bar");
+                Assert.That(windowB.TitleBar, Is.Not.Null, "Precondition: window B provides a title bar");
+
+                MoveRibbon(ribbon, windowA, windowB);
+
+                AssertShownInTitleBarOf(ribbon, windowB);
+            }
+        }
+        finally
+        {
+            windowA.Close();
+        }
+    }
+
+    /// <summary>
+    /// Moved from a RibbonWindow into a plain <see cref="Window"/>, the ribbon has no title bar any more,
+    /// and the old window's title bar must no longer show its toolbar and contextual groups.
+    /// </summary>
+    [Test]
+    public void Ribbon_moved_from_a_RibbonWindow_to_a_plain_Window_leaves_the_old_title_bar()
+    {
+        var ribbon = new Ribbon();
+        var windowB = CreatePlainWindow();
+
+        try
+        {
+            using (var windowA = new TestRibbonWindow(ribbon))
+            {
+                UIHelper.DoEvents();
+
+                AssertShownInTitleBarOf(ribbon, windowA);
+
+                MoveRibbon(ribbon, windowA, windowB);
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(ribbon.TitleBar, Is.Null, "A ribbon in a plain window must not keep the title bar of its old window");
+                    Assert.That(windowA.TitleBar!.QuickAccessToolBar, Is.Null, "The title bar of the old window must no longer show the quick access toolbar of the moved ribbon");
+                    Assert.That(windowA.TitleBar.ItemsSource, Is.Null, "The title bar of the old window must no longer show the contextual groups of the moved ribbon");
+                }
+            }
+        }
+        finally
+        {
+            windowB.Close();
+        }
+    }
+
+    /// <summary>
+    /// Moved to another RibbonWindow and back again, the ribbon must use the first window's title bar again.
+    /// </summary>
+    [Test]
+    public void Ribbon_moved_to_another_RibbonWindow_and_back_shows_its_toolbar_in_the_first_title_bar_again()
+    {
+        var ribbon = new Ribbon();
+
+        using (var windowA = new TestRibbonWindow(ribbon))
+        using (var windowB = new TestRibbonWindow())
+        {
+            UIHelper.DoEvents();
+
+            MoveRibbon(ribbon, windowA, windowB);
+            AssertShownInTitleBarOf(ribbon, windowB);
+
+            MoveRibbon(ribbon, windowB, windowA);
+
+            AssertShownInTitleBarOf(ribbon, windowA);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(windowB.TitleBar!.QuickAccessToolBar, Is.Null, "The title bar of window B must no longer show the quick access toolbar of the ribbon");
+                Assert.That(windowB.TitleBar.ItemsSource, Is.Null, "The title bar of window B must no longer show the contextual groups of the ribbon");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Moved from a RibbonWindow into a plain <see cref="Window"/> and back, the ribbon must use the RibbonWindow's title bar again.
+    /// </summary>
+    [Test]
+    public void Ribbon_moved_to_a_plain_Window_and_back_shows_its_toolbar_in_the_title_bar_again()
+    {
+        var ribbon = new Ribbon();
+        var windowB = CreatePlainWindow();
+
+        try
+        {
+            using (var windowA = new TestRibbonWindow(ribbon))
+            {
+                UIHelper.DoEvents();
+
+                MoveRibbon(ribbon, windowA, windowB);
+                Assert.That(ribbon.TitleBar, Is.Null, "Precondition: a ribbon in a plain window has no title bar");
+
+                MoveRibbon(ribbon, windowB, windowA);
+
+                AssertShownInTitleBarOf(ribbon, windowA);
+            }
+        }
+        finally
+        {
+            windowB.Close();
+        }
+    }
+
+    private static void AssertShownInTitleBarOf(Ribbon ribbon, TestRibbonWindow window)
+    {
+        Assert.That(window.TitleBar, Is.Not.Null, "Precondition: the window provides a title bar");
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(ribbon.TitleBar, Is.SameAs(window.TitleBar), "The ribbon must use the title bar of its current window");
+            Assert.That(window.TitleBar!.QuickAccessToolBar, Is.SameAs(ribbon.QuickAccessToolBar), "The title bar of the current window must show the quick access toolbar of the ribbon");
+            Assert.That(window.TitleBar.ItemsSource, Is.SameAs(ribbon.ContextualGroups), "The title bar of the current window must show the contextual groups of the ribbon");
+        }
+    }
+
     private static void MoveRibbon(Ribbon ribbon, Window from, Window to)
     {
         from.Content = null;
