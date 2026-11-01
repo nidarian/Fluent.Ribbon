@@ -92,6 +92,70 @@ public class Round8ReviewTests
     }
 
     /// <summary>
+    /// The same with the default AutomaticStateManagement (on). Found by the final review: the state storage stays loaded
+    /// after the first load, so the startup step that selected the tab was skipped on every later load.
+    /// </summary>
+    [Test]
+    public void Tabs_replaced_while_the_ribbon_is_unloaded_select_a_tab_when_it_comes_back_with_default_state_management()
+    {
+        var ribbon = new Ribbon();
+        ribbon.Tabs.Add(new RibbonTabItem { Header = "A" });
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            // A minimized state saved by another test would keep the ribbon from selecting a tab at all.
+            ribbon.IsMinimized = false;
+            UIHelper.DoEvents();
+            Assert.That(ribbon.AutomaticStateManagement, Is.True, "Precondition: the default state management is on");
+            Assert.That(ribbon.SelectedTabItem, Is.Not.Null, "Precondition: a tab is selected");
+
+            window.Content = null;
+            UIHelper.DoEvents();
+            Assert.That(ribbon.IsLoaded, Is.False, "Precondition: the ribbon is unloaded");
+
+            ribbon.Tabs.Clear();
+            var c = new RibbonTabItem { Header = "C" };
+            ribbon.Tabs.Add(c);
+
+            window.Content = ribbon;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.SelectedTabItem, Is.SameAs(c), "The first new tab must be selected when the ribbon is shown again");
+        }
+    }
+
+    /// <summary>
+    /// The Spinner sets its text box's name in code. An app's own Spinner template that already names PART_TextBox must keep that name.
+    /// Found by the final review.
+    /// </summary>
+    [Test]
+    public void Spinner_keeps_a_name_its_custom_template_gives_the_text_box()
+    {
+        const string templateXaml = @"<ControlTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+    <StackPanel>
+        <TextBox x:Name=""PART_TextBox"" AutomationProperties.Name=""Custom name"" />
+        <RepeatButton x:Name=""PART_ButtonUp"" />
+        <RepeatButton x:Name=""PART_ButtonDown"" />
+    </StackPanel>
+</ControlTemplate>";
+
+        var spinner = new Spinner
+        {
+            Header = "Zoom",
+            Template = (ControlTemplate)System.Windows.Markup.XamlReader.Parse(templateXaml)
+        };
+
+        using (new TestRibbonWindow(spinner))
+        {
+            UIHelper.DoEvents();
+
+            Assert.That(TextBoxName(spinner), Is.EqualTo("Custom name"), "The name from the app's own template must be kept");
+        }
+    }
+
+    /// <summary>
     /// Round 8 made toolbar children use SimplifiedSizeDefinition in the simplified ribbon. Its default (Large, Middle, Small)
     /// changed the look of existing apps whose toolbar buttons only set SizeDefinition (for example icon-only "Small"):
     /// they grew in the simplified ribbon. Only a SimplifiedSizeDefinition the app set must be used.
