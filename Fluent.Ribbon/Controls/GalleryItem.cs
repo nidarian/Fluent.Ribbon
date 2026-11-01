@@ -408,7 +408,9 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
         }
 
         this.ExecuteCommand();
-        this.IsSelected = true;
+
+        // SetCurrentValue, not the CLR setter: SetValue would put a local value on top of an IsSelected binding from the app's item style.
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox);
         e.Handled = true;
     }
 

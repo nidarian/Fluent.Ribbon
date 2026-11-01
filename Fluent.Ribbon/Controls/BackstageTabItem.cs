@@ -154,7 +154,8 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
         if (ReferenceEquals(e.Source, this)
             || this.IsSelected == false)
         {
-            this.IsSelected = true;
+            // SetCurrentValue, not the CLR setter: SetValue would put a local value on top of an IsSelected binding from the app's item style.
+            this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox);
         }
     }
 
@@ -163,7 +164,8 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
     {
         base.OnGotFocus(e);
 
-        this.IsSelected = true;
+        // SetCurrentValue, see OnMouseLeftButtonDown.
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox);
     }
 
     #endregion
@@ -224,7 +226,8 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
     /// <inheritdoc />
     public KeyTipPressedResult OnKeyTipPressed()
     {
-        this.IsSelected = true;
+        // SetCurrentValue, see OnMouseLeftButtonDown.
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox);
 
         return KeyTipPressedResult.Empty;
     }
