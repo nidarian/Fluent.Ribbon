@@ -551,6 +551,16 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             return;
         }
 
+        // After all tabs were replaced (Reset, then Add) nothing is selected, and only Remove picked another tab.
+        // Later, at Loaded priority: the new tabs' containers may not be generated yet, and the app may still be adding tabs.
+        if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset
+            && this.SelectedIndex == -1
+            && this.IsLoaded)
+        {
+            this.RunInDispatcherAsync(this.SelectFirstTabIfNoneSelected, DispatcherPriority.Loaded);
+            return;
+        }
+
         if (e.Action == NotifyCollectionChangedAction.Remove
             && this.SelectedIndex == -1)
         {
@@ -793,6 +803,26 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
                    ?? this.ItemContainerGenerator.ContainerOrContainerContentFromIndex<RibbonTabItem>(this.SelectedIndex);
 
         return item;
+    }
+
+    private void SelectFirstTabIfNoneSelected()
+    {
+        if (this.SelectedIndex != -1
+            || this.IsLoaded == false)
+        {
+            return;
+        }
+
+        var firstItem = this.FindNextTabItem(-1, 1);
+        if (firstItem is not null)
+        {
+            // SetCurrentValue keeps an app's binding on the tab's IsSelected.
+            firstItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox);
+        }
+        else
+        {
+            this.SelectedContent = null;
+        }
     }
 
     // Find next tab item

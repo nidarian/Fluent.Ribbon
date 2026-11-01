@@ -778,7 +778,9 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        this.UnSubscribeEvents();
+        // Keep listening to Groups while unloaded (a tab taken out of the ribbon): a group added there would never be shown,
+        // and a group moved from here to another tab would still be held by this tab's panel (adding it there throws).
+        // The handler is this tab's own, on its own collection, so it keeps nothing else alive.
     }
 
     private void SubscribeEvents()
