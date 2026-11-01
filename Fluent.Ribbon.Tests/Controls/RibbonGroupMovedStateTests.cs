@@ -18,7 +18,6 @@ public class RibbonGroupMovedStateTests
         var narrow = new RibbonGroupsContainer
         {
             Height = RibbonTabControl.DefaultContentHeight,
-            Width = 40,
             ReduceOrder = "(MyGroup),(MyGroup),(MyGroup)"
         };
 
@@ -35,6 +34,11 @@ public class RibbonGroupMovedStateTests
 
         using (new TestRibbonWindow(new StackPanel { Children = { narrow, roomy } }))
         {
+            UIHelper.DoEvents();
+            Assert.That(group.State, Is.EqualTo(RibbonGroupBoxState.Large), "Precondition: the group starts large");
+
+            // Like the other group size tests: make the container narrow once it is shown.
+            narrow.Width = 40;
             UIHelper.DoEvents();
 
             Assert.That(group.State, Is.Not.EqualTo(RibbonGroupBoxState.Large), "Precondition: the narrow container shrinks the group");
