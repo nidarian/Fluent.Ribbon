@@ -520,7 +520,9 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
         }
 
         senderItem.IsChecked = true;
-        this.SelectedFilter = senderItem.Tag as GalleryGroupFilter;
+
+        // SetCurrentValue keeps an app's binding on SelectedFilter (OneWay by default; SetValue would replace it).
+        this.SetCurrentValue(SelectedFilterProperty, senderItem.Tag as GalleryGroupFilter);
         if (this.groupsMenuButton is not null)
         {
             this.groupsMenuButton.SetCurrentValue(DropDownButton.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
@@ -1448,7 +1450,8 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
             this.quickAccessGallery.DropDownClosed -= this.OnQuickAccessMenuClosedOrUnloaded;
             this.quickAccessGallery.Unloaded -= this.OnQuickAccessMenuClosedOrUnloaded;
 
-            this.SelectedFilter = this.quickAccessGallery.SelectedFilter;
+            // SetCurrentValue keeps an app's binding on SelectedFilter (see OnFilterMenuItemClick).
+            this.SetCurrentValue(SelectedFilterProperty, this.quickAccessGallery.SelectedFilter);
             this.quickAccessGallery.Filters.Clear();
         }
 
