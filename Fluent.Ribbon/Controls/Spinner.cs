@@ -451,6 +451,19 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
             return;
         }
 
+        // The text box takes the focus, so a screen reader announces it: give it the spinner's name,
+        // the app's AutomationProperties.Name or else a text header (never the type name of a header that isn't text).
+        this.textBox.SetBinding(System.Windows.Automation.AutomationProperties.NameProperty, new MultiBinding
+        {
+            Converter = TextBoxNameConverter.Instance,
+            Mode = BindingMode.OneWay,
+            Bindings =
+            {
+                new Binding { Source = this, Path = new PropertyPath(System.Windows.Automation.AutomationProperties.NameProperty), Mode = BindingMode.OneWay },
+                new Binding { Source = this, Path = new PropertyPath(HeaderProperty), Mode = BindingMode.OneWay }
+            }
+        });
+
         // Bindings
         Bind(this, this.buttonUp, nameof(this.Delay), RepeatButton.DelayProperty, BindingMode.OneWay);
         Bind(this, this.buttonDown, nameof(this.Delay), RepeatButton.DelayProperty, BindingMode.OneWay);
@@ -664,6 +677,34 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
             {
                 yield return this.MediumIcon;
             }
+        }
+    }
+
+    // Name for the spinner's text box: the spinner's AutomationProperties.Name, else its Header if that is text (without the access key marker).
+    private sealed class TextBoxNameConverter : IMultiValueConverter
+    {
+        public static readonly TextBoxNameConverter Instance = new();
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length > 0
+                && values[0] is string { Length: > 0 } name)
+            {
+                return name;
+            }
+
+            if (values.Length > 1
+                && values[1] is string header)
+            {
+                return AccessTextHelper.RemoveAccessKeyMarker(header) ?? string.Empty;
+            }
+
+            return string.Empty;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 }

@@ -98,7 +98,6 @@
                     </Grid.RowDefinitions>
 
                     <TextBox x:Name="PART_TextBox"
-                             AutomationProperties.LabeledBy="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                              Style="{x:Null}"
                              Grid.RowSpan="2"
                              Grid.Column="0"
@@ -252,7 +251,6 @@
                         </Grid.RowDefinitions>
 
                         <TextBox x:Name="PART_TextBox"
-                             AutomationProperties.LabeledBy="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                  Style="{x:Null}"
                                  Grid.RowSpan="2"
                                  Grid.Column="0"

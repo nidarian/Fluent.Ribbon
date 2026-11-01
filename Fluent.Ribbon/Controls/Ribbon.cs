@@ -599,6 +599,9 @@ public class Ribbon : Control, ILogicalChildSupport
     // Whether LoadInitialState already selected the first tab (see LoadInitialState)
     private bool isInitialTabSelectionDone;
 
+    // Tabs were added or all replaced while the ribbon was unloaded, see LoadInitialState.
+    private bool tabsChangedWhileUnloaded;
+
     #endregion
 
     #region Properties
@@ -1010,6 +1013,13 @@ public class Ribbon : Control, ILogicalChildSupport
         // Replacing all tabs (Clear, then Add) left no tab selected and the ribbon empty: only removing a single tab selected another one.
         // Select the first tab like on the first load, once that is done. Later, so the tab control already has the new tabs
         // (this handler runs before they are passed on) and the app can finish adding tabs.
+        if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset
+            && this.isInitialTabSelectionDone
+            && this.IsLoaded == false)
+        {
+            this.tabsChangedWhileUnloaded = true;
+        }
+
         if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset
             && this.isInitialTabSelectionDone
             && this.IsLoaded)
@@ -2287,10 +2297,16 @@ public class Ribbon : Control, ILogicalChildSupport
         // Only select the first tab the first time, so a later Loaded doesn't override the tab selection the app made in the meantime.
         if (this.isInitialTabSelectionDone)
         {
-            // All tabs were replaced while the ribbon was unloaded (the selection after Add or Reset only runs while it is loaded).
-            if (this.SelectedTabItem is null)
+            // Tabs were added or all replaced while the ribbon was unloaded (the selection after Add or Reset only runs while it is loaded).
+            // Only then: otherwise a tab selection the app cleared on purpose must stay cleared when the ribbon is loaded again.
+            if (this.tabsChangedWhileUnloaded)
             {
-                this.TabControl?.SelectFirstTab();
+                this.tabsChangedWhileUnloaded = false;
+
+                if (this.SelectedTabItem is null)
+                {
+                    this.TabControl?.SelectFirstTab();
+                }
             }
 
             return;
