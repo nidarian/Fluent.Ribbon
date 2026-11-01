@@ -13,7 +13,7 @@ blind reviews (pessimistic and adversarial) of the combined round.
 | The gallery filter menu replaced an app's OneWay binding on `SelectedFilter` (Gallery and InRibbonGallery; the property isn't TwoWay by default) | After picking a filter, the app could no longer choose the filter | `fix/gallery-selectedfilter-keeps-oneway-binding` | #495 → #497 |
 | The Showcase "..." overflow group had no accessible name (WCAG 1.1.1) | A screen reader announced "dot dot dot"; apps copying the sample did the same | `docs/overflow-sample-accessible-name` | sample only |
 
-Combined on `integration/round9` (on top of round 8): running (recorded here when done).
+Combined on `integration/round9` (on top of round 8): **#499 green** on net462, net6.0 and net8.0.
 
 ## Blind reviews
 
