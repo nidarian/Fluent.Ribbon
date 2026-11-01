@@ -49,10 +49,9 @@ forth were fine (tests kept as guards).
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
 Round 8 fixed the names of the status bar menu entries and the Spinner text box
-and the checkable SplitButton's state. Still open, with details in `ROUND8.md`:
-the ColorGallery (no automation peer, colours read as hex codes), KeyTips and help
-text for menu items, gallery items and collapsed groups, the "..." overflow
-sample's name, contextual group labels in the automation tree, text that doesn't
+and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
+items, gallery items and groups, and the overflow sample's name (`ROUND9.md`). Still open, with details in `ROUND8.md`:
+the ColorGallery (no automation peer, colours read as hex codes), contextual group labels in the automation tree, text that doesn't
 grow with the Windows text size, and keyboard access to the status bar menu.
 
 ## 5. Checks only a person can do (on a Windows PC)
