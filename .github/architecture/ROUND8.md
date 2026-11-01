@@ -42,6 +42,20 @@ cleared, `RibbonTests`). Both reworked, #480 green.
 
 Combined build of the whole round on `integration/next` (3c51e2b2): **#482 green** on net462, net6.0 and net8.0.
 
+## Final blind review
+
+A third blind review checked the review fixes. Its two findings were tested first:
+
+- An app's own Spinner template that names `PART_TextBox` had that name replaced:
+  real, fixed (the Spinner only names the text box when the template doesn't),
+  #487 → #490.
+- After a reload with the default `AutomaticStateManagement`, the tab selection
+  step would never run: not reproduced (the test passed without a change, #487).
+  No code change; the test stays as a guard.
+
+A last blind review of that final change found no bugs ("safe to merge").
+Combined build of everything on `integration/next` (b7061d0e): **#492 green**.
+
 ## Ruled out (tests kept as guards)
 
 | Suspicion | Result |
