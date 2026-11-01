@@ -171,3 +171,15 @@ DataContext). An app that bound, for example, `SelectedTabIndex` only to choose
 the first tab will see the ribbon go back to that tab on such a refresh. Use
 `Mode=OneTime` for a start value, or `TwoWay` to keep the view model up to date.
 
+## Round 8
+
+- After all tabs are replaced (`Tabs.Clear()`, then `Add`), or tabs are added
+  while no tab is selected, the ribbon selects the first visible tab (as it does
+  on its first load). Same when the ribbon is loaded again after its tabs were
+  replaced while it was unloaded.
+- A toolbar child's `SimplifiedSizeDefinition`, if the app set one, is used in
+  the simplified ribbon. Children without one keep their size as before.
+- Screen readers now hear names for the "Customize Status Bar" entries and the
+  Spinner's text box, and a checkable SplitButton exposes the Toggle pattern
+  (UI tests that look for these may need updating).
+

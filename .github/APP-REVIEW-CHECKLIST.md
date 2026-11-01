@@ -94,7 +94,7 @@ are the ones you will notice anyway:
 | #1247 `Backstage.Closing` | Handle `Closing` on your `Backstage` and set `e.Cancel = true` while you're saving. Escape, clicking outside and the back button should then leave it open. |
 | #647 Spinner accessibility | Screen readers (Narrator) and UI test tools should now see a `Spinner` as a spinner with its value, minimum and maximum, and be able to set the value. |
 | #1265 `Fluent.Ribbon.Brushes.BackstageTabItem.Focus.Border` | Override this brush in your resources to recolor the keyboard focus frame of backstage tabs. |
-| #1233 "..." overflow group | A last group with `Header="..."` and `SimplifiedStateDefinition="Collapsed"` shows as a single "..." button in the simplified ribbon. See the Showcase's Simplified Ribbon window, tab 1. |
+| #1233 "..." overflow group | A last group with `Header="..."` and `SimplifiedStateDefinition="Collapsed"` shows as a single "..." button in the simplified ribbon. Give it `AutomationProperties.Name="More commands"` so screen readers don't announce "dot dot dot". See the Showcase's Simplified Ribbon window, tab 1. |
 | High Contrast (round 4) | Set `ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithHighContrast` at startup, then turn on a Windows High Contrast theme (Settings, Accessibility, Contrast themes). The ribbon should use the High Contrast colors. Known gaps are in `architecture/HIGH-CONTRAST.md`. |
 
 ## 4. Reporting back
