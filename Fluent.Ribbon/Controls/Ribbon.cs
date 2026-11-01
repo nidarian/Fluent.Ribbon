@@ -1006,6 +1006,22 @@ public class Ribbon : Control, ILogicalChildSupport
             this.isSyncingTabControl = true;
             this.tabSelectedBeforeSync = this.TabControl.SelectedItem as RibbonTabItem;
         }
+
+        // Replacing all tabs (Clear, then Add) left no tab selected and the ribbon empty: only removing a single tab selected another one.
+        // Select the first tab like on the first load, once that is done. Later, so the tab control already has the new tabs
+        // (this handler runs before they are passed on) and the app can finish adding tabs.
+        if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset
+            && this.isInitialTabSelectionDone
+            && this.IsLoaded)
+        {
+            this.RunInDispatcherAsync(() =>
+            {
+                if (this.SelectedTabItem is null)
+                {
+                    this.TabControl?.SelectFirstTab();
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }
     }
 
     /// <summary>
