@@ -426,7 +426,9 @@ public class Gallery : ListBox
         }
 
         senderItem.IsChecked = true;
-        this.SelectedFilter = senderItem.Tag as GalleryGroupFilter;
+
+        // SetCurrentValue keeps an app's binding on SelectedFilter (OneWay by default; SetValue would replace it).
+        this.SetCurrentValue(SelectedFilterProperty, senderItem.Tag as GalleryGroupFilter);
 
         if (this.groupsMenuButton is not null)
         {

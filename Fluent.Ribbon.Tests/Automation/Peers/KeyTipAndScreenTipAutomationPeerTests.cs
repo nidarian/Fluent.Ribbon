@@ -30,6 +30,12 @@ public class KeyTipAndScreenTipAutomationPeerTests
         yield return typeof(InRibbonGallery);
         yield return typeof(BackstageTabItem);
         yield return typeof(RibbonTabItem);
+
+        // Added after the accessibility re-audit of round 8: drop down and menu items, gallery items, and groups
+        // (a collapsed group, or a group on the Quick Access Toolbar, is a button with a KeyTip).
+        yield return typeof(MenuItem);
+        yield return typeof(GalleryItem);
+        yield return typeof(RibbonGroupBox);
     }
 
     [Test]
