@@ -2185,6 +2185,19 @@ public class Ribbon : Control, ILogicalChildSupport
 
         this.LoadInitialState();
 
+        // Tabs were added or all replaced while the ribbon was unloaded (the selection after Add or Reset only runs while it is loaded).
+        // Here, not in LoadInitialState: that returns early whenever the state storage is still loaded (AutomaticStateManagement on).
+        // Only then: otherwise a tab selection the app cleared on purpose must stay cleared when the ribbon is loaded again.
+        if (this.tabsChangedWhileUnloaded)
+        {
+            this.tabsChangedWhileUnloaded = false;
+
+            if (this.SelectedTabItem is null)
+            {
+                this.TabControl?.SelectFirstTab();
+            }
+        }
+
         this.TitleBar?.ScheduleForceMeasureAndArrange();
     }
 
@@ -2297,18 +2310,6 @@ public class Ribbon : Control, ILogicalChildSupport
         // Only select the first tab the first time, so a later Loaded doesn't override the tab selection the app made in the meantime.
         if (this.isInitialTabSelectionDone)
         {
-            // Tabs were added or all replaced while the ribbon was unloaded (the selection after Add or Reset only runs while it is loaded).
-            // Only then: otherwise a tab selection the app cleared on purpose must stay cleared when the ribbon is loaded again.
-            if (this.tabsChangedWhileUnloaded)
-            {
-                this.tabsChangedWhileUnloaded = false;
-
-                if (this.SelectedTabItem is null)
-                {
-                    this.TabControl?.SelectFirstTab();
-                }
-            }
-
             return;
         }
 

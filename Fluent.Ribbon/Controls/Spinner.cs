@@ -453,16 +453,11 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
 
         // The text box takes the focus, so a screen reader announces it: give it the spinner's name,
         // the app's AutomationProperties.Name or else a text header (never the type name of a header that isn't text).
-        this.textBox.SetBinding(System.Windows.Automation.AutomationProperties.NameProperty, new MultiBinding
+        // Not when the template already names it (an app's own Spinner template).
+        if (DependencyPropertyHelper.GetValueSource(this.textBox, System.Windows.Automation.AutomationProperties.NameProperty).BaseValueSource == BaseValueSource.Default)
         {
-            Converter = TextBoxNameConverter.Instance,
-            Mode = BindingMode.OneWay,
-            Bindings =
-            {
-                new Binding { Source = this, Path = new PropertyPath(System.Windows.Automation.AutomationProperties.NameProperty), Mode = BindingMode.OneWay },
-                new Binding { Source = this, Path = new PropertyPath(HeaderProperty), Mode = BindingMode.OneWay }
-            }
-        });
+            this.SetTextBoxNameBinding(this.textBox);
+        }
 
         // Bindings
         Bind(this, this.buttonUp, nameof(this.Delay), RepeatButton.DelayProperty, BindingMode.OneWay);
@@ -678,6 +673,20 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
                 yield return this.MediumIcon;
             }
         }
+    }
+
+    private void SetTextBoxNameBinding(System.Windows.Controls.TextBox textBox)
+    {
+        textBox.SetBinding(System.Windows.Automation.AutomationProperties.NameProperty, new MultiBinding
+        {
+            Converter = TextBoxNameConverter.Instance,
+            Mode = BindingMode.OneWay,
+            Bindings =
+            {
+                new Binding { Source = this, Path = new PropertyPath(System.Windows.Automation.AutomationProperties.NameProperty), Mode = BindingMode.OneWay },
+                new Binding { Source = this, Path = new PropertyPath(HeaderProperty), Mode = BindingMode.OneWay }
+            }
+        });
     }
 
     // Name for the spinner's text box: the spinner's AutomationProperties.Name, else its Header if that is text (without the access key marker).
