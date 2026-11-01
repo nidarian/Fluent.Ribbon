@@ -443,8 +443,8 @@ public class RibbonToolBar : RibbonControl, IRibbonSizeChangedSink, ISimplifiedS
             // Measuring
             if (measure)
             {
-                // Apply Control Definition Properties
-                RibbonProperties.SetAppropriateSize(child, ribbonToolBarSize);
+                // Apply Control Definition Properties (SimplifiedSizeDefinition in the simplified ribbon)
+                RibbonProperties.SetAppropriateSize(child, ribbonToolBarSize, this.IsSimplified);
                 child.Measure(SizeConstants.Infinite);
             }
 

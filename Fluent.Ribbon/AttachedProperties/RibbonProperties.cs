@@ -195,6 +195,19 @@ public class RibbonProperties : DependencyObject
         SetSize(element, GetSizeDefinition(element).GetSize(size));
     }
 
+    /// <summary>
+    /// Sets appropriate size of the control according to the given size and its <see cref="SizeDefinitionProperty"/>,
+    /// or its <see cref="SimplifiedSizeDefinitionProperty"/> when <paramref name="isSimplified"/> is <c>true</c>.
+    /// </summary>
+    /// <param name="element">Control</param>
+    /// <param name="size">Size of the element's parent</param>
+    /// <param name="isSimplified">Whether the element is in the simplified ribbon</param>
+    internal static void SetAppropriateSize(DependencyObject element, RibbonControlSize size, bool isSimplified)
+    {
+        var sizeDefinition = isSimplified ? GetSimplifiedSizeDefinition(element) : GetSizeDefinition(element);
+        SetSize(element, sizeDefinition.GetSize(size));
+    }
+
     #endregion
 
     #region MouseOverBackgroundProperty
