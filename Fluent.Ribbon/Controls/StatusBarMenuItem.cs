@@ -2,6 +2,8 @@
 namespace Fluent;
 
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Data;
 
 /// <summary>
 /// Represents menu item in ribbon status bar menu
@@ -42,6 +44,10 @@ public class StatusBarMenuItem : MenuItem
     public StatusBarMenuItem(StatusBarItem item)
     {
         this.StatusBarItem = item;
+
+        // The template draws the item's title, but the menu item has no Header of its own: without this a screen reader
+        // announces every entry as "menu item, checked" with no label.
+        this.SetBinding(AutomationProperties.NameProperty, new Binding(nameof(Fluent.StatusBarItem.Title)) { Source = item, Mode = BindingMode.OneWay });
     }
 
     internal StatusBarMenuItem()

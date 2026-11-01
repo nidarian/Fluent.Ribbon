@@ -127,6 +127,9 @@ public class SplitButton : DropDownButton, IToggleButton, ICommandSource, IKeyTi
             {
                 button.RaiseEvent(new RoutedEventArgs(UncheckedEvent, button));
             }
+
+            // Tell screen readers the new state (Toggle pattern of the automation peer).
+            (UIElementAutomationPeer.FromElement(button) as Fluent.Automation.Peers.RibbonSplitButtonAutomationPeer)?.RaiseToggleStateChanged((bool?)e.OldValue, nullable);
         }
     }
 
