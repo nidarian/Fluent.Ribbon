@@ -4,6 +4,7 @@ namespace Fluent;
 using System;
 using System.Collections;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -773,4 +774,7 @@ public class MenuItem : System.Windows.Controls.MenuItem, IQuickAccessItemProvid
             }
         }
     }
+
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer() => new Fluent.Automation.Peers.RibbonMenuItemAutomationPeer(this);
 }
