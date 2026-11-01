@@ -18,7 +18,7 @@ public class RibbonGroupMovedStateTests
         var narrow = new RibbonGroupsContainer
         {
             Height = RibbonTabControl.DefaultContentHeight,
-            ReduceOrder = "(MyGroup),(MyGroup),(MyGroup)"
+            ReduceOrder = "MyGroup,MyGroup,MyGroup"
         };
 
         var roomy = new RibbonGroupsContainer
