@@ -40,7 +40,7 @@ name (the Spinner text box had none at all), and selecting the first tab on ever
 reload broke an earlier, deliberate rule (a selection the app cleared stays
 cleared, `RibbonTests`). Both reworked, #480 green.
 
-Combined build of the whole round on `integration/next`: COMBINED8.
+Combined build of the whole round on `integration/next` (3c51e2b2): **#482 green** on net462, net6.0 and net8.0.
 
 ## Ruled out (tests kept as guards)
 
