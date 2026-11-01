@@ -28,13 +28,19 @@ findings were fixed the same way.
 
 | Finding | Fix | Tests only → with fix |
 |---|---|---|
-| UI Automation Toggle flipped a SplitButton whose button part was disabled, and skipped the app's command and the GroupName rule | Toggle does what a click on the button part does, like Invoke | running (recorded here when done) |
-| The Spinner text box was named by its Header object: a non-text header was read as a type name, an app's `AutomationProperties.Name` was ignored | The text box is labeled by the Spinner (`AutomationProperties.LabeledBy`) | running (recorded here when done) |
-| Tabs replaced while the ribbon was unloaded left no tab when it came back | The ribbon selects the first tab on Loaded when none is selected | running (recorded here when done) |
-| The toolbar size fix changed the look of apps whose toolbar children only set `SizeDefinition` (the default `SimplifiedSizeDefinition` is Large, Middle, Small) | Only a `SimplifiedSizeDefinition` the app set is used | running (recorded here when done) |
+| UI Automation Toggle flipped a SplitButton whose button part was disabled, and skipped the app's command and the GroupName rule | Toggle does what a click on the button part does, like Invoke | #477 → #480 |
+| The Spinner text box was named by its Header object: a non-text header was read as a type name, an app's `AutomationProperties.Name` was ignored | The Spinner names its text box itself: its own `AutomationProperties.Name`, else a text header without the access key marker | #477 → #480 |
+| Tabs replaced while the ribbon was unloaded left no tab when it came back | The ribbon selects the first tab on Loaded when tabs were added or replaced while it was unloaded and none is selected | #477 → #480 |
+| The toolbar size fix changed the look of apps whose toolbar children only set `SizeDefinition` (the default `SimplifiedSizeDefinition` is Large, Middle, Small) | Only a `SimplifiedSizeDefinition` the app set is used | #477 → #480 |
 
-(#475/#476: the first review test didn't compile, `Button` meant WPF's button;
-corrected.)
+Along the way: #475/#476, the first review test didn't compile (`Button` meant
+WPF's button), corrected. #478: the first try of these fixes broke two things,
+both caught by tests: `AutomationProperties.LabeledBy` gives a WPF TextBox no
+name (the Spinner text box had none at all), and selecting the first tab on every
+reload broke an earlier, deliberate rule (a selection the app cleared stays
+cleared, `RibbonTests`). Both reworked, #480 green.
+
+Combined build of the whole round on `integration/next`: COMBINED8.
 
 ## Ruled out (tests kept as guards)
 
@@ -52,6 +58,24 @@ corrected.)
 - The custom toolbar layout (with `LayoutDefinitions`) takes sizes from the
   layout definitions, which can be marked `ForSimplified`; that path is unchanged.
 - The SplitButton's inner button still reports its own toggle state as well.
+
+## For the owner (found, not tested, may be intended)
+
+- A Quick Access Toolbar copy stays after its original control leaves the ribbon,
+  for example a button generated from the app's data (`ItemsSource`) that the app
+  removes: the copy goes blank, the old control and view model stay in memory, and
+  after a refill the new button can be pinned a second time
+  (`Ribbon.cs`, `QuickAccessElements`). Removing the copy automatically is a design
+  choice.
+- Changing the `Target` of a checked `QuickAccessMenuItem` leaves the old target's
+  copy on the toolbar; unchecking can't remove it any more
+  (`QuickAccessMenuItem.OnTargetChanged`).
+- Also found, lower priority: `RibbonTabItem.IsSelected` with an explicit OneWay
+  binding is replaced by the mouse wheel, Ctrl+Tab and contextual header clicks;
+  `Gallery`/`InRibbonGallery.SelectedFilter` (OneWay by default) is replaced by
+  the filter menu; a group shrunk to a single button stays shrunk after it moves to
+  another tab; controls in a panel nested in a group, or in a wrapper DataTemplate,
+  aren't switched to the simplified look. Not tested yet.
 
 ## Accessibility re-audit: still open
 
