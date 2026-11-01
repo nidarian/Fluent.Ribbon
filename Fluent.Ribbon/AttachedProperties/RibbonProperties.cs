@@ -204,7 +204,11 @@ public class RibbonProperties : DependencyObject
     /// <param name="isSimplified">Whether the element is in the simplified ribbon</param>
     internal static void SetAppropriateSize(DependencyObject element, RibbonControlSize size, bool isSimplified)
     {
-        var sizeDefinition = isSimplified ? GetSimplifiedSizeDefinition(element) : GetSizeDefinition(element);
+        // Only a SimplifiedSizeDefinition the app set (locally or in a style): its default (Large, Middle, Small)
+        // would change the look of apps whose toolbar children only set SizeDefinition.
+        var useSimplified = isSimplified
+                            && DependencyPropertyHelper.GetValueSource(element, SimplifiedSizeDefinitionProperty).BaseValueSource != BaseValueSource.Default;
+        var sizeDefinition = useSimplified ? GetSimplifiedSizeDefinition(element) : GetSizeDefinition(element);
         SetSize(element, sizeDefinition.GetSize(size));
     }
 

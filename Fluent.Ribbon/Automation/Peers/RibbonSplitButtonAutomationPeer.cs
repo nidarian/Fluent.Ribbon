@@ -1,5 +1,6 @@
 ﻿namespace Fluent.Automation.Peers;
 
+using System;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
@@ -123,13 +124,19 @@ public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPee
     /// <inheritdoc />
     public void Toggle()
     {
+        if (this.SplitButtonOnwer.IsCheckable == false)
+        {
+            throw new InvalidOperationException("The split button is not checkable.");
+        }
+
+        // Toggle does what a click on the button part does (like Invoke): it respects a disabled button part
+        // (IsButtonEnabled = false or a command that can't execute), runs the app's command and keeps the GroupName rule.
         if (this.IsEnabled() == false
-            || this.SplitButtonOnwer.IsCheckable == false)
+            || this.SplitButtonOnwer.Button is { IsEnabled: false })
         {
             throw new ElementNotEnabledException();
         }
 
-        // SetCurrentValue keeps an app's binding on IsChecked.
-        this.SplitButtonOnwer.SetCurrentValue(SplitButton.IsCheckedProperty, this.SplitButtonOnwer.IsChecked != true);
+        this.RunInDispatcherAsync(() => this.SplitButtonOnwer.AutomationButtonClick(), DispatcherPriority.Input);
     }
 }
