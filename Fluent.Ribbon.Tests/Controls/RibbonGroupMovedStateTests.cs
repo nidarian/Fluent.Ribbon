@@ -29,8 +29,8 @@ public class RibbonGroupMovedStateTests
         };
 
         var group = new RibbonGroupBox { Name = "MyGroup", Header = "Group" };
-        group.Items.Add(new Button { Header = "One" });
-        group.Items.Add(new Button { Header = "Two" });
+        group.Items.Add(new Fluent.Button { Header = "One" });
+        group.Items.Add(new Fluent.Button { Header = "Two" });
         narrow.Children.Add(group);
 
         using (new TestRibbonWindow(new StackPanel { Children = { narrow, roomy } }))
