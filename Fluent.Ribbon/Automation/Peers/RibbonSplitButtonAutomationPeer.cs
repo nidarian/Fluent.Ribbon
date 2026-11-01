@@ -11,7 +11,7 @@ using Fluent.Internal;
 /// <summary>
 /// Automation peer for <see cref="SplitButton"/>.
 /// </summary>
-public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPeer, IInvokeProvider
+public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPeer, IInvokeProvider, IToggleProvider
 {
     /// <summary>
     /// Creates a new instance.
@@ -42,6 +42,10 @@ public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPee
         switch (patternInterface)
         {
             case PatternInterface.Invoke:
+                return this;
+
+            // Only a checkable split button is a toggle (like "Bold" with a drop down); a screen reader then reports its state.
+            case PatternInterface.Toggle when this.SplitButtonOnwer.IsCheckable:
                 return this;
 
             default:
@@ -99,5 +103,33 @@ public class RibbonSplitButtonAutomationPeer : RibbonDropDownButtonAutomationPee
         }
 
         this.RunInDispatcherAsync(() => this.SplitButtonOnwer.AutomationButtonClick(), DispatcherPriority.Input);
+    }
+
+    internal void RaiseToggleStateChanged(bool? oldValue, bool? newValue)
+    {
+        this.RaisePropertyChangedEvent(TogglePatternIdentifiers.ToggleStateProperty, ToToggleState(oldValue), ToToggleState(newValue));
+    }
+
+    private static ToggleState ToToggleState(bool? value) => value switch
+    {
+        true => ToggleState.On,
+        false => ToggleState.Off,
+        _ => ToggleState.Indeterminate
+    };
+
+    /// <inheritdoc />
+    public ToggleState ToggleState => ToToggleState(this.SplitButtonOnwer.IsChecked);
+
+    /// <inheritdoc />
+    public void Toggle()
+    {
+        if (this.IsEnabled() == false
+            || this.SplitButtonOnwer.IsCheckable == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
+        // SetCurrentValue keeps an app's binding on IsChecked.
+        this.SplitButtonOnwer.SetCurrentValue(SplitButton.IsCheckedProperty, this.SplitButtonOnwer.IsChecked != true);
     }
 }

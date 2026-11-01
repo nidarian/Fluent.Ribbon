@@ -98,6 +98,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBox x:Name="PART_TextBox"
+                             AutomationProperties.Name="{Binding Header, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                              Style="{x:Null}"
                              Grid.RowSpan="2"
                              Grid.Column="0"
@@ -251,6 +252,7 @@
                         </Grid.RowDefinitions>
 
                         <TextBox x:Name="PART_TextBox"
+                             AutomationProperties.Name="{Binding Header, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                  Style="{x:Null}"
                                  Grid.RowSpan="2"
                                  Grid.Column="0"
