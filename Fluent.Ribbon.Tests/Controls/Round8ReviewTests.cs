@@ -99,7 +99,7 @@ public class Round8ReviewTests
     [Test]
     public void Toolbar_children_without_a_SimplifiedSizeDefinition_keep_their_size_in_the_simplified_ribbon()
     {
-        var button = new Button
+        var button = new Fluent.Button
         {
             Header = "Cut",
             SizeDefinition = new RibbonControlSizeDefinition(RibbonControlSize.Small, RibbonControlSize.Small, RibbonControlSize.Small)
