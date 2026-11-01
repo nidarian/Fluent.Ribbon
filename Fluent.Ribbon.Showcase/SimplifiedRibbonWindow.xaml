@@ -283,9 +283,11 @@
                 <!--  #1233: "..." overflow for rarely used commands.
                       The last group always collapses in the simplified ribbon (SimplifiedStateDefinition="Collapsed"),
                       so its commands open from a single "..." button at the end of the tab.
-                      In the classic ribbon it's a normal group, the same as in Office.  -->
+                      In the classic ribbon it's a normal group, the same as in Office.
+                      AutomationProperties.Name gives it a real name: a screen reader would otherwise announce "..." (WCAG 1.1.1).  -->
                 <fluent:RibbonGroupBox x:Name="OverflowGroup"
                                        Header="..."
+                                       AutomationProperties.Name="More commands"
                                        SimplifiedStateDefinition="Collapsed">
                     <fluent:Button Header="Rarely used command 1">
                         <fluent:Button.Icon>
