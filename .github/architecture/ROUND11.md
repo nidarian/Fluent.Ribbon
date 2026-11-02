@@ -19,7 +19,7 @@ combined round.
 | The End/Home/Ctrl+Tab keys, the mouse wheel and a contextual header click replaced an explicit OneWay binding on a tab's `IsSelected` | After using them, the app could no longer select that tab | `fix/tab-isselected-keeps-oneway-binding` | #523 → #526 |
 | The ColorGallery colour lists had no names (WCAG 1.3.1) | A screen reader said "list" instead of "Theme Colors, list" | `fix/a11y-colorgallery-lists-and-menu-headings` | #518 → #524 |
 | A control wrapped in an item DataTemplate (a Border around the button) didn't get the simplified state | The button stayed in the classic look in the simplified ribbon | `fix/simplified-wrapped-template-children` | #528 → #529 |
-| UI Automation Toggle on the four display options items only changed the check mark (a regression of the round 8 and 11 fixes, found by the review) | UI tests or assistive technology that toggle these items didn't change the ribbon | `fix/display-options-uia-toggle` | TOGGLE_PROOF |
+| UI Automation Toggle on the four display options items only changed the check mark (a regression of the round 8 and 11 fixes, found by the review) | UI tests or assistive technology that toggle these items didn't change the ribbon | `fix/display-options-uia-toggle` | #531 → #532 |
 
 Along the way: the first tab test (#515) threw before it reached the code (a
 mouse wheel event without its RoutedEvent); the corrected test failed for the
@@ -45,4 +45,4 @@ the scope check called that beyond the intent, and it was removed.
 - A RibbonTabControl with its own style without the IsSimplified binding: the
   check marks of the simplified items can show the wrong state.
 
-Combined build of the round: COMBINED11. Blind reviews: REVIEWS11.
+Combined build of the round (`integration/round11`, c247c6ef): **#534 green** on net462, net6.0 and net8.0. Blind reviews: REVIEWS11.
