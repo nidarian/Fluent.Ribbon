@@ -143,6 +143,7 @@
                                 <Fluent:GroupSeparatorMenuItem x:Name="themeColorsSeparator"
                                                                Header="Theme Colors" />
                                 <ListBox x:Name="PART_ThemeColorsListBox"
+                                         AutomationProperties.Name="{Binding Header, ElementName=themeColorsSeparator, Mode=OneWay}"
                                          Style="{DynamicResource Fluent.Ribbon.Styles.ColorGalleryListBox}"
                                          Padding="2"
                                          ItemsSource="{Binding ThemeColors, RelativeSource={RelativeSource TemplatedParent}}"
@@ -155,6 +156,7 @@
                                 <Fluent:GroupSeparatorMenuItem x:Name="standardColorsSeparator"
                                                                Header="Standard Colors" />
                                 <ListBox x:Name="PART_StandardColorsListBox"
+                                         AutomationProperties.Name="{Binding Header, ElementName=standardColorsSeparator, Mode=OneWay}"
                                          Style="{DynamicResource Fluent.Ribbon.Styles.ColorGalleryListBox}"
                                          Padding="2"
                                          ItemsSource="{x:Static Fluent:ColorGallery.StandardThemeColors}"
@@ -167,6 +169,7 @@
                                 <Fluent:GroupSeparatorMenuItem x:Name="recentColorsSeparator"
                                                                Header="Recent Colors" />
                                 <ListBox x:Name="PART_RecentColorsListBox"
+                                         AutomationProperties.Name="{Binding Header, ElementName=recentColorsSeparator, Mode=OneWay}"
                                          Style="{DynamicResource Fluent.Ribbon.Styles.ColorGalleryListBox}"
                                          Padding="2"
                                          ItemsSource="{x:Static Fluent:ColorGallery.RecentColors}"
