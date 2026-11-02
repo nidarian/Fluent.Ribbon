@@ -243,13 +243,48 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
         if (element is ContentPresenter contentPresenter
             && item is not DispatcherObject)
         {
-            contentPresenter.WhenLoaded(x => UpdateValues(UIHelper.GetFirstVisualChild(x) ?? x, groupBoxState, isSimplified));
+            contentPresenter.WhenLoaded(x =>
+            {
+                // The DataTemplate's root can be a plain wrapper (a Border around the button): pass the state on to what it wraps.
+                var root = UnwrapPlainWrappers(UIHelper.GetFirstVisualChild(x) ?? x);
+
+                if (root is Panel)
+                {
+                    this.UpdateChildSizesOfUIElement(root, root, groupBoxState, isSimplified);
+                }
+                else
+                {
+                    UpdateValues(root, groupBoxState, isSimplified);
+                }
+            });
             return;
         }
 
         UpdateValues(element, groupBoxState, isSimplified);
 
         return;
+
+        // Only through plain wrappers (Decorators like Border, and ContentPresenters), stopping at the first control:
+        // the inside of a control's own template (a DropDownButton, a Gallery) must not get the group's sizes.
+        static DependencyObject UnwrapPlainWrappers(DependencyObject element)
+        {
+            while (true)
+            {
+                switch (element)
+                {
+                    case Decorator { Child: { } child }:
+                        element = child;
+                        continue;
+
+                    case ContentPresenter contentPresenter when VisualTreeHelper.GetChildrenCount(contentPresenter) > 0:
+                        element = VisualTreeHelper.GetChild(contentPresenter, 0);
+                        continue;
+
+                    default:
+                        return element;
+                }
+            }
+        }
 
         static void UpdateValues(DependencyObject element, RibbonGroupBoxState groupBoxState, bool isSimplified)
         {
