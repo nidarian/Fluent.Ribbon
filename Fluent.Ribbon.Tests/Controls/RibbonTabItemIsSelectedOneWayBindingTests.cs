@@ -34,9 +34,9 @@ public class RibbonTabItemIsSelectedOneWayBindingTests
         AssertBindingSurvives((ribbon, tabs) =>
         {
             // Two notches down: from the first tab past the second to the third.
-            ribbon.TabControl!.ProcessMouseWheel(new MouseWheelEventArgs(Mouse.PrimaryDevice, 0, -120));
+            ribbon.TabControl!.ProcessMouseWheel(new MouseWheelEventArgs(Mouse.PrimaryDevice, 0, -120) { RoutedEvent = Mouse.MouseWheelEvent });
             UIHelper.DoEvents();
-            ribbon.TabControl!.ProcessMouseWheel(new MouseWheelEventArgs(Mouse.PrimaryDevice, 0, -120));
+            ribbon.TabControl!.ProcessMouseWheel(new MouseWheelEventArgs(Mouse.PrimaryDevice, 0, -120) { RoutedEvent = Mouse.MouseWheelEvent });
         });
     }
 
