@@ -589,6 +589,20 @@ public class RibbonGroupsContainer : Panel, IScrollInfo
         this.GroupBoxCacheClearedAndStateAndScaleResetted(null);
     }
 
+    /// <inheritdoc />
+    protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
+    {
+        base.OnVisualChildrenChanged(visualAdded, visualRemoved);
+
+        // A group that comes from another container (another tab) still has the state that container gave it
+        // (for example Collapsed), which nothing here would undo: start it again from its first state, like after a size change.
+        if (visualAdded is RibbonGroupBox groupBox
+            && groupBox.TryClearCacheAndResetStateAndScale())
+        {
+            this.GroupBoxCacheClearedAndStateAndScaleResetted(groupBox);
+        }
+    }
+
     // We have to reset the reduce order to it's initial value, clear all caches we keep here and invalidate measure/arrange
     internal void GroupBoxCacheClearedAndStateAndScaleResetted(RibbonGroupBox? ribbonGroupBox)
     {
