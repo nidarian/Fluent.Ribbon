@@ -563,7 +563,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             var item = this.FindNextTabItem(startIndex, -1);
             if (item is not null)
             {
-                item.IsSelected = true;
+                item.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
             else
             {
@@ -695,7 +695,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             && ReferenceEquals(nextTabItem, this.SelectedItem) == false)
         {
             e.Handled = true;
-            nextTabItem.IsSelected = true;
+            nextTabItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
         }
 
         if (e.Handled == false)
@@ -754,7 +754,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         {
             if (visualItems.Count > 0)
             {
-                visualItems[0].IsSelected = true;
+                visualItems[0].SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
         }
         else
@@ -764,7 +764,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
                 if (selectedIndex > 0)
                 {
                     selectedIndex--;
-                    visualItems[selectedIndex].IsSelected = true;
+                    visualItems[selectedIndex].SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
                 }
             }
             else if (e.Delta < 0)
@@ -772,7 +772,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
                 if (selectedIndex < visualItems.Count - 1)
                 {
                     selectedIndex++;
-                    visualItems[selectedIndex].IsSelected = true;
+                    visualItems[selectedIndex].SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
                 }
             }
         }
@@ -1005,7 +1005,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
             if (item is not null)
             {
-                item.IsSelected = true;
+                item.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
         }
     }

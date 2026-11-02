@@ -300,7 +300,7 @@ public class RibbonContextualTabGroup : Control
         {
             if (firstVisibleItem.TabControlParent?.SelectedItem is RibbonTabItem currentSelectedItem)
             {
-                currentSelectedItem.IsSelected = false;
+                currentSelectedItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.FalseBox); // keeps an app's binding on IsSelected
             }
 
             e.Handled = true;
@@ -313,7 +313,7 @@ public class RibbonContextualTabGroup : Control
                     firstVisibleItem.TabControlParent.SetIsMinimizedFromUserAction(false);
                 }
 
-                firstVisibleItem.IsSelected = true;
+                firstVisibleItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
         }
 
