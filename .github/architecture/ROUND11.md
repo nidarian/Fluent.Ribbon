@@ -45,4 +45,18 @@ the scope check called that beyond the intent, and it was removed.
 - A RibbonTabControl with its own style without the IsSimplified binding: the
   check marks of the simplified items can show the wrong state.
 
-Combined build of the round (`integration/round11`, c247c6ef): **#534 green** on net462, net6.0 and net8.0. Blind reviews: REVIEWS11.
+Combined build of the round (`integration/round11`, c247c6ef): **#534 green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and adversarial each round):
+
+- Round A (four fixes): safe, no bugs; one real finding, UI Automation Toggle on
+  the display options items, fixed and proven above.
+- Round B (all six fixes): safe, no bugs.
+- Round C (all six fixes): safe, no bugs. **Two clean rounds in a row.**
+
+Their remaining notes (low likelihood, known): `UpdateTarget` runs inside the
+Checked event, which WPF tolerates (the least proven spot); a runtime theme swap
+could in theory hand a default value to the menu handlers; the "no ribbon"
+simplified path doesn't check CanUseSimplified; Decorator roots such as Viewbox
+now also pass the group's size to their child (the intent, but visible for apps
+that sized that child themselves); the contextual group name isn't refreshed by
+an event when the header changes at runtime; the two gradient colour lists have
+no name.
