@@ -201,7 +201,7 @@
                                          Template="{DynamicResource Fluent.Ribbon.Templates.MenuItem.HeaderOnly}"
                                          Visibility="{Binding CanMinimize, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}"
                                          Opacity="1" />
-                        <!-- IsChecked is OneWay: RibbonTabControl handles the click (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsMinimized). -->
+                        <!-- IsChecked is OneWay: RibbonTabControl follows the check mark (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsMinimized). -->
                         <Fluent:MenuItem x:Name="PART_ExpandRibbonMenuItem"
                                          Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandRibbon, Mode=OneWay}"
                                          IsCheckable="True"
@@ -222,7 +222,7 @@
                                          Template="{DynamicResource Fluent.Ribbon.Templates.MenuItem.HeaderOnly}"
                                          Visibility="{Binding CanUseSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}"
                                          Opacity="1" />
-                        <!-- IsChecked is OneWay: RibbonTabControl handles the click (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsSimplified). -->
+                        <!-- IsChecked is OneWay: RibbonTabControl follows the check mark (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsSimplified). -->
                         <Fluent:MenuItem x:Name="PART_UseClassicRibbonMenuItem"
                                          Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.UseClassicRibbon, Mode=OneWay}"
                                          IsCheckable="True"
