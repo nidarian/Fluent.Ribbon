@@ -101,4 +101,5 @@ conflict later.
 | `architecture/ROUND8.md` | Round 8: a bug hunt (runtime tabs and groups, simplified toolbar sizes) and an ADA / WCAG accessibility re-audit, each fix proven test-first and reviewed, what was ruled out, and the accessibility gaps still open |
 | `architecture/ROUND9.md` | Round 9: KeyTips and ScreenTips for screen readers on menu items, gallery items and groups, the gallery filter binding, the overflow sample's name |
 | `architecture/ROUND10.md` | Round 10: a group stuck shrunk after moving to a roomier tab |
+| `architecture/ROUND11.md` | Round 11: accessibility (contextual group names, ColorGallery lists), display options and tab selection bindings, simplified look for wrapped templates |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |
