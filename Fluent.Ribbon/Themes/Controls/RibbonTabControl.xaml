@@ -222,13 +222,16 @@
                                          Template="{DynamicResource Fluent.Ribbon.Templates.MenuItem.HeaderOnly}"
                                          Visibility="{Binding CanUseSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}"
                                          Opacity="1" />
-                        <Fluent:MenuItem Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.UseClassicRibbon, Mode=OneWay}"
+                        <!-- IsChecked is OneWay: RibbonTabControl handles the click (a TwoWay binding would replace an app's OneWay binding on Ribbon.IsSimplified). -->
+                        <Fluent:MenuItem x:Name="PART_UseClassicRibbonMenuItem"
+                                         Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.UseClassicRibbon, Mode=OneWay}"
                                          IsCheckable="True"
-                                         IsChecked="{Binding IsSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static converters:StaticConverters.InverseBoolConverter}}"
+                                         IsChecked="{Binding IsSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static converters:StaticConverters.InverseBoolConverter}, Mode=OneWay}"
                                          Visibility="{Binding CanUseSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}" />
-                        <Fluent:MenuItem Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.UseSimplifiedRibbon, Mode=OneWay}"
+                        <Fluent:MenuItem x:Name="PART_UseSimplifiedRibbonMenuItem"
+                                         Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.UseSimplifiedRibbon, Mode=OneWay}"
                                          IsCheckable="True"
-                                         IsChecked="{Binding IsSimplified, RelativeSource={RelativeSource TemplatedParent}}"
+                                         IsChecked="{Binding IsSimplified, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                          Visibility="{Binding CanUseSimplified, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Fluent.Ribbon.Converters.BoolToVisibilityConverter}}" />
                     </Fluent:DropDownButton>
                 </StackPanel>
