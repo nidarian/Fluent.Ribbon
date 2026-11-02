@@ -100,4 +100,5 @@ conflict later.
 | `architecture/ROUND7.md` | Round 7: the code items from `OPEN-ITEMS.md` (7 fixes, 3 suspicions ruled out) and its follow-up (5 fixes), on `integration/next` |
 | `architecture/ROUND8.md` | Round 8: a bug hunt (runtime tabs and groups, simplified toolbar sizes) and an ADA / WCAG accessibility re-audit, each fix proven test-first and reviewed, what was ruled out, and the accessibility gaps still open |
 | `architecture/ROUND9.md` | Round 9: KeyTips and ScreenTips for screen readers on menu items, gallery items and groups, the gallery filter binding, the overflow sample's name |
+| `architecture/ROUND10.md` | Round 10: a group stuck shrunk after moving to a roomier tab |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |
