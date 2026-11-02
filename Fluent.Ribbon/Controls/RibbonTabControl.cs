@@ -491,12 +491,14 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
         if (this.expandRibbonMenuItem is not null)
         {
-            this.expandRibbonMenuItem.Click -= this.OnExpandRibbonMenuItemClick;
+            this.expandRibbonMenuItem.Checked -= this.OnExpandRibbonMenuItemIsCheckedChanged;
+            this.expandRibbonMenuItem.Unchecked -= this.OnExpandRibbonMenuItemIsCheckedChanged;
         }
 
         if (this.minimizeRibbonMenuItem is not null)
         {
-            this.minimizeRibbonMenuItem.Click -= this.OnMinimizeRibbonMenuItemClick;
+            this.minimizeRibbonMenuItem.Checked -= this.OnMinimizeRibbonMenuItemIsCheckedChanged;
+            this.minimizeRibbonMenuItem.Unchecked -= this.OnMinimizeRibbonMenuItemIsCheckedChanged;
         }
 
         this.expandRibbonMenuItem = this.GetTemplateChild("PART_ExpandRibbonMenuItem") as System.Windows.Controls.MenuItem;
@@ -504,22 +506,26 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
         if (this.expandRibbonMenuItem is not null)
         {
-            this.expandRibbonMenuItem.Click += this.OnExpandRibbonMenuItemClick;
+            this.expandRibbonMenuItem.Checked += this.OnExpandRibbonMenuItemIsCheckedChanged;
+            this.expandRibbonMenuItem.Unchecked += this.OnExpandRibbonMenuItemIsCheckedChanged;
         }
 
         if (this.minimizeRibbonMenuItem is not null)
         {
-            this.minimizeRibbonMenuItem.Click += this.OnMinimizeRibbonMenuItemClick;
+            this.minimizeRibbonMenuItem.Checked += this.OnMinimizeRibbonMenuItemIsCheckedChanged;
+            this.minimizeRibbonMenuItem.Unchecked += this.OnMinimizeRibbonMenuItemIsCheckedChanged;
         }
 
         if (this.useClassicRibbonMenuItem is not null)
         {
-            this.useClassicRibbonMenuItem.Click -= this.OnUseClassicRibbonMenuItemClick;
+            this.useClassicRibbonMenuItem.Checked -= this.OnUseClassicRibbonMenuItemIsCheckedChanged;
+            this.useClassicRibbonMenuItem.Unchecked -= this.OnUseClassicRibbonMenuItemIsCheckedChanged;
         }
 
         if (this.useSimplifiedRibbonMenuItem is not null)
         {
-            this.useSimplifiedRibbonMenuItem.Click -= this.OnUseSimplifiedRibbonMenuItemClick;
+            this.useSimplifiedRibbonMenuItem.Checked -= this.OnUseSimplifiedRibbonMenuItemIsCheckedChanged;
+            this.useSimplifiedRibbonMenuItem.Unchecked -= this.OnUseSimplifiedRibbonMenuItemIsCheckedChanged;
         }
 
         this.useClassicRibbonMenuItem = this.GetTemplateChild("PART_UseClassicRibbonMenuItem") as System.Windows.Controls.MenuItem;
@@ -527,12 +533,14 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
         if (this.useClassicRibbonMenuItem is not null)
         {
-            this.useClassicRibbonMenuItem.Click += this.OnUseClassicRibbonMenuItemClick;
+            this.useClassicRibbonMenuItem.Checked += this.OnUseClassicRibbonMenuItemIsCheckedChanged;
+            this.useClassicRibbonMenuItem.Unchecked += this.OnUseClassicRibbonMenuItemIsCheckedChanged;
         }
 
         if (this.useSimplifiedRibbonMenuItem is not null)
         {
-            this.useSimplifiedRibbonMenuItem.Click += this.OnUseSimplifiedRibbonMenuItemClick;
+            this.useSimplifiedRibbonMenuItem.Checked += this.OnUseSimplifiedRibbonMenuItemIsCheckedChanged;
+            this.useSimplifiedRibbonMenuItem.Unchecked += this.OnUseSimplifiedRibbonMenuItemIsCheckedChanged;
         }
 
         this.SelectedContentPresenter = this.Template.FindName("PART_SelectedContent", this) as FrameworkElement;
@@ -968,19 +976,20 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
         }
     }
 
-    // "Expand ribbon" and "Minimize ribbon" in the display options menu. Their IsChecked is bound OneWay in the template, and a click has
-    // already toggled the item's check mark when Click is raised. The ribbon follows that new check mark, like the TwoWay binding did before.
-    private void OnExpandRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    // "Expand ribbon" and "Minimize ribbon" in the display options menu. Their IsChecked is bound OneWay in the template; the ribbon follows
+    // the item's new check mark, like the TwoWay binding did before. Checked/Unchecked, not Click: UI Automation's Toggle changes IsChecked
+    // without a Click. When the ribbon itself changes the check mark (through the binding), the value already matches and nothing changes.
+    private void OnExpandRibbonMenuItemIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        this.ApplyDisplayOptionsMenuItemClick((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked == false);
+        this.ApplyDisplayOptionsMinimizedMenuItem((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked == false);
     }
 
-    private void OnMinimizeRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    private void OnMinimizeRibbonMenuItemIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        this.ApplyDisplayOptionsMenuItemClick((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked);
+        this.ApplyDisplayOptionsMinimizedMenuItem((System.Windows.Controls.MenuItem)sender, isMinimized: ((System.Windows.Controls.MenuItem)sender).IsChecked);
     }
 
-    private void ApplyDisplayOptionsMenuItemClick(System.Windows.Controls.MenuItem menuItem, bool isMinimized)
+    private void ApplyDisplayOptionsMinimizedMenuItem(System.Windows.Controls.MenuItem menuItem, bool isMinimized)
     {
         if (this.CanMinimize)
         {
@@ -994,17 +1003,17 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
     // "Use classic ribbon" and "Use simplified ribbon" in the display options menu, the same way as "Expand ribbon" and "Minimize ribbon":
     // IsChecked is bound OneWay in the template, a TwoWay binding would write Ribbon.IsSimplified with SetValue through the style binding
     // and replace an app's OneWay binding on it.
-    private void OnUseClassicRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    private void OnUseClassicRibbonMenuItemIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        this.ApplyDisplayOptionsSimplifiedMenuItemClick((System.Windows.Controls.MenuItem)sender, isSimplified: ((System.Windows.Controls.MenuItem)sender).IsChecked == false);
+        this.ApplyDisplayOptionsSimplifiedMenuItem((System.Windows.Controls.MenuItem)sender, isSimplified: ((System.Windows.Controls.MenuItem)sender).IsChecked == false);
     }
 
-    private void OnUseSimplifiedRibbonMenuItemClick(object sender, RoutedEventArgs e)
+    private void OnUseSimplifiedRibbonMenuItemIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        this.ApplyDisplayOptionsSimplifiedMenuItemClick((System.Windows.Controls.MenuItem)sender, isSimplified: ((System.Windows.Controls.MenuItem)sender).IsChecked);
+        this.ApplyDisplayOptionsSimplifiedMenuItem((System.Windows.Controls.MenuItem)sender, isSimplified: ((System.Windows.Controls.MenuItem)sender).IsChecked);
     }
 
-    private void ApplyDisplayOptionsSimplifiedMenuItemClick(System.Windows.Controls.MenuItem menuItem, bool isSimplified)
+    private void ApplyDisplayOptionsSimplifiedMenuItem(System.Windows.Controls.MenuItem menuItem, bool isSimplified)
     {
         if (this.TemplatedParent is Ribbon ribbon
             && ReferenceEquals(ribbon.TabControl, this))
