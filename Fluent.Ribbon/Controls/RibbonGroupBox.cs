@@ -246,16 +246,8 @@ public class RibbonGroupBox : HeaderedItemsControl, IQuickAccessItemProvider, ID
             contentPresenter.WhenLoaded(x =>
             {
                 // The DataTemplate's root can be a plain wrapper (a Border around the button): pass the state on to what it wraps.
-                var root = UnwrapPlainWrappers(UIHelper.GetFirstVisualChild(x) ?? x);
-
-                if (root is Panel)
-                {
-                    this.UpdateChildSizesOfUIElement(root, root, groupBoxState, isSimplified);
-                }
-                else
-                {
-                    UpdateValues(root, groupBoxState, isSimplified);
-                }
+                // Not into Panels: that would change the sizes of every control in a Panel-rooted DataTemplate.
+                UpdateValues(UnwrapPlainWrappers(UIHelper.GetFirstVisualChild(x) ?? x), groupBoxState, isSimplified);
             });
             return;
         }
