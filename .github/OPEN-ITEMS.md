@@ -1,6 +1,7 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-03, after round 12
+One page for all loose ends. Status: 2026-11-03, after round 12 (in the package
+once `integration/round12` is merged into `integration/all-fixes`)
 (`architecture/ROUND7.md` to `architecture/ROUND12.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
@@ -16,7 +17,7 @@ had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-Small UI Automation gaps of the tabs on a minimized ribbon (details in
+Small UI Automation gaps of the ribbon tabs (details in
 `ROUND12.md`, "Deferred"): no event when the pattern appears or goes away, or
 when Expand moves the popup to another tab (screen readers that ask again on
 focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is

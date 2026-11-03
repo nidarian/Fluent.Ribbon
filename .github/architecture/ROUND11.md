@@ -41,7 +41,8 @@ the scope check called that beyond the intent, and it was removed.
   next tab after a removal, restoring a minimized ribbon without a selected tab
   (first written here as `SelectFirstTab`), hiding a tab while minimized,
   UI Automation Expand (first written here as "Select"), a click on a tab
-  (passes already). Round 12 proved and fixed all but the click (`ROUND12.md`).
+  (passes already). Round 12 proved and fixed all but a click on a tab without a
+  tab control, which is still unproven (`ROUND12.md`).
 - Controls added later to a Panel nested in a group aren't simplified: there is no
   safe hook for a nested Panel's children.
 - A RibbonTabControl with its own style without the IsSimplified binding: the

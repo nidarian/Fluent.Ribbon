@@ -63,7 +63,7 @@ forbids. History isn't rewritten here, so the same code went to a new branch
   tested).
 
 Combined build of the round (`integration/round12`, 90ab054a, built as `diag/round12`, which only adds the CI step that lists failed tests):
-**#553 green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and
+**#553 green** on net462, net6.0 and net8.0 (and #554 on `integration/round12` itself). Blind reviews (pessimistic and
 adversarial each round):
 
 Tab sites (first part):
