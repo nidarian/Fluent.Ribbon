@@ -1,7 +1,7 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-01, after round 8
-(`architecture/ROUND7.md`, `architecture/ROUND8.md`). Each item points to the
+One page for all loose ends. Status: 2026-11-03, after round 12
+(`architecture/ROUND7.md` to `architecture/ROUND12.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -50,9 +50,11 @@ forth were fine (tests kept as guards).
 
 Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
-items, gallery items and groups, and the overflow sample's name (`ROUND9.md`). Still open, with details in `ROUND8.md`:
-the ColorGallery (no automation peer, colours read as hex codes), contextual group labels in the automation tree, text that doesn't
-grow with the Windows text size, and keyboard access to the status bar menu.
+items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
+ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
+`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings), text that doesn't
+grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
+and the small UI Automation gaps of the minimized ribbon's tabs (a hidden tab can be expanded; ScrollItem probably not offered).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
@@ -63,7 +65,7 @@ person. Skip the ones already done.
 - **Two screens or high scaling** (`ROUND5.md`, five steps): sharp icons, dragging to a left-hand screen, maximize on each screen, the Windows 11 snap layout popup, `UseNativeCaptionButtons`.
 - **Right-to-left window at 150 % scaling**: ScreenTips line up with their control. (`ROUND6.md`)
 - **Showcase "new thread" window**: "More Colors" in both windows, no crash, the colour shows in both. (`ROUND6.md`)
-- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`)
+- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`) On a minimized ribbon, a tab can be opened with the screen reader (or with Inspect, ExpandCollapse pattern) and is announced as collapsed or expanded; a disabled tab refuses. (`ROUND12.md`)
 - **High Contrast** (only if an app turns it on): the manual checks in `architecture/HIGH-CONTRAST.md`.
 
 ## 6. Not covered on purpose

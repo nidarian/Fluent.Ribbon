@@ -13,9 +13,9 @@ scope check asked whether any fix went beyond its intent.
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
 | Removing the selected tab, restoring a minimized ribbon that had no selected tab, and hiding the selected tab while minimized replaced an explicit OneWay binding on a tab's `IsSelected` (the "same pattern, not proven" items of round 11) | After that, the app could no longer select that tab | `fix/tab-isselected-sites-r12` | #41696827415 (stricter tests: #41700836516) → #41699027520, #41699674643 |
-| A tab on a minimized ribbon implements Expand/Collapse for UI Automation, but never offered the pattern, so a screen reader could not open it (WCAG 2.1.1, 4.1.2) | With Narrator or NVDA, the tabs of a minimized ribbon could not be opened | `fix/tab-isselected-uia-expand` | #41700673139 → RESULT_EXPAND |
-| Expand (now reachable) replaced an app's OneWay binding on the tab's `IsSelected` | After a screen reader opened a tab, the app could no longer select it | `fix/tab-isselected-uia-expand` | #41700673139 → RESULT_EXPAND |
-| Expand and Collapse on a disabled tab acted anyway (found by the review once the pattern was reachable; the other Fluent.Ribbon peers refuse, `ACCESSIBILITY.md`) | Assistive technology could open a disabled tab | `fix/tab-isselected-uia-expand` | RESULT_DISABLED_RED → RESULT_DISABLED_GREEN |
+| A tab on a minimized ribbon implements Expand/Collapse for UI Automation, but never offered the pattern, so a screen reader could not open it (WCAG 2.1.1, 4.1.2) | With Narrator or NVDA, the tabs of a minimized ribbon could not be opened | `fix/tab-isselected-uia-expand` | #41700673139 → #41702884691 |
+| Expand (now reachable) replaced an app's OneWay binding on the tab's `IsSelected` | After a screen reader opened a tab, the app could no longer select it | `fix/tab-isselected-uia-expand` | #41700673139 → #41702884691 |
+| Expand and Collapse on a disabled tab acted anyway (found by the review once the pattern was reachable; the other Fluent.Ribbon peers refuse, `ACCESSIBILITY.md`) | Assistive technology could open a disabled tab | `fix/tab-isselected-uia-expand` | #41703458284 → #41703465283 |
 
 **Default chosen (owner can change it):** the tab offers Expand/Collapse only
 while the ribbon is minimized. On a normal ribbon a tab isn't expanded or

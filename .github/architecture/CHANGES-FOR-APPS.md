@@ -183,3 +183,24 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   Spinner's text box, and a checkable SplitButton exposes the Toggle pattern
   (UI tests that look for these may need updating).
 
+## Round 11
+
+- A contextual tab group ("Table Tools") is now its own element in the UI
+  Automation tree (control type Group, named after its header), and the
+  ColorGallery colour lists are named after their heading. UI tests that walk
+  the tree may see these new or renamed elements.
+- "Use classic ribbon" and "Use simplified ribbon" no longer replace an app's
+  OneWay binding on `Ribbon.IsSimplified` (as "Minimize ribbon" did for
+  `Ribbon.IsMinimized` until round 8). A UI Automation Toggle on any of the four
+  display options items now changes the ribbon, not only the check mark.
+
+## Round 12
+
+- On a minimized ribbon, a tab now offers the UI Automation ExpandCollapse
+  pattern (it was implemented but never offered). Expand selects the tab and
+  opens its popup. On a normal ribbon the pattern is still not offered.
+- Expand or Collapse on a disabled tab throws `ElementNotEnabledException`,
+  like the other Fluent.Ribbon controls.
+- Removing the selected tab, restoring a minimized ribbon without a selected tab,
+  hiding the selected tab while minimized, and UI Automation Expand keep an app's
+  OneWay binding on `RibbonTabItem.IsSelected`.
