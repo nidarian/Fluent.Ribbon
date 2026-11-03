@@ -189,10 +189,11 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
 
     #endregion
 
-    // Same rule the tab control uses to pick tabs (mouse wheel, keyboard): visible, and for a contextual tab its group visible too.
+    // On screen (IsVisible also covers a collapsed ribbon or a hidden parent), and for a contextual tab its group visible too,
+    // like the tab control's mouse wheel selection.
     private static bool IsShown(RibbonTabItem tab)
     {
-        return tab.Visibility == Visibility.Visible
+        return tab.IsVisible
                && (tab.IsContextual == false || tab.Group?.Visibility == Visibility.Visible);
     }
 }

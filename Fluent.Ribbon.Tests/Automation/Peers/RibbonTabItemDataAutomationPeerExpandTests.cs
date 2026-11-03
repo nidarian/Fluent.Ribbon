@@ -126,6 +126,25 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
+    // A collapsed ribbon (narrow window, or set by the app) hides its whole tab control, while each tab's own Visibility stays Visible.
+    [Test]
+    public void Tab_of_a_collapsed_ribbon_neither_offers_nor_acts_on_Expand()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+        ribbon.IsAutomaticCollapseEnabled = false;
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+            ribbon.IsCollapsed = true;
+            UIHelper.DoEvents();
+            Assert.That(tabs[1].Visibility, Is.EqualTo(Visibility.Visible), "Precondition: the tab's own Visibility stays Visible");
+            Assert.That(tabs[1].IsVisible, Is.False, "Precondition: the collapsed ribbon hides the tab");
+
+            AssertNotOpenable(ribbon, tabs[1], dataPeer);
+        }
+    }
+
     // Collapse on a tab whose popup isn't the open one must not close the popup of another tab.
     [Test]
     public void Collapse_on_a_tab_that_is_not_open_leaves_the_open_tab_alone()
