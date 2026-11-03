@@ -24,8 +24,8 @@ collapsed, and offering it would make screen readers say "expanded" on every
 tab. A test guards this default.
 
 Hidden tabs and Expand came up in three review rounds in a row; the owner's
-working rule is that the same finding three times means re-plan, not track. The tab now uses the tab control's own rule
-for which tabs can be picked (on screen, and for a contextual tab its group
+working rule is that the same finding three times means re-plan, not track. The tab now uses a rule like the tab control's
+own for which tabs can be picked (on screen, and for a contextual tab its group
 visible): such a tab doesn't offer the pattern, and Expand ignores it.
 
 Along the way: the first round 12 fix commit carried a session link, which this fork

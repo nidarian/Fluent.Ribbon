@@ -75,7 +75,8 @@ items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); r
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
 `ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-and the minimized ribbon's tabs probably not offering ScrollItem. Also: the ribbon itself and a collapsed group
+and the tabs probably not offering ScrollItem (on any ribbon), and a contextual group's
+name not announced again when its header changes at runtime (`ROUND11.md`). Also: the ribbon itself and a collapsed group
 (`RibbonGroupBoxAutomationPeer`) can be expanded through UI Automation while disabled (found by reading, not tested).
 
 ## 5. Checks only a person can do (on a Windows PC)
