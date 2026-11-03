@@ -20,6 +20,22 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// The base class doesn't return <see cref="PatternInterface.ExpandCollapse"/>, so screen readers could not open a tab on a
+    /// minimized ribbon. It is offered only while the ribbon is minimized: on a normal ribbon a tab isn't expanded or collapsed.
+    /// </remarks>
+    public override object? GetPattern(PatternInterface patternInterface)
+    {
+        if (patternInterface == PatternInterface.ExpandCollapse
+            && this.GetWrapper() is RibbonTabItem { TabControlParent.IsMinimized: true })
+        {
+            return this;
+        }
+
+        return base.GetPattern(patternInterface);
+    }
+
+    /// <inheritdoc />
     protected override string GetClassNameCore()
     {
         return "RibbonTabItem";
@@ -103,7 +119,7 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
             if (tabControl is not null &&
                 tabControl.IsMinimized)
             {
-                wrapperTab.IsSelected = true;
+                wrapperTab.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
                 tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
             }
         }

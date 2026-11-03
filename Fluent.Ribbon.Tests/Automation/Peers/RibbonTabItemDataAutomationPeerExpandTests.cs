@@ -32,6 +32,23 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
+    // Default (noted in ROUND12.md): on a normal ribbon a tab isn't expanded or collapsed, so the pattern isn't offered.
+    [Test]
+    public void ExpandCollapse_pattern_is_not_offered_on_a_normal_ribbon()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+            ribbon.IsMinimized = false;
+            UIHelper.DoEvents();
+            Assert.That(ribbon.TabControl!.IsMinimized, Is.False, "Precondition: the tab control is no longer minimized");
+
+            Assert.That(dataPeer.GetPattern(PatternInterface.ExpandCollapse), Is.Null, "A tab on a normal ribbon must not offer ExpandCollapse");
+        }
+    }
+
     [Test]
     public void Expand_on_a_minimized_ribbon_keeps_the_app_binding_on_IsSelected()
     {
