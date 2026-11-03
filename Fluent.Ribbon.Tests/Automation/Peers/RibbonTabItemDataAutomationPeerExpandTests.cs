@@ -32,7 +32,7 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
-    // Default (noted in ROUND12.md): on a normal ribbon a tab isn't expanded or collapsed, so the pattern isn't offered.
+    // Default: on a normal ribbon a tab isn't expanded or collapsed, so the pattern isn't offered.
     [Test]
     public void ExpandCollapse_pattern_is_not_offered_on_a_normal_ribbon()
     {
@@ -73,6 +73,24 @@ public class RibbonTabItemDataAutomationPeerExpandTests
             UIHelper.DoEvents();
 
             Assert.That(tabs[1].IsSelected, Is.True, "The app must still be able to select the tab");
+        }
+    }
+
+    // UI Automation: a disabled element must refuse actions, like the other Fluent.Ribbon peers.
+    [Test]
+    public void Expand_and_Collapse_on_a_disabled_tab_throw_ElementNotEnabledException()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+            tabs[1].IsEnabled = false;
+            UIHelper.DoEvents();
+
+            Assert.That(() => ((IExpandCollapseProvider)dataPeer).Expand(), Throws.TypeOf<ElementNotEnabledException>(), "Expand on a disabled tab must refuse");
+            Assert.That(tabs[1].IsSelected, Is.False, "A disabled tab must not be selected by Expand");
+            Assert.That(() => ((IExpandCollapseProvider)dataPeer).Collapse(), Throws.TypeOf<ElementNotEnabledException>(), "Collapse on a disabled tab must refuse");
         }
     }
 
