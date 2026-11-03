@@ -93,6 +93,12 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     /// </summary>
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         var wrapperTab = this.GetWrapper() as RibbonTabItem;
         if (wrapperTab is not null)
         {
@@ -110,6 +116,12 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     /// </summary>
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         var wrapperTab = this.GetWrapper() as RibbonTabItem;
 
         // Select the tab and display popup
