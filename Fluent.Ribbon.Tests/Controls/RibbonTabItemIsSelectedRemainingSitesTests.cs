@@ -9,9 +9,9 @@ using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 /// <summary>
-/// Round 11 kept an app's explicit OneWay binding on a tab's IsSelected for the keyboard, the mouse wheel and the contextual
-/// header (each proven by a failing test). Three more places select or deselect a tab with the CLR setter; these tests check
-/// whether they also replace such a binding, so they are only fixed if they do.
+/// An app's OneWay binding on a tab's IsSelected must survive the ribbon selecting or deselecting the tab itself: when the
+/// selected tab is removed, when a minimized ribbon with no selected tab is restored, and when the selected tab is hidden while
+/// the ribbon is minimized. After each, the app must still be able to select the tab through its view model.
 /// </summary>
 [TestFixture]
 public class RibbonTabItemIsSelectedRemainingSitesTests
@@ -34,6 +34,15 @@ public class RibbonTabItemIsSelectedRemainingSitesTests
             var selected = ribbon.SelectedTabItem;
             Assert.That(selected, Is.Not.Null.And.Not.SameAs(tabs[1]), "Precondition: another tab is selected after the removal");
             Assert.That(BindingOperations.GetBindingExpression(selected!, RibbonTabItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on the newly selected tab was lost");
+
+            // The view model still says false (OneWay never wrote back); select another tab, then let the app select this one.
+            var other = selected == tabs[0] ? tabs[2] : tabs[0];
+            ribbon.SelectedTabItem = other;
+            UIHelper.DoEvents();
+            models[System.Array.IndexOf(tabs, selected)].IsSelected = true;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.SelectedTabItem, Is.SameAs(selected), "The app must still be able to select the tab");
         }
     }
 
@@ -57,6 +66,13 @@ public class RibbonTabItemIsSelectedRemainingSitesTests
 
             Assert.That(ribbon.SelectedTabItem, Is.SameAs(tabs[0]), "Precondition: restoring selects the first tab");
             Assert.That(BindingOperations.GetBindingExpression(tabs[0], RibbonTabItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on the first tab was lost");
+
+            ribbon.SelectedTabItem = tabs[1];
+            UIHelper.DoEvents();
+            models[0].IsSelected = true;
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.SelectedTabItem, Is.SameAs(tabs[0]), "The app must still be able to select the tab");
         }
     }
 
@@ -80,6 +96,13 @@ public class RibbonTabItemIsSelectedRemainingSitesTests
 
             Assert.That(tabs[1].IsSelected, Is.False, "Precondition: hiding the selected tab deselects it");
             Assert.That(BindingOperations.GetBindingExpression(tabs[1], RibbonTabItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on the hidden tab was lost");
+
+            tabs[1].Visibility = Visibility.Visible;
+            UIHelper.DoEvents();
+            models[1].IsSelected = true;
+            UIHelper.DoEvents();
+
+            Assert.That(tabs[1].IsSelected, Is.True, "The app must still be able to select the tab");
         }
     }
 
