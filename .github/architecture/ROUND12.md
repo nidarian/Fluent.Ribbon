@@ -29,8 +29,11 @@ forbids. History isn't rewritten here, so the same code went to a new branch
 
 ## Deferred or ruled out (tracked)
 
-- Still the CLR setter, not proven to matter: a click on a tab that has no tab
-  control (`RibbonTabItem`, only without a ribbon).
+- Still not proven (no failing test): UI Automation **Select** on a tab (goes
+  through WPF's own Selector, which keeps bindings) and a click on a tab that has
+  no tab control (`RibbonTabItem`, only without a ribbon, still the CLR setter).
+- The ribbon's own UI Automation Expand/Collapse (minimize, restore) doesn't
+  refuse on a disabled ribbon, unlike the tabs now (older, not tested).
 - Expand on a **hidden** tab (for example a contextual tab whose group is hidden)
   still opens it: UI Automation has no standard refusal for hidden elements.
 - Nothing tells cached UI Automation clients that the pattern appears or goes
