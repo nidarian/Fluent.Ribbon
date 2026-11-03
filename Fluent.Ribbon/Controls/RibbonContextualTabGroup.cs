@@ -4,6 +4,7 @@ namespace Fluent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -300,7 +301,7 @@ public class RibbonContextualTabGroup : Control
         {
             if (firstVisibleItem.TabControlParent?.SelectedItem is RibbonTabItem currentSelectedItem)
             {
-                currentSelectedItem.IsSelected = false;
+                currentSelectedItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.FalseBox); // keeps an app's binding on IsSelected
             }
 
             e.Handled = true;
@@ -313,7 +314,7 @@ public class RibbonContextualTabGroup : Control
                     firstVisibleItem.TabControlParent.SetIsMinimizedFromUserAction(false);
                 }
 
-                firstVisibleItem.IsSelected = true;
+                firstVisibleItem.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
         }
 
@@ -344,4 +345,7 @@ public class RibbonContextualTabGroup : Control
         var ribbonTitleBar = UIHelper.GetParent<RibbonTitleBar>(contextGroup);
         ribbonTitleBar?.ScheduleForceMeasureAndArrange();
     }
+
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer() => new Fluent.Automation.Peers.RibbonContextualTabGroupAutomationPeer(this);
 }
