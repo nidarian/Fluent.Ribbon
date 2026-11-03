@@ -598,7 +598,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
             var item = this.FindNextTabItem(startIndex, -1);
             if (item is not null)
             {
-                item.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
+                item.IsSelected = true;
             }
             else
             {
@@ -1074,7 +1074,7 @@ public class RibbonTabControl : Selector, IDropDownControl, ILogicalChildSupport
 
             if (item is not null)
             {
-                item.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
+                item.IsSelected = true;
             }
         }
     }
