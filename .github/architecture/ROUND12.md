@@ -43,6 +43,14 @@ forbids. History isn't rewritten here, so the same code went to a new branch
 - Nothing tells cached UI Automation clients that the pattern appears or goes
   away when the ribbon is minimized or restored (Narrator and NVDA ask again on
   focus, so they are fine).
+- Only the Expand half of the disabled-tab fix was seen failing: the test stops
+  at Expand, so the Collapse refusal is shown by the passing run only.
+- Expand on a tab that isn't shown, or on a ribbon that isn't minimized, quietly
+  does nothing (for a client that kept the pattern from earlier).
+- If the open tab becomes disabled, Collapse through that tab refuses (UI
+  Automation's rule); Escape still closes the popup.
+- A contextual tab whose group is `Hidden` (not `Collapsed`) is still drawn but
+  doesn't offer the pattern, like the tab control's own rule (rare).
 - When Expand moves the open popup from one tab to another, no state change
   event is raised for either tab (the popup stays open); a client that caches
   the state shows it stale until it asks again (older).
