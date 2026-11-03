@@ -2,8 +2,8 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-11-03 (rounds 5 to 12). The open choices about some of
-these are in `AUDIT-DECISIONS.md`.
+be checked when updating. Status: 2026-11-03 (rounds 5 to 12; round 12 is in the package once `integration/round12` is merged into `integration/all-fixes`). The open choices about some of
+these are in `AUDIT-DECISIONS.md` and `../OPEN-ITEMS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
 
@@ -189,8 +189,8 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   `GalleryItem` and `RibbonGroupBox` also report their KeyTip (access key) and
   ScreenTip (help text) to UI Automation; UI tests can see this. The gallery
   filter menu keeps an app's OneWay binding on `SelectedFilter` (`ROUND9.md`).
-- Round 10: a group that moves to another tab is reset to its full size there;
-  a group `State` set by the app is reset too (`ROUND10.md`).
+- Round 10: a group that moves to another tab is reset to its full size there
+  (`ROUND10.md`).
 
 ## Round 11
 
@@ -233,4 +233,5 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   Expand/Collapse and a collapsed group's).
 - Removing the selected tab, restoring a minimized ribbon without a selected tab,
   hiding the selected tab while minimized, and UI Automation Expand keep an app's
-  OneWay binding on `RibbonTabItem.IsSelected`.
+  OneWay binding on `RibbonTabItem.IsSelected` of the tab the ribbon selects
+  (or deselects). The "refresh everything" note of round 7 applies here too.

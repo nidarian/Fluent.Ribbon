@@ -14,12 +14,12 @@ combined round.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| "Use classic ribbon" / "Use simplified ribbon" replaced an app's OneWay binding on `Ribbon.IsSimplified` (same bug as "Minimize ribbon", fixed in the round 7 follow-up) | After using the menu, the app's setting no longer switched the ribbon | `fix/display-options-keeps-simplified-binding` | #516 → #519 |
+| "Use classic ribbon" / "Use simplified ribbon" replaced an app's OneWay binding on `Ribbon.IsSimplified` (same bug as "Minimize ribbon", fixed in round 7's independent review) | After using the menu, the app's setting no longer switched the ribbon | `fix/display-options-keeps-simplified-binding` | #516 → #519 |
 | A contextual tab group ("Table Tools") had no automation peer; its header TextBlock is hidden from the control view (WCAG 1.3.1) | Screen readers never announced the context of contextual tabs | `fix/a11y-contextual-group-name` | #517 → #521 |
 | The End/Home/Ctrl+Tab keys, the mouse wheel and a contextual header click replaced an explicit OneWay binding on a tab's `IsSelected` | After using them, the app could no longer select that tab | `fix/tab-isselected-keeps-oneway-binding` | #523 → #526 |
 | The ColorGallery colour lists had no names (WCAG 1.3.1) | A screen reader said "list" instead of "Theme Colors, list" | `fix/a11y-colorgallery-lists-and-menu-headings` | #518 → #524 |
 | A control wrapped in an item DataTemplate (a Border around the button) didn't get the simplified state | The button stayed in the classic look in the simplified ribbon | `fix/simplified-wrapped-template-children` | #528 → #529 |
-| UI Automation Toggle on the four display options items only changed the check mark (a regression of the round 8 and 11 fixes, found by the review) | UI tests or assistive technology that toggle these items didn't change the ribbon | `fix/display-options-uia-toggle` | #531 → #532 |
+| UI Automation Toggle on the four display options items only changed the check mark (a regression of the fixes from round 7's independent review and round 11, found by the review) | UI tests or assistive technology that toggle these items didn't change the ribbon | `fix/display-options-uia-toggle` | #531 → #532 |
 
 Along the way: the first tab test (#515) threw before it reached the code (a
 mouse wheel event without its RoutedEvent); the corrected test failed for the

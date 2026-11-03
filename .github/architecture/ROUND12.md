@@ -12,7 +12,7 @@ scope check asked whether any fix went beyond its intent.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| Removing the selected tab, restoring a minimized ribbon that had no selected tab, and hiding the selected tab while minimized replaced an explicit OneWay binding on a tab's `IsSelected` (two of them were round 11's "same pattern, not proven" items; restoring was found now) | After that, the app could no longer select the tab the ribbon chose (the one selected instead, the first tab, or the hidden one) | `fix/tab-isselected-sites-r12` | #537 (stricter tests: #543, which failed at the binding check, not yet at the new one) → #540 (run on the old branch's identical code), #541 |
+| Removing the selected tab, restoring a minimized ribbon that had no selected tab, and hiding the selected tab while minimized replaced an explicit OneWay binding on a tab's `IsSelected` (two of them were round 11's "same pattern, not proven" items; restoring was found now) | After that, the app could no longer select the tab the ribbon chose (the one selected instead, the first tab, or the hidden one) | `fix/tab-isselected-sites-r12` | #537 (stricter tests: #543: it failed at the "binding kept" check, before the new "app can still select the tab" check could run) → #540 (run on the old branch's identical code), #541 |
 | A tab on a minimized ribbon implements Expand/Collapse for UI Automation, but never offered the pattern, so a screen reader could not open it (WCAG 2.1.1, 4.1.2) | With Narrator or NVDA, the tabs of a minimized ribbon could not be opened | `fix/tab-isselected-uia-expand` | #542 → #544 |
 | Expand (now reachable) replaced an app's OneWay binding on the tab's `IsSelected` | After a screen reader opened a tab, the app could no longer select it | `fix/tab-isselected-uia-expand` | #542 → #544 |
 | Expand and Collapse on a disabled tab acted anyway (found by the review once the pattern was reachable; most other Fluent.Ribbon peers refuse, `ACCESSIBILITY.md`) | Assistive technology could open a disabled tab | `fix/tab-isselected-uia-expand` | #545 → #546 |
@@ -62,7 +62,7 @@ forbids. History isn't rewritten here, so the same code went to a new branch
 - The same peer implements ScrollItem, which is probably not offered either (not
   tested).
 
-Combined build of the round (`integration/round12`, 90ab054a, built as `diag/round12`):
+Combined build of the round (`integration/round12`, 90ab054a, built as `diag/round12`, which only adds the CI step that lists failed tests):
 **#553 green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and
 adversarial each round):
 

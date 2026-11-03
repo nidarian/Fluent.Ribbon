@@ -20,7 +20,14 @@ Small UI Automation gaps of the tabs on a minimized ribbon (details in
 `ROUND12.md`, "Deferred"): no event when the pattern appears or goes away, or
 when Expand moves the popup to another tab (screen readers that ask again on
 focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is
-drawn but can't be opened by a screen reader.
+drawn but can't be opened by a screen reader; if the open tab becomes disabled,
+a screen reader can't close it through that tab (Escape still works);
+`ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
+through the pattern, which isn't offered there).
+
+From round 11 (`ROUND11.md`): controls added later to a Panel nested in a group
+don't get the simplified look; an app's own RibbonTabControl style without the
+`IsSimplified` binding can show the wrong check marks.
 
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
 StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
@@ -66,10 +73,10 @@ Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
 items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
-`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings), text that doesn't
+`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-and the small UI Automation gaps of the minimized ribbon's tabs (ScrollItem probably not offered), and Expand/Collapse that don't
-refuse when disabled on the ribbon itself and on a collapsed group (`RibbonGroupBoxAutomationPeer`, found by reading, not tested).
+and the minimized ribbon's tabs probably not offering ScrollItem. Also: the ribbon itself and a collapsed group
+(`RibbonGroupBoxAutomationPeer`) can be expanded through UI Automation while disabled (found by reading, not tested).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
