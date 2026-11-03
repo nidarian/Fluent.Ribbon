@@ -61,10 +61,9 @@ The follow-up tested the rest: a ribbon moved from a plain window into a
 RibbonWindow was a real bug (fixed), moves into a plain window and back and
 forth were fine (tests kept as guards).
 
-Still without a test (`ROUND12.md`): whether UI Automation Select on a tab,
-`SelectFirstTab` and a click on a tab without a tab control keep an app's
-OneWay binding on `IsSelected` (the first two go through WPF's Selector, which
-should keep it). The Collapse half of the disabled-tab refusal was never seen
+Still without a test (`ROUND12.md`): whether a click on a tab without a tab
+control keeps an app's OneWay binding on `IsSelected` (only happens without a
+ribbon). The Collapse half of the disabled-tab refusal was never seen
 failing, only Expand (`ROUND12.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
@@ -73,11 +72,11 @@ Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
 items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
-`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
+`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-and the tabs probably not offering ScrollItem (on any ribbon), and a contextual group's
-name not announced again when its header changes at runtime (`ROUND11.md`). Also: the ribbon itself and a collapsed group
-(`RibbonGroupBoxAutomationPeer`) can be expanded through UI Automation while disabled (found by reading, not tested).
+a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`), and tabs probably
+not offering ScrollItem on any ribbon (`ROUND12.md`). Also: the Expand/Collapse of the ribbon itself and of a collapsed
+group (`RibbonGroupBoxAutomationPeer`) don't refuse when disabled (found by reading, not tested).
 
 ## 5. Checks only a person can do (on a Windows PC)
 

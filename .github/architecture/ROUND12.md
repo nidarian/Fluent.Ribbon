@@ -12,7 +12,7 @@ scope check asked whether any fix went beyond its intent.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| Removing the selected tab, restoring a minimized ribbon that had no selected tab, and hiding the selected tab while minimized replaced an explicit OneWay binding on a tab's `IsSelected` (two of them were round 11's "same pattern, not proven" items; restoring was found now) | After that, the app could no longer select the tab the ribbon chose (the one selected instead, the first tab, or the hidden one) | `fix/tab-isselected-sites-r12` | #537 (stricter tests: #543: it failed at the "binding kept" check, before the new "app can still select the tab" check could run) → #540 (run on the old branch's identical code), #541 |
+| Removing the selected tab, restoring a minimized ribbon that had no selected tab, and hiding the selected tab while minimized replaced an explicit OneWay binding on a tab's `IsSelected` (round 11's "same pattern, not proven" items; round 11's notes called the restore "`SelectFirstTab`" and UI Automation Expand "Select", corrected there) | After that, the app could no longer control the tab the ribbon changed (the one selected instead, the first tab, or the hidden one it deselected) | `fix/tab-isselected-sites-r12` | #537 (stricter tests: #543: it failed at the "binding kept" check, before the new "app can still select the tab" check could run) → #540 (run on the old branch's identical code), #541 |
 | A tab on a minimized ribbon implements Expand/Collapse for UI Automation, but never offered the pattern, so a screen reader could not open it (WCAG 2.1.1, 4.1.2) | With Narrator or NVDA, the tabs of a minimized ribbon could not be opened | `fix/tab-isselected-uia-expand` | #542 → #544 |
 | Expand (now reachable) replaced an app's OneWay binding on the tab's `IsSelected` | After a screen reader opened a tab, the app could no longer select it | `fix/tab-isselected-uia-expand` | #542 → #544 |
 | Expand and Collapse on a disabled tab acted anyway (found by the review once the pattern was reachable; most other Fluent.Ribbon peers refuse, `ACCESSIBILITY.md`) | Assistive technology could open a disabled tab | `fix/tab-isselected-uia-expand` | #545 → #546 |
@@ -35,11 +35,11 @@ forbids. History isn't rewritten here, so the same code went to a new branch
 
 ## Deferred or ruled out (tracked)
 
-- Still not proven (no failing test): UI Automation **Select** on a tab (goes
-  through WPF's own Selector, which keeps bindings), `SelectFirstTab` (sets the
-  tab control's `SelectedItem`, so it goes through the Selector too) and a click
-  on a tab that has no tab control (`RibbonTabItem`, only without a ribbon, still
-  the CLR setter).
+- Still not proven (no failing test): a click on a tab that has no tab control
+  (`RibbonTabItem`, only without a ribbon, still the CLR setter). That is the
+  last of round 11's list. Not the same pattern, so not looked at further: UI
+  Automation Select on a tab and the real `SelectFirstTab` go through WPF's own
+  Selector, which keeps bindings.
 - The ribbon's own UI Automation Expand/Collapse (minimize, restore) and a
   collapsed group's (`RibbonGroupBoxAutomationPeer`) don't refuse when disabled,
   unlike the tabs now (older, found by reading, not tested).

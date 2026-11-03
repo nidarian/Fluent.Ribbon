@@ -38,8 +38,10 @@ the scope check called that beyond the intent, and it was removed.
   in "highlight colours" mode one list is announced as "Standard Colors"; the
   gradient lists have no name.
 - Tab `IsSelected`, same pattern but not proven (no failing test): selecting the
-  next tab after a removal, `SelectFirstTab`, hiding a tab while minimized,
-  UI Automation Select, a click on a tab (passes already).
+  next tab after a removal, restoring a minimized ribbon without a selected tab
+  (first written here as `SelectFirstTab`), hiding a tab while minimized,
+  UI Automation Expand (first written here as "Select"), a click on a tab
+  (passes already). Round 12 proved and fixed all but the click (`ROUND12.md`).
 - Controls added later to a Panel nested in a group aren't simplified: there is no
   safe hook for a nested Panel's children.
 - A RibbonTabControl with its own style without the IsSimplified binding: the

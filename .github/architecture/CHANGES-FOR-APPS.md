@@ -191,8 +191,9 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   filter menu keeps an app's OneWay binding on `SelectedFilter` (`ROUND9.md`).
 - Round 10: a group added to a tab (also one moved from another tab) starts
   again from its first state, so a group that another tab had shrunk gets its
-  full size back. A `State` the app set on a group before adding it is
-  overwritten (`ROUND10.md`).
+  full size back. As before on the first add, a `State` the app set on a group
+  is overwritten; now also when the group is moved or added again
+  (`ROUND10.md`).
 
 ## Round 11
 
