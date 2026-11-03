@@ -513,7 +513,7 @@ public class RibbonTabItem : Control, IKeyTipedControl, IHeaderedControl, ILogic
             {
                 if (item.TabControlParent.IsMinimized)
                 {
-                    item.IsSelected = false;
+                    item.SetCurrentValue(IsSelectedProperty, BooleanBoxes.FalseBox); // keeps an app's binding on IsSelected
                 }
                 else
                 {
