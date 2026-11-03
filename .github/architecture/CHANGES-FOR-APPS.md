@@ -190,17 +190,28 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   ColorGallery colour lists are named after their heading. UI tests that walk
   the tree may see these new or renamed elements.
 - "Use classic ribbon" and "Use simplified ribbon" no longer replace an app's
-  OneWay binding on `Ribbon.IsSimplified` (as "Minimize ribbon" did for
-  `Ribbon.IsMinimized` until round 8). A UI Automation Toggle on any of the four
-  display options items now changes the ribbon, not only the check mark.
+  OneWay binding on `Ribbon.IsSimplified` (the "Minimize ribbon" item was fixed
+  for `Ribbon.IsMinimized` in round 7, above). A UI Automation Toggle on any of
+  the four display options items now changes the ribbon, not only the check mark.
+- The End, Home and Ctrl+Tab keys, the mouse wheel and a click on a contextual
+  group header keep an app's OneWay binding on `RibbonTabItem.IsSelected`. The
+  "refresh everything" note of round 7 applies here too.
+- A control wrapped in an item DataTemplate (for example a Border around a
+  button) now gets the simplified look. Decorator roots such as a Viewbox now
+  also pass the group's size to their child: visible for apps that sized that
+  child themselves.
 
 ## Round 12
 
 - On a minimized ribbon, a tab now offers the UI Automation ExpandCollapse
   pattern (it was implemented but never offered). Expand selects the tab and
-  opens its popup. On a normal ribbon the pattern is still not offered.
+  opens its popup. The pattern is not offered on a normal ribbon, nor for a tab
+  that isn't on screen (hidden, a contextual tab whose group is hidden, or a tab
+  of a collapsed, narrow ribbon); Expand quietly does nothing there. Collapse
+  only closes the popup when this tab is the open one.
 - Expand or Collapse on a disabled tab throws `ElementNotEnabledException`,
-  like the other Fluent.Ribbon controls.
+  like most other Fluent.Ribbon controls (not yet the ribbon's own
+  Expand/Collapse).
 - Removing the selected tab, restoring a minimized ribbon without a selected tab,
   hiding the selected tab while minimized, and UI Automation Expand keep an app's
   OneWay binding on `RibbonTabItem.IsSelected`.

@@ -102,5 +102,5 @@ conflict later.
 | `architecture/ROUND9.md` | Round 9: KeyTips and ScreenTips for screen readers on menu items, gallery items and groups, the gallery filter binding, the overflow sample's name |
 | `architecture/ROUND10.md` | Round 10: a group stuck shrunk after moving to a roomier tab |
 | `architecture/ROUND11.md` | Round 11: accessibility (contextual group names, ColorGallery lists), display options and tab selection bindings, simplified look for wrapped templates |
-| `architecture/ROUND12.md` | Round 12: the last tab selection bindings (removing, restoring, hiding tabs) and opening a tab on a minimized ribbon with a screen reader |
+| `architecture/ROUND12.md` | Round 12: the remaining tab selection bindings (removing, restoring, hiding tabs) and opening a tab on a minimized ribbon with a screen reader |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |

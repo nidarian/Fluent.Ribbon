@@ -34,6 +34,7 @@ toolbar copy writing `null` into the app's selection in its follow-up.
 | The empty strip next to the tabs acts as a title bar (drag, double-click maximizes, right-click shows the window menu); apps can't turn it off. | `ROUND5.md` |
 | Contextual group headers follow the order of `ContextualGroups`, not of their tabs. | `ROUND5.md` |
 | Gallery filter names `"A, B"` (space after the comma) silently hide B. | `ROUND5.md` |
+| A tab on a normal (not minimized) ribbon doesn't offer UI Automation Expand/Collapse; it does on a minimized ribbon. Default chosen: keep it so (offering it would make screen readers say "expanded" on every tab). | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
 ## 4. Suspicions not checked yet (need a test)
@@ -45,6 +46,11 @@ RemoveFromQuickAccess command and the StatusBar menu order were ruled out.
 The follow-up tested the rest: a ribbon moved from a plain window into a
 RibbonWindow was a real bug (fixed), moves into a plain window and back and
 forth were fine (tests kept as guards).
+
+Still without a test (`ROUND12.md`): whether UI Automation Select on a tab,
+`SelectFirstTab` and a click on a tab without a tab control keep an app's
+OneWay binding on `IsSelected` (the first two go through WPF's Selector, which
+should keep it).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
