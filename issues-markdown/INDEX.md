@@ -1,6 +1,6 @@
 # Fluent.Ribbon issue archive
 
-1236 issues and pull requests copied from the original project.
+1239 issues and pull requests copied from the original project.
 
 | # | Type | State | Title |
 |---|------|-------|-------|
@@ -1240,3 +1240,6 @@
 | [1282](issues/01282.md) | PR | closed | General purpose fix for missing/untransfered ItemsControl QAT properties |
 | [1283](issues/01283.md) | Issue | open | How to achieve mixed arrangement of size icons in RibbonGroupBox |
 | [1284](issues/01284.md) | Issue | closed | Requesting permission to try and help |
+| [1285](issues/01285.md) | PR | closed | Support derived quick-access ComboBox and SplitButton copies |
+| [1286](issues/01286.md) | PR | closed | Allow KeyTipService to serve control hosts |
+| [1287](issues/01287.md) | Issue | open | The name of a group box is truncated |
