@@ -54,7 +54,8 @@ items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); r
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
 `ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings), text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-and the small UI Automation gaps of the minimized ribbon's tabs (a hidden tab can be expanded; ScrollItem probably not offered).
+and the small UI Automation gaps of the minimized ribbon's tabs (ScrollItem probably not offered; the ribbon's own Expand doesn't
+refuse when disabled).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
