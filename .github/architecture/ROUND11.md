@@ -14,7 +14,7 @@ combined round.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| "Use classic ribbon" / "Use simplified ribbon" replaced an app's OneWay binding on `Ribbon.IsSimplified` (same bug as "Minimize ribbon" in round 8) | After using the menu, the app's setting no longer switched the ribbon | `fix/display-options-keeps-simplified-binding` | #516 → #519 |
+| "Use classic ribbon" / "Use simplified ribbon" replaced an app's OneWay binding on `Ribbon.IsSimplified` (same bug as "Minimize ribbon", fixed in the round 7 follow-up) | After using the menu, the app's setting no longer switched the ribbon | `fix/display-options-keeps-simplified-binding` | #516 → #519 |
 | A contextual tab group ("Table Tools") had no automation peer; its header TextBlock is hidden from the control view (WCAG 1.3.1) | Screen readers never announced the context of contextual tabs | `fix/a11y-contextual-group-name` | #517 → #521 |
 | The End/Home/Ctrl+Tab keys, the mouse wheel and a contextual header click replaced an explicit OneWay binding on a tab's `IsSelected` | After using them, the app could no longer select that tab | `fix/tab-isselected-keeps-oneway-binding` | #523 → #526 |
 | The ColorGallery colour lists had no names (WCAG 1.3.1) | A screen reader said "list" instead of "Theme Colors, list" | `fix/a11y-colorgallery-lists-and-menu-headings` | #518 → #524 |

@@ -16,7 +16,11 @@ had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-None.
+Small UI Automation gaps of the tabs on a minimized ribbon (details in
+`ROUND12.md`, "Deferred"): no event when the pattern appears or goes away, or
+when Expand moves the popup to another tab (screen readers that ask again on
+focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is
+drawn but can't be opened by a screen reader.
 
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
 StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
@@ -24,6 +28,8 @@ dropping an app's OneWay binding on `Ribbon.IsMinimized` and the InRibbonGallery
 toolbar copy writing `null` into the app's selection in its follow-up.
 
 ## 3. Decisions for the owner
+
+If nothing is decided, everything stays as it is now.
 
 | Question | Details |
 |---|---|
@@ -35,6 +41,7 @@ toolbar copy writing `null` into the app's selection in its follow-up.
 | Contextual group headers follow the order of `ContextualGroups`, not of their tabs. | `ROUND5.md` |
 | Gallery filter names `"A, B"` (space after the comma) silently hide B. | `ROUND5.md` |
 | A tab on a normal (not minimized) ribbon doesn't offer UI Automation Expand/Collapse; it does on a minimized ribbon. Default chosen: keep it so (offering it would make screen readers say "expanded" on every tab). | `ROUND12.md` |
+| The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
 ## 4. Suspicions not checked yet (need a test)
@@ -50,7 +57,8 @@ forth were fine (tests kept as guards).
 Still without a test (`ROUND12.md`): whether UI Automation Select on a tab,
 `SelectFirstTab` and a click on a tab without a tab control keep an app's
 OneWay binding on `IsSelected` (the first two go through WPF's Selector, which
-should keep it).
+should keep it). The Collapse half of the disabled-tab refusal was never seen
+failing, only Expand (`ROUND12.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
@@ -60,8 +68,8 @@ items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); r
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`). Still open, with details in
 `ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery colours (read as hex codes, English headings), text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-and the small UI Automation gaps of the minimized ribbon's tabs (ScrollItem probably not offered; the ribbon's own Expand doesn't
-refuse when disabled).
+and the small UI Automation gaps of the minimized ribbon's tabs (ScrollItem probably not offered), and Expand/Collapse that don't
+refuse when disabled on the ribbon itself and on a collapsed group (`RibbonGroupBoxAutomationPeer`, found by reading, not tested).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
@@ -72,7 +80,7 @@ person. Skip the ones already done.
 - **Two screens or high scaling** (`ROUND5.md`, five steps): sharp icons, dragging to a left-hand screen, maximize on each screen, the Windows 11 snap layout popup, `UseNativeCaptionButtons`.
 - **Right-to-left window at 150 % scaling**: ScreenTips line up with their control. (`ROUND6.md`)
 - **Showcase "new thread" window**: "More Colors" in both windows, no crash, the colour shows in both. (`ROUND6.md`)
-- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`) On a minimized ribbon, a tab can be opened with the screen reader (or with Inspect, ExpandCollapse pattern) and is announced as collapsed or expanded; a disabled tab refuses. (`ROUND12.md`)
+- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`) On a minimized ribbon, a tab can be opened with the screen reader (or with Inspect, ExpandCollapse pattern) and is announced as collapsed or expanded. (`ROUND12.md`)
 - **High Contrast** (only if an app turns it on): the manual checks in `architecture/HIGH-CONTRAST.md`.
 
 ## 6. Not covered on purpose
