@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
@@ -94,11 +95,84 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
+    // A tab the ribbon itself wouldn't select (hidden, or contextual with its group hidden) must not be opened by UI Automation.
+    [Test]
+    public void Hidden_tab_on_a_minimized_ribbon_neither_offers_nor_acts_on_Expand()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+            tabs[1].Visibility = Visibility.Collapsed;
+            UIHelper.DoEvents();
+
+            AssertNotOpenable(ribbon, tabs[1], dataPeer);
+        }
+    }
+
+    [Test]
+    public void Contextual_tab_of_a_hidden_group_on_a_minimized_ribbon_neither_offers_nor_acts_on_Expand()
+    {
+        var group = new RibbonContextualTabGroup { Header = "Table Tools", Visibility = Visibility.Collapsed };
+        var (ribbon, tabs, _) = CreateRibbon(group);
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+            Assert.That(tabs[1].IsContextual, Is.True, "Precondition: the second tab is contextual");
+
+            AssertNotOpenable(ribbon, tabs[1], dataPeer);
+        }
+    }
+
+    // Collapse on a tab whose popup isn't the open one must not close the popup of another tab.
+    [Test]
+    public void Collapse_on_a_tab_that_is_not_open_leaves_the_open_tab_alone()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var secondPeer = PrepareMinimized(ribbon, tabs[1]);
+            var firstPeer = GetDataPeer(ribbon, tabs[0]);
+
+            ((IExpandCollapseProvider)secondPeer).Expand();
+            UIHelper.DoEvents();
+            Assert.That(ribbon.TabControl!.IsDropDownOpen, Is.True, "Precondition: the second tab is open");
+            Assert.That(((IExpandCollapseProvider)firstPeer).ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Collapsed), "Precondition: the first tab reports collapsed");
+
+            ((IExpandCollapseProvider)firstPeer).Collapse();
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.TabControl.IsDropDownOpen, Is.True, "Collapse on a collapsed tab must not close another tab's popup");
+            Assert.That(tabs[1].IsSelected, Is.True, "The open tab must stay selected");
+        }
+    }
+
+    private static void AssertNotOpenable(Ribbon ribbon, RibbonTabItem tab, RibbonTabItemDataAutomationPeer dataPeer)
+    {
+        Assert.That(dataPeer.GetPattern(PatternInterface.ExpandCollapse), Is.Null, "A tab the user can't see must not offer ExpandCollapse");
+
+        // A client could still hold the pattern from before the tab was hidden.
+        ((IExpandCollapseProvider)dataPeer).Expand();
+        UIHelper.DoEvents();
+
+        Assert.That(tab.IsSelected, Is.False, "Expand must not select a tab the user can't see");
+        Assert.That(ribbon.TabControl!.IsDropDownOpen, Is.False, "Expand must not open the popup for a tab the user can't see");
+    }
+
     // Both tabs' IsSelected are bound OneWay to their own view model (both start "not selected").
-    private static (Ribbon Ribbon, RibbonTabItem[] Tabs, TabModel[] Models) CreateRibbon()
+    private static (Ribbon Ribbon, RibbonTabItem[] Tabs, TabModel[] Models) CreateRibbon(RibbonContextualTabGroup groupOfSecondTab = null)
     {
         var ribbon = new Ribbon { CanMinimize = true, AutomaticStateManagement = false };
-        var tabs = new[] { new RibbonTabItem { Header = "Home" }, new RibbonTabItem { Header = "Insert" } };
+        var tabs = new[] { new RibbonTabItem { Header = "Home" }, new RibbonTabItem { Header = "Insert", Group = groupOfSecondTab } };
+
+        if (groupOfSecondTab is not null)
+        {
+            ribbon.ContextualGroups.Add(groupOfSecondTab);
+        }
+
         var models = new[] { new TabModel(), new TabModel() };
 
         for (var i = 0; i < tabs.Length; i++)
@@ -121,6 +195,11 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         Assert.That(ribbon.TabControl.IsMinimized, Is.True, "Precondition: the tab control is minimized");
         Assert.That(tab.IsSelected, Is.False, "Precondition: the tab is not selected yet");
 
+        return GetDataPeer(ribbon, tab);
+    }
+
+    private static RibbonTabItemDataAutomationPeer GetDataPeer(Ribbon ribbon, RibbonTabItem tab)
+    {
         var tabControlPeer = UIElementAutomationPeer.CreatePeerForElement(ribbon.TabControl);
         var dataPeer = tabControlPeer.GetChildren().OfType<RibbonTabItemDataAutomationPeer>().FirstOrDefault(x => ReferenceEquals(x.Item, tab));
         Assert.That(dataPeer, Is.Not.Null, "Precondition: the tab control peer exposes a data peer for the tab");
