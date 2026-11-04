@@ -152,7 +152,7 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
-        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
+        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize.
         if (this.OwningRibbon.CanMinimize == false)
         {
             return;
@@ -167,12 +167,8 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
-        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
-        if (this.OwningRibbon.CanMinimize == false)
-        {
-            return;
-        }
-
+        // Restoring stays possible with CanMinimize off: a mouse user can still restore through a contextual group header,
+        // so a screen reader user must not be stuck with a minimized ribbon.
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
