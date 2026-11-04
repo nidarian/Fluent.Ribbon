@@ -6,7 +6,8 @@ original project.
 How: same as round 11. Each fix was proven by a tests-only build that fails in
 the new tests on net462, net6.0 and net8.0, then the fix. Blind reviews
 (pessimistic and adversarial) ran until two rounds in a row were clean, and a
-scope check asked whether any fix went beyond its intent.
+scope check asked whether any fix went beyond its intent: the tab sites stayed in scope (the
+screen reader fix was checked for scope by its adversarial reviews).
 
 ## Fixed
 

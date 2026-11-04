@@ -226,7 +226,7 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   pattern (it was implemented but never offered). Expand selects the tab and
   opens its popup. The pattern is not offered on a normal ribbon, nor for a tab
   that isn't on screen (hidden, a contextual tab whose group is hidden, or a tab
-  of a collapsed, narrow or hidden ribbon); Expand quietly does nothing there (a disabled
+  of a collapsed ribbon in a narrow window, or of a hidden ribbon); Expand quietly does nothing there (a disabled
   tab throws first, see below). Collapse only closes the popup when this tab is
   the open one. When Expand moves the open popup to another tab, no state change
   event is raised. `RibbonTabItemDataAutomationPeer` has a new `GetPattern`
