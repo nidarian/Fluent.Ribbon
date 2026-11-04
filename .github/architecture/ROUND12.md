@@ -52,7 +52,7 @@ forbids. History isn't rewritten here, so the same code went to a new branch
 - Expand on a tab that isn't shown, or on a ribbon that isn't minimized, quietly
   does nothing (for a client that kept the pattern from earlier).
 - If the open tab becomes disabled, Collapse through that tab refuses (UI
-  Automation's rule); Escape still closes the popup.
+  Automation's rule); Escape probably still closes the popup (not checked).
 - A contextual tab whose group is `Hidden` (not `Collapsed`) is still drawn but
   doesn't offer the pattern, like the tab control's own rule (rare).
 - When Expand moves the open popup from one tab to another, no state change

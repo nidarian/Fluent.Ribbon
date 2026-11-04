@@ -1,7 +1,8 @@
 # Round 13: disabled ribbon and groups, and CanMinimize, for screen readers
 
 Done 2026-11-04. **AI (Claude) was used** for all of it. Nothing was sent to the
-original project. Both items were found by the round 12 reviews.
+original project. The disabled ribbon and group were found by the round 12
+reviews, the `CanMinimize` gap by a round 13 reviewer.
 
 How: same as rounds 11 and 12. Each fix was proven by a tests-only build that
 fails in the new tests on net462, net6.0 and net8.0, then the fix. Blind
@@ -19,11 +20,11 @@ can neither minimize nor restore, like the keyboard. A screen reader user is
 not worse off than a keyboard user: on a minimized ribbon each tab can still be
 opened (round 12).
 
-The reviews disagreed on this once. Round B said blocking the restore leaves a
-screen reader user stuck, because a mouse user can still restore by clicking a
-contextual group header; so restore was allowed for a while. Round C showed
-that the keyboard can't restore either, and that the tabs stay reachable, so
-the first version came back (with a new commit, history not rewritten). The
+The decision changed twice. First restore was blocked. Round B said that
+leaves a screen reader user stuck, because a mouse user can still restore by
+clicking a contextual group header, so restore was allowed. Round C showed that
+the keyboard can't restore either and that the tabs stay reachable, so restore
+was blocked again (with a new commit, history not rewritten). The
 contextual header click is left as a decision for the owner.
 
 ## Deferred (tracked)
@@ -36,8 +37,9 @@ contextual header click is left as a decision for the owner.
   owner; default: quiet, like the other Fluent.Ribbon peers in a state where the
   action doesn't apply.
 - If a collapsed group is disabled while its drop down is open, UI Automation
-  can't close it through the group (it refuses, as UI Automation requires);
-  Escape still closes it.
+  can't close it through the group (it refuses, as UI Automation requires).
+  Escape probably doesn't close it either (keyboard input doesn't reach a
+  disabled element); a click outside probably does. Not checked.
 - The disabled tests stop at the first action (the ribbon's Collapse, the
   group's Expand), so the second action's refusal is shown by the passing runs
   only.
@@ -47,8 +49,8 @@ Combined build (`integration/round13`, bfc562f8, on top of round 12, built as
 green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and
 adversarial each round):
 
-- Round A (disabled ribbon and group): safe, no bugs. One reviewer found the
-  `CanMinimize` gap, fixed above.
-- Round B: the restore question (see "Default chosen").
-- Round C: the opposite view on restore; the first version came back.
+- Round A (disabled ribbon and group): no bugs in the change; one reviewer
+  found the `CanMinimize` gap, fixed above.
+- Round B (not clean): restore should be allowed; the code was changed.
+- Round C (not clean): the opposite view; restore was blocked again.
 - Rounds D and E: safe, no bugs. **Two clean rounds in a row.**
