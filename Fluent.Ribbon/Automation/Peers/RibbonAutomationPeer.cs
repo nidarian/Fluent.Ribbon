@@ -158,6 +158,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
             throw new ElementNotEnabledException();
         }
 
+        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);
     }
 
@@ -171,6 +177,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
         if (this.IsEnabled() == false)
         {
             throw new ElementNotEnabledException();
+        }
+
+        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
         }
 
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
