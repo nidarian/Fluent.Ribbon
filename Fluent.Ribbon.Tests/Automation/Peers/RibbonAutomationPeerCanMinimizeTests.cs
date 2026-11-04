@@ -7,8 +7,9 @@ using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 /// <summary>
-/// With <see cref="Ribbon.CanMinimize"/> off, a user can't minimize or restore the ribbon: the tab double-click and the display
-/// options menu ignore it. UI Automation Expand/Collapse on the ribbon must follow the same rule.
+/// With <see cref="Ribbon.CanMinimize"/> off, a user can't minimize or restore the ribbon: the tab double-click, the display options
+/// menu and Ctrl+F1 ignore it. UI Automation Expand/Collapse on the ribbon must follow the same rule (on a minimized ribbon each tab
+/// can still be opened, also through UI Automation).
 /// </summary>
 [TestFixture]
 public class RibbonAutomationPeerCanMinimizeTests
