@@ -24,7 +24,7 @@ when Expand moves the popup to another tab (screen readers that ask again on
 focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is
 drawn but can't be opened by a screen reader; if the open tab becomes disabled,
 a screen reader can't close it through that tab (Escape probably still works, not checked); the same
-for a collapsed group disabled while its drop down is open (there Escape probably doesn't work either, `ROUND13.md`);
+for a collapsed group disabled while its drop down is open (unlike the tab, Escape probably doesn't work there, `ROUND13.md`);
 `ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
 through the pattern, which isn't offered there).
 
@@ -51,6 +51,7 @@ If nothing is decided, everything stays as it is now.
 | Contextual group headers follow the order of `ContextualGroups`, not of their tabs. | `ROUND5.md` |
 | Gallery filter names `"A, B"` (space after the comma) silently hide B. | `ROUND5.md` |
 | A tab on a normal (not minimized) ribbon doesn't offer UI Automation Expand/Collapse; it does on a minimized ribbon. Default chosen: keep it so (offering it would make screen readers say "expanded" on every tab). | `ROUND12.md` |
+| With `CanMinimize` off, UI Automation can neither minimize nor restore the ribbon (like the keyboard; the tabs can still be opened). Allow restore instead? The reviews argued both ways. Default: keep it blocked. | `ROUND13.md` |
 | A mouse click on a contextual group header restores a minimized ribbon even with `CanMinimize` off (the keyboard, the tab double-click, the menu and UI Automation don't). Default: leave it. | `ROUND13.md` |
 | With `CanMinimize` off, UI Automation Expand/Collapse on the ribbon quietly do nothing; throw instead? Default: quiet. | `ROUND13.md` |
 | The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |

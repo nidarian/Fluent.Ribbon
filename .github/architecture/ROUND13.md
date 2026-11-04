@@ -44,13 +44,16 @@ contextual header click is left as a decision for the owner.
   group's Expand), so the second action's refusal is shown by the passing runs
   only.
 
-Combined build (`integration/round13`, bfc562f8, on top of round 12, built as
-`diag/round13`, which only adds the CI step that lists failed tests): **#563
-green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and
-adversarial each round):
+Combined builds of `integration/round13` (on top of round 12, built as
+`diag/round13`, which only adds the CI step that lists failed tests), all green
+on net462, net6.0 and net8.0: #560 (first version), #561 (restore allowed;
+its Expand test was rewritten for that and changed back later), #562 (restore
+blocked again), **#563** (final, bfc562f8: #562 plus a comment that names the
+paths the rule follows). Blind reviews (pessimistic and adversarial each round):
 
-- Round A (disabled ribbon and group): no bugs in the change; one reviewer
-  found the `CanMinimize` gap, fixed above.
-- Round B (not clean): restore should be allowed; the code was changed.
-- Round C (not clean): the opposite view; restore was blocked again.
-- Rounds D and E: safe, no bugs. **Two clean rounds in a row.**
+- Round A (disabled ribbon and group, not clean): no bugs in the change, but a
+  reviewer found the `CanMinimize` gap, fixed above.
+- Round B (not clean): restore should be allowed; the code was changed (#561).
+- Round C (not clean): the opposite view; restore was blocked again (#562).
+- Round D (#562's code): safe, no bugs; its note led to the comment in #563.
+- Round E (the final code, #563): safe, no bugs. **Two clean rounds in a row.**
