@@ -152,7 +152,7 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
-        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize or restore
+        // Like the tab double-click, the display options menu and Ctrl+F1, which don't minimize or restore while CanMinimize is off
         // (on a minimized ribbon each tab can still be opened, also through UI Automation).
         if (this.OwningRibbon.CanMinimize == false)
         {
@@ -168,7 +168,7 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
-        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize or restore
+        // Like the tab double-click, the display options menu and Ctrl+F1, which don't minimize or restore while CanMinimize is off
         // (on a minimized ribbon each tab can still be opened, also through UI Automation).
         if (this.OwningRibbon.CanMinimize == false)
         {
