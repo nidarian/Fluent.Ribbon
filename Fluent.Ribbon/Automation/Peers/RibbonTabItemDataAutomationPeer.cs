@@ -1,5 +1,6 @@
 ﻿namespace Fluent.Automation.Peers;
 
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
@@ -17,6 +18,24 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     public RibbonTabItemDataAutomationPeer(object item, RibbonTabControlAutomationPeer tabControlAutomationPeer)
         : base(item, tabControlAutomationPeer)
     {
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// The base class doesn't return <see cref="PatternInterface.ExpandCollapse"/>, so screen readers could not open a tab on a
+    /// minimized ribbon. It is offered only while the ribbon is minimized (on a normal ribbon a tab isn't expanded or collapsed),
+    /// and only for a tab the user can see.
+    /// </remarks>
+    public override object? GetPattern(PatternInterface patternInterface)
+    {
+        if (patternInterface == PatternInterface.ExpandCollapse
+            && this.GetWrapper() is RibbonTabItem { TabControlParent.IsMinimized: true } tab
+            && IsShown(tab))
+        {
+            return this;
+        }
+
+        return base.GetPattern(patternInterface);
     }
 
     /// <inheritdoc />
@@ -73,16 +92,24 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     #region IExpandCollapseProvider Members
 
     /// <summary>
-    /// If Ribbon.IsMinimized then set Ribbon.IsDropDownOpen to false
+    /// On a minimized ribbon, closes the popup if this tab is the open one.
+    /// Throws <see cref="ElementNotEnabledException"/> for a disabled tab.
     /// </summary>
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         var wrapperTab = this.GetWrapper() as RibbonTabItem;
         if (wrapperTab is not null)
         {
             var tabControl = wrapperTab.TabControlParent;
             if (tabControl is not null &&
-                tabControl.IsMinimized)
+                tabControl.IsMinimized &&
+                wrapperTab.IsSelected)
             {
                 tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             }
@@ -90,10 +117,17 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     }
 
     /// <summary>
-    /// If Ribbon.IsMinimized then set Ribbon.IsDropDownOpen to true
+    /// On a minimized ribbon, selects this tab and opens its popup, if the user can see the tab.
+    /// Throws <see cref="ElementNotEnabledException"/> for a disabled tab.
     /// </summary>
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         var wrapperTab = this.GetWrapper() as RibbonTabItem;
 
         // Select the tab and display popup
@@ -101,16 +135,17 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
         {
             var tabControl = wrapperTab.TabControlParent;
             if (tabControl is not null &&
-                tabControl.IsMinimized)
+                tabControl.IsMinimized &&
+                IsShown(wrapperTab))
             {
-                wrapperTab.IsSelected = true;
+                wrapperTab.SetCurrentValue(RibbonTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
                 tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.TrueBox);
             }
         }
     }
 
     /// <summary>
-    /// Return Ribbon.IsDropDownOpen
+    /// On a minimized ribbon, Expanded while this tab is selected and its popup is open.
     /// </summary>
     ExpandCollapseState IExpandCollapseProvider.ExpandCollapseState
     {
@@ -153,4 +188,12 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     }
 
     #endregion
+
+    // On screen (IsVisible also covers a collapsed ribbon or a hidden parent), and for a contextual tab its group visible too,
+    // like the tab control's mouse wheel selection.
+    private static bool IsShown(RibbonTabItem tab)
+    {
+        return tab.IsVisible
+               && (tab.IsContextual == false || tab.Group?.Visibility == Visibility.Visible);
+    }
 }
