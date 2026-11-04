@@ -158,7 +158,8 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
             throw new ElementNotEnabledException();
         }
 
-        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize.
+        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize or restore
+        // (on a minimized ribbon each tab can still be opened, also through UI Automation).
         if (this.OwningRibbon.CanMinimize == false)
         {
             return;
@@ -179,8 +180,13 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
             throw new ElementNotEnabledException();
         }
 
-        // Restoring stays possible with CanMinimize off: a mouse user can still restore through a contextual group header,
-        // so a screen reader user must not be stuck with a minimized ribbon.
+        // Like the tab double-click, the display options menu and Ctrl+F1: with CanMinimize off the user can't minimize or restore
+        // (on a minimized ribbon each tab can still be opened, also through UI Automation).
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
