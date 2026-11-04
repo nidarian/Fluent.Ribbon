@@ -18,7 +18,7 @@ had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-Small UI Automation gaps of the ribbon tabs (details in
+Small UI Automation gaps of the ribbon tabs and groups (details in
 `ROUND12.md`, "Deferred"): no event when the pattern appears or goes away, or
 when Expand moves the popup to another tab (screen readers that ask again on
 focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is
