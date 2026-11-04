@@ -152,6 +152,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
+        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);
     }
 
@@ -161,6 +167,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
+        // Like the tab double-click and the display options menu: with CanMinimize off the user can't minimize or restore.
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
