@@ -49,6 +49,8 @@ If nothing is decided, everything stays as it is now.
 | Contextual group headers follow the order of `ContextualGroups`, not of their tabs. | `ROUND5.md` |
 | Gallery filter names `"A, B"` (space after the comma) silently hide B. | `ROUND5.md` |
 | A tab on a normal (not minimized) ribbon doesn't offer UI Automation Expand/Collapse; it does on a minimized ribbon. Default chosen: keep it so (offering it would make screen readers say "expanded" on every tab). | `ROUND12.md` |
+| A mouse click on a contextual group header restores a minimized ribbon even with `CanMinimize` off (the keyboard, the tab double-click, the menu and UI Automation don't). Default: leave it. | `ROUND13.md` |
+| With `CanMinimize` off, UI Automation Expand/Collapse on the ribbon quietly do nothing; throw instead? Default: quiet. | `ROUND13.md` |
 | The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
@@ -76,8 +78,8 @@ ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ri
 `ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
 a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`), and tabs probably
-not offering ScrollItem on any ribbon (`ROUND12.md`). Also: the Expand/Collapse of the ribbon itself and of a collapsed
-group (`RibbonGroupBoxAutomationPeer`) don't refuse when disabled (found by reading, not tested).
+not offering ScrollItem on any ribbon (`ROUND12.md`). Round 13 made a disabled ribbon or collapsed group refuse UI Automation
+Expand/Collapse (`ROUND13.md`).
 
 ## 5. Checks only a person can do (on a Windows PC)
 

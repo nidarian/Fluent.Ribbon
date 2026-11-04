@@ -41,8 +41,8 @@ forbids. History isn't rewritten here, so the same code went to a new branch
   last of round 11's list. Not the same pattern, so not looked at further: UI
   Automation Select on a tab and the real `SelectFirstTab` go through WPF's own
   Selector, which keeps bindings.
-- The ribbon's own UI Automation Expand/Collapse (minimize, restore) and a
-  collapsed group's (`RibbonGroupBoxAutomationPeer`) don't refuse when disabled,
+- (Fixed in round 13, `ROUND13.md`.) The ribbon's own UI Automation Expand/Collapse (minimize, restore) and a
+  collapsed group's (`RibbonGroupBoxAutomationPeer`) didn't refuse when disabled,
   unlike the tabs now (older, found by reading, not tested).
 - Nothing tells cached UI Automation clients that the pattern appears or goes
   away when the ribbon is minimized or restored (Narrator and NVDA ask again on

@@ -232,9 +232,18 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   event is raised. `RibbonTabItemDataAutomationPeer` has a new `GetPattern`
   override (only matters for apps that subclass it).
 - Expand or Collapse on a disabled tab throws `ElementNotEnabledException`,
-  like most other Fluent.Ribbon controls (not yet the ribbon's own
-  Expand/Collapse and a collapsed group's).
+  like the other Fluent.Ribbon controls (the ribbon's own and a collapsed
+  group's since round 13).
 - Removing the selected tab, restoring a minimized ribbon without a selected tab,
   hiding the selected tab while minimized, and UI Automation Expand keep an app's
   OneWay binding on `RibbonTabItem.IsSelected` of the tab the ribbon selects
   (or deselects). The "refresh everything" note of round 7 applies here too.
+
+## Round 13
+
+- UI Automation Expand/Collapse on a disabled ribbon or a disabled collapsed
+  group throws `ElementNotEnabledException`.
+- With `Ribbon.CanMinimize` off, UI Automation Expand/Collapse on the ribbon do
+  nothing (no minimize, no restore), like the tab double-click, the display
+  options menu and Ctrl+F1. A UI test that minimized or restored such a ribbon
+  through UI Automation will see no change.
