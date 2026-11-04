@@ -42,4 +42,13 @@ contextual header click is left as a decision for the owner.
   group's Expand), so the second action's refusal is shown by the passing runs
   only.
 
-COMBINED_AND_REVIEWS
+Combined build (`integration/round13`, bfc562f8, on top of round 12, built as
+`diag/round13`, which only adds the CI step that lists failed tests): **#563
+green** on net462, net6.0 and net8.0. Blind reviews (pessimistic and
+adversarial each round):
+
+- Round A (disabled ribbon and group): safe, no bugs. One reviewer found the
+  `CanMinimize` gap, fixed above.
+- Round B: the restore question (see "Default chosen").
+- Round C: the opposite view on restore; the first version came back.
+- Rounds D and E: safe, no bugs. **Two clean rounds in a row.**
