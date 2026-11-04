@@ -7,8 +7,9 @@ using Fluent.Tests.TestClasses;
 using NUnit.Framework;
 
 /// <summary>
-/// With <see cref="Ribbon.CanMinimize"/> off, a user can't minimize or restore the ribbon: the tab double-click and the display
-/// options menu ignore it. UI Automation Expand/Collapse on the ribbon must follow the same rule.
+/// With <see cref="Ribbon.CanMinimize"/> off, a user can't minimize the ribbon (the tab double-click, the display options menu and
+/// Ctrl+F1 ignore it), so UI Automation Collapse must not minimize it either. Restoring stays possible through UI Automation:
+/// a mouse user can still restore through a contextual group header, and a screen reader user must not be stuck.
 /// </summary>
 [TestFixture]
 public class RibbonAutomationPeerCanMinimizeTests
@@ -29,8 +30,9 @@ public class RibbonAutomationPeerCanMinimizeTests
         }
     }
 
+    // Default (noted in the round notes): restoring is not blocked.
     [Test]
-    public void Expand_does_not_restore_when_CanMinimize_is_off()
+    public void Expand_still_restores_when_CanMinimize_is_off()
     {
         var ribbon = CreateRibbon();
 
@@ -41,7 +43,7 @@ public class RibbonAutomationPeerCanMinimizeTests
             GetExpandCollapse(ribbon).Expand();
             UIHelper.DoEvents();
 
-            Assert.That(ribbon.IsMinimized, Is.True, "UI Automation must not restore a ribbon whose CanMinimize is off, like the tab double-click");
+            Assert.That(ribbon.IsMinimized, Is.False, "A screen reader user must still be able to restore a minimized ribbon");
         }
     }
 
