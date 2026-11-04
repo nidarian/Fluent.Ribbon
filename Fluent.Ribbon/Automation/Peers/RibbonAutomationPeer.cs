@@ -152,6 +152,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);
     }
 
@@ -161,6 +167,12 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
