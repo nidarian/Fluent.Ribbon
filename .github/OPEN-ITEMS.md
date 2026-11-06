@@ -26,7 +26,8 @@ drawn but can't be opened by a screen reader; if the open tab becomes disabled,
 a screen reader can't close it through that tab (Escape probably still works, not checked); the same
 for a collapsed group disabled while its drop down is open (unlike the tab, Escape probably doesn't work there, `ROUND13.md`);
 `ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
-through the pattern, which isn't offered there).
+through the pattern, which isn't offered there); a hidden tab, or a contextual tab whose
+group is hidden, still offers ScrollItem (scrolling to it is harmless but meaningless, `ROUND14.md`).
 
 From round 11 (`ROUND11.md`): controls added later to a Panel nested in a group
 don't get the simplified look; an app's own RibbonTabControl style without the
@@ -71,7 +72,8 @@ Still without a test (`ROUND12.md`): whether a click on a tab without a tab
 control keeps an app's OneWay binding on `IsSelected` (only happens without a
 ribbon). The Collapse half of the disabled-tab refusal was never seen
 failing, only Expand (`ROUND12.md`). In round 13 the same for the second action
-of the disabled ribbon and group tests (`ROUND13.md`).
+of the disabled ribbon and group tests (`ROUND13.md`). In round 14 the test checks that a
+tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
@@ -79,7 +81,7 @@ Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
 items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
 ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`); round 14 a tab's ScrollItem (`ROUND14.md`). Still open, with details in
-`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
+`ROUND8.md` and `ROUND11.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
 a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`).
 

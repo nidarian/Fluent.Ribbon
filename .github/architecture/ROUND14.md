@@ -13,8 +13,9 @@ adversarial) ran until two rounds in a row were clean.
 |---|---|---|---|
 | A ribbon tab implements UI Automation ScrollItem (bring the tab into view when the tabs don't fit) but never offered it, like Expand before round 12 (WCAG 4.1.2) | A screen reader or UI test could not scroll a tab into view | `fix/tab-uia-scrollitem` | #566 → #567 |
 
-ScrollItem only scrolls the tab strip: no tab is selected, focus doesn't move,
-nothing opens. It is offered for every tab, like the gallery items in this
+ScrollItem only scrolls: the tab strip, and an app's own scroll area around the
+ribbon if it has one (as with any WPF control). No tab is selected, focus
+doesn't move, nothing opens. It is offered for every tab, like the gallery items in this
 library and WPF's own list items.
 
 ## Deferred (tracked)
