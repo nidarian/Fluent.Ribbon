@@ -97,6 +97,31 @@ public class ItemIsSelectedOneWayBindingTests
         }
     }
 
+    // Removing the selected backstage page selects the next one; that must not replace the next page's binding.
+    [Test]
+    public void Removing_the_selected_backstage_page_keeps_the_next_pages_OneWay_IsSelected_binding()
+    {
+        var model = new SelectionModel();
+        var first = new BackstageTabItem { Header = "First" };
+        var second = new BackstageTabItem { Header = "Second" };
+        second.SetBinding(BackstageTabItem.IsSelectedProperty, new Binding(nameof(SelectionModel.IsSelected)) { Source = model, Mode = BindingMode.OneWay });
+        var tabControl = new BackstageTabControl { Items = { first, second } };
+
+        using (new TestRibbonWindow(tabControl))
+        {
+            UIHelper.DoEvents();
+            tabControl.SelectedItem = first;
+            UIHelper.DoEvents();
+            Assert.That(first.IsSelected, Is.True, "Precondition: the first page is selected");
+
+            tabControl.Items.Remove(first);
+            UIHelper.DoEvents();
+
+            Assert.That(second.IsSelected, Is.True, "Precondition: removing the selected page selects the next one");
+            Assert.That(BindingOperations.GetBindingExpression(second, BackstageTabItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on IsSelected was lost");
+        }
+    }
+
     // A gallery with Selectable=false (a command gallery) unselects the clicked item again; that must not replace the binding either.
     [Test]
     public void Click_on_an_item_of_a_non_selectable_gallery_keeps_its_OneWay_IsSelected_binding()
