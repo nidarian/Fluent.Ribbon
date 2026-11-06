@@ -28,6 +28,12 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
     /// </remarks>
     public override object? GetPattern(PatternInterface patternInterface)
     {
+        // The base class doesn't offer ScrollItem either, although this peer implements it (brings the tab into view).
+        if (patternInterface == PatternInterface.ScrollItem)
+        {
+            return this;
+        }
+
         if (patternInterface == PatternInterface.ExpandCollapse
             && this.GetWrapper() is RibbonTabItem { TabControlParent.IsMinimized: true } tab
             && IsShown(tab))
