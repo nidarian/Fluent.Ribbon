@@ -2,8 +2,8 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-10-09 (rounds 5 and 6). The open choices about some of
-these are in `AUDIT-DECISIONS.md`.
+be checked when updating. Status: 2026-11-06 (rounds 5 to 15; rounds 12 to 15 are in the package once `integration/round12` to `integration/round15` are merged into `integration/all-fixes`). The open choices about some of
+these are in `AUDIT-DECISIONS.md` and `../OPEN-ITEMS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
 
@@ -183,3 +183,100 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   Spinner's text box, and a checkable SplitButton exposes the Toggle pattern
   (UI tests that look for these may need updating).
 
+## Rounds 9 and 10
+
+- Round 9: `Fluent.MenuItem` has its own automation peer, and menu items,
+  `GalleryItem` and `RibbonGroupBox` also report their KeyTip (access key) and
+  ScreenTip (help text) to UI Automation; UI tests can see this. The gallery
+  filter menu keeps an app's OneWay binding on `SelectedFilter` (`ROUND9.md`).
+- Round 10: a group added to a tab (also one moved from another tab) starts
+  again from its first state, so a group that another tab had shrunk gets its
+  full size back. As before on the first add, a `State` the app set on a group
+  is overwritten; now also when the group is moved or added again
+  (`ROUND10.md`).
+
+## Round 11
+
+- A contextual tab group ("Table Tools") is now its own element in the UI
+  Automation tree (control type Group, named after its header), and the
+  ColorGallery colour lists are named after their heading. UI tests that walk
+  the tree may see these new or renamed elements.
+- "Use classic ribbon" and "Use simplified ribbon" no longer replace an app's
+  OneWay binding on `Ribbon.IsSimplified` (the "Minimize ribbon" item was fixed
+  for `Ribbon.IsMinimized` in round 7, above). A UI Automation Toggle on any of
+  the four display options items now changes the ribbon, not only the check mark.
+  **An app with its own RibbonTabControl template** should copy the new template
+  parts `PART_UseClassicRibbonMenuItem` and `PART_UseSimplifiedRibbonMenuItem`
+  together with their `Mode=OneWay` bindings (`RibbonTabControl.xaml`): without
+  the part names the items keep the old behaviour; with the OneWay bindings but
+  without the part names they no longer switch the ribbon. A template without the
+  `IsSimplified` binding can show the wrong check marks.
+- The End, Home and Ctrl+Tab keys, the mouse wheel and a click on a contextual
+  group header keep an app's OneWay binding on `RibbonTabItem.IsSelected`. The
+  "refresh everything" note of round 7 applies here too.
+- A control wrapped in an item DataTemplate (for example a Border around a
+  button) now gets the simplified look. Decorator roots such as a Viewbox now
+  also pass the group's size to their child: visible for apps that sized that
+  child themselves. Controls added later to a Panel nested in a group still don't
+  get the simplified look.
+
+## Round 12
+
+- On a minimized ribbon, a tab now offers the UI Automation ExpandCollapse
+  pattern (it was implemented but never offered). Expand selects the tab and
+  opens its popup. The pattern is not offered on a normal ribbon, nor for a tab
+  that isn't on screen (hidden, a contextual tab whose group is hidden, or a tab
+  of a collapsed ribbon in a narrow window, or of a hidden ribbon); Expand quietly does nothing there (a disabled
+  tab throws first, see below). Collapse only closes the popup when this tab is
+  the open one. When Expand moves the open popup to another tab, no state change
+  event is raised. `RibbonTabItemDataAutomationPeer` has a new `GetPattern`
+  override (only matters for apps that subclass it).
+- Expand or Collapse on a disabled tab throws `ElementNotEnabledException`,
+  like the other Fluent.Ribbon controls (the ribbon's own and a collapsed
+  group's since round 13).
+- Removing the selected tab, restoring a minimized ribbon without a selected tab,
+  hiding the selected tab while minimized, and UI Automation Expand keep an app's
+  OneWay binding on `RibbonTabItem.IsSelected` of the tab the ribbon selects
+  (or deselects). The "refresh everything" note of round 7 applies here too.
+
+## Round 13
+
+- UI Automation Expand/Collapse on a disabled ribbon or a disabled collapsed
+  group throws `ElementNotEnabledException`.
+- With `Ribbon.CanMinimize` off, UI Automation Expand/Collapse on the ribbon do
+  nothing (no minimize, no restore), like the tab double-click, the display
+  options menu and Ctrl+F1. A UI test that minimized or restored such a ribbon
+  through UI Automation will see no change.
+
+## Round 14
+
+- A ribbon tab now offers the UI Automation ScrollItem pattern (bring the tab
+  into view). UI tests that list a tab's patterns see it. Using it scrolls the
+  tab strip and, as with any WPF control, an app's own scroll area around the
+  ribbon.
+
+## Round 15
+
+- A click, focus or KeyTip on a backstage page, selecting the next page after the
+  selected one is removed, a click on a gallery item, and a non-selectable
+  gallery unselecting the clicked item keep an app's explicit
+  OneWay binding on `IsSelected`. The "refresh everything" note of round 7
+  applies here too. If an app sets `IsSelected` with a fixed style setter or
+  trigger (not a binding), any of these selections now overrides it only until the style is
+  applied again (for example on a theme switch) or the trigger changes; then
+  the style's value returns.
+- UI Automation Toggle on the checked (or indeterminate) button of a group, or
+  the checked checkable menu item of a group, now leaves it as it is, where a
+  click ends up too; it doesn't raise Click or run the command, and for a menu
+  item it doesn't fire Unchecked/Checked (a click unchecks it for a moment). A disabled one still refuses with
+  `ElementNotEnabledException`, as before. Other toggles behave as before, but for every
+  Fluent `ToggleButton` and checkable `MenuItem` the Toggle pattern is now a
+  separate object, not the automation peer itself. `RibbonToggleButtonAutomationPeer`
+  and `RibbonMenuItemAutomationPeer` have a new `GetPattern` override (only
+  matters for apps that subclass them).
+- Typing in the Quick Access Toolbar copy of a `TextBox` keeps an app's OneWay
+  binding on the original's `Text`. The copy now follows the original OneWay and
+  writes typed text back. The "refresh everything" note of round 7 applies here
+  too. If an app sets the original's `Text` with a fixed style
+  setter or trigger, typed text now overrides it only until the style is applied
+  again or the trigger changes.
