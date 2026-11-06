@@ -47,7 +47,7 @@ copy showed the selection stays put.
 
 Combined build of `integration/round15` (e24fd622, on top of round 14, built as
 `diag/round15`, which only adds the CI step that lists failed tests): **#594
-green** on net462, net6.0 and net8.0. The first tests-only build of all three
+green** on net462, net6.0 and net8.0 (and #595 on `integration/round15` itself). The first tests-only build of all three
 candidates (#578) showed only 10 failures because GitHub caps the failure notes
 of one step, so each fix got its own tests-only build (#579 to #581).
 
