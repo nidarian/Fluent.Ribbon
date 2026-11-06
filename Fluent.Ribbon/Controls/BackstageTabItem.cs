@@ -154,7 +154,7 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
         if (ReferenceEquals(e.Source, this)
             || this.IsSelected == false)
         {
-            this.IsSelected = true;
+            this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
         }
     }
 
@@ -163,7 +163,7 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
     {
         base.OnGotFocus(e);
 
-        this.IsSelected = true;
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
     }
 
     #endregion
@@ -224,7 +224,7 @@ public class BackstageTabItem : ContentControl, IHeaderedControl, IKeyTipedContr
     /// <inheritdoc />
     public KeyTipPressedResult OnKeyTipPressed()
     {
-        this.IsSelected = true;
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
 
         return KeyTipPressedResult.Empty;
     }

@@ -408,7 +408,7 @@ public class GalleryItem : ListBoxItem, IKeyTipedControl, ICommandSource
         }
 
         this.ExecuteCommand();
-        this.IsSelected = true;
+        this.SetCurrentValue(IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
         e.Handled = true;
     }
 
