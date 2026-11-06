@@ -1,7 +1,9 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-01, after round 8
-(`architecture/ROUND7.md`, `architecture/ROUND8.md`). Each item points to the
+One page for all loose ends. Status: 2026-11-04, after round 13 (rounds 12 and
+13 are in the package once `integration/round12` and `integration/round13` are
+merged into `integration/all-fixes`)
+(`architecture/ROUND7.md` to `architecture/ROUND13.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -16,7 +18,19 @@ had not really proven it (`architecture/ROUND7.md`).
 
 ## 2. Known small gaps (real, not fixed)
 
-None.
+Small UI Automation gaps of the ribbon tabs and groups (details in
+`ROUND12.md`, "Deferred"): no event when the pattern appears or goes away, or
+when Expand moves the popup to another tab (screen readers that ask again on
+focus are fine); a contextual tab whose group is `Hidden` (not `Collapsed`) is
+drawn but can't be opened by a screen reader; if the open tab becomes disabled,
+a screen reader can't close it through that tab (Escape probably still works, not checked); the same
+for a collapsed group disabled while its drop down is open (unlike the tab, Escape probably doesn't work there, `ROUND13.md`);
+`ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
+through the pattern, which isn't offered there).
+
+From round 11 (`ROUND11.md`): controls added later to a Panel nested in a group
+don't get the simplified look; an app's own RibbonTabControl style without the
+`IsSimplified` binding can show the wrong check marks.
 
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
 StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
@@ -24,6 +38,8 @@ dropping an app's OneWay binding on `Ribbon.IsMinimized` and the InRibbonGallery
 toolbar copy writing `null` into the app's selection in its follow-up.
 
 ## 3. Decisions for the owner
+
+If nothing is decided, everything stays as it is now.
 
 | Question | Details |
 |---|---|
@@ -34,6 +50,11 @@ toolbar copy writing `null` into the app's selection in its follow-up.
 | The empty strip next to the tabs acts as a title bar (drag, double-click maximizes, right-click shows the window menu); apps can't turn it off. | `ROUND5.md` |
 | Contextual group headers follow the order of `ContextualGroups`, not of their tabs. | `ROUND5.md` |
 | Gallery filter names `"A, B"` (space after the comma) silently hide B. | `ROUND5.md` |
+| A tab on a normal (not minimized) ribbon doesn't offer UI Automation Expand/Collapse; it does on a minimized ribbon. Default chosen: keep it so (offering it would make screen readers say "expanded" on every tab). | `ROUND12.md` |
+| With `CanMinimize` off, UI Automation can neither minimize nor restore the ribbon (like the keyboard; the tabs can still be opened). Allow restore instead? The reviews argued both ways. Default: keep it blocked. | `ROUND13.md` |
+| A mouse click on a contextual group header restores a minimized ribbon even with `CanMinimize` off (the keyboard, the tab double-click, the menu and UI Automation don't). Default: leave it. | `ROUND13.md` |
+| With `CanMinimize` off, UI Automation Expand/Collapse on the ribbon quietly do nothing; throw instead? Default: quiet. | `ROUND13.md` |
+| The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
 ## 4. Suspicions not checked yet (need a test)
@@ -46,13 +67,22 @@ The follow-up tested the rest: a ribbon moved from a plain window into a
 RibbonWindow was a real bug (fixed), moves into a plain window and back and
 forth were fine (tests kept as guards).
 
+Still without a test (`ROUND12.md`): whether a click on a tab without a tab
+control keeps an app's OneWay binding on `IsSelected` (only happens without a
+ribbon). The Collapse half of the disabled-tab refusal was never seen
+failing, only Expand (`ROUND12.md`). In round 13 the same for the second action
+of the disabled ribbon and group tests (`ROUND13.md`).
+
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
 Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
-items, gallery items and groups, and the overflow sample's name (`ROUND9.md`). Still open, with details in `ROUND8.md`:
-the ColorGallery (no automation peer, colours read as hex codes), contextual group labels in the automation tree, text that doesn't
-grow with the Windows text size, and keyboard access to the status bar menu.
+items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
+ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`). Still open, with details in
+`ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
+grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
+a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`), and tabs probably
+not offering ScrollItem on any ribbon (`ROUND12.md`).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
@@ -63,7 +93,7 @@ person. Skip the ones already done.
 - **Two screens or high scaling** (`ROUND5.md`, five steps): sharp icons, dragging to a left-hand screen, maximize on each screen, the Windows 11 snap layout popup, `UseNativeCaptionButtons`.
 - **Right-to-left window at 150 % scaling**: ScreenTips line up with their control. (`ROUND6.md`)
 - **Showcase "new thread" window**: "More Colors" in both windows, no crash, the colour shows in both. (`ROUND6.md`)
-- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`)
+- **Screen reader (Narrator or NVDA)**: what is spoken for the Spinner, the ColorGallery and the status bar menu; Shift+F10 on the status bar; where focus goes when a StartScreen opens. (`ROUND8.md`) On a minimized ribbon, a tab can be opened with the screen reader (or with Inspect, ExpandCollapse pattern) and is announced as collapsed or expanded. (`ROUND12.md`)
 - **High Contrast** (only if an app turns it on): the manual checks in `architecture/HIGH-CONTRAST.md`.
 
 ## 6. Not covered on purpose
