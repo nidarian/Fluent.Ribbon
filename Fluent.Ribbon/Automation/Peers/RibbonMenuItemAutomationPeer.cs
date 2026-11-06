@@ -17,7 +17,8 @@ public class RibbonMenuItemAutomationPeer : MenuItemAutomationPeer
 
     /// <inheritdoc />
     /// <remarks>
-    /// The Toggle pattern is wrapped so that toggling the checked item of a group keeps it checked, like a click (issue #481).
+    /// The Toggle pattern is wrapped so that toggling the checked item of a group keeps it checked, which is where a click ends
+    /// up too (issue #481; a click unchecks it for a moment and checks it again).
     /// </remarks>
     public override object? GetPattern(PatternInterface patternInterface)
     {
