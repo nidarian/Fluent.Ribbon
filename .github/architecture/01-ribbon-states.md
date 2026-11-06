@@ -2,7 +2,7 @@
 
 The Ribbon keeps a few on/off switches that decide how it looks: minimized (only the tab headers show, and a tab's content opens as a popup when clicked), simplified (a flatter, single-row layout), collapsed (hidden entirely because the window is too small), backstage/start screen open, and whether the Quick Access Toolbar sits above or below the ribbon. Three of them (minimized, Quick Access Toolbar position, simplified) are written to a small file on the user's machine and read back the next time the Ribbon loads. That saving and loading is on by default and can be turned off with `AutomaticStateManagement`.
 
-Scope: this describes the code at this checkout (upstream). The fork's package (`integration/all-fixes` and the `integration/roundN` branches) changes some of it: UI Automation Expand/Collapse use `SetCurrentValue` (round 7) and, from round 13, refuse on a disabled ribbon and do nothing while `CanMinimize` is off (see `ROUND7.md`, `ROUND13.md`). Those changes are not described here.
+Scope: this describes the code at this checkout (upstream). The fork changes some of it on other branches: UI Automation Expand/Collapse use `SetCurrentValue` on `integration/all-fixes` (round 7, `fix/uia-expandcollapse-keeps-minimized-binding`, see `.github/architecture/ROUND7.md`), and on `integration/round13` (until it is merged into `integration/all-fixes`) they also refuse on a disabled ribbon and do nothing while `CanMinimize` is off (`fix/uia-disabled-ribbon-and-group`, `fix/uia-ribbon-respects-canminimize`, see `.github/architecture/ROUND13.md`). Those changes are not described here.
 
 ## State diagram
 
