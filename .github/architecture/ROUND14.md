@@ -20,8 +20,9 @@ library and WPF's own list items.
 
 ## Deferred (tracked)
 
-- For a hidden tab, or a contextual tab whose group is hidden, ScrollItem is
-  still offered; scrolling to it is harmless but meaningless (the tab strip can
+- For a tab that isn't on screen (hidden, a contextual tab whose group is
+  hidden, a collapsed ribbon, or tab headers turned off), ScrollItem is still
+  offered; scrolling to it is harmless but meaningless (the tab strip can
   jump). Not tested.
 - The test checks that the pattern is offered, not that the tab strip actually
   scrolls (the scrolling code was there before).

@@ -26,8 +26,8 @@ drawn but can't be opened by a screen reader; if the open tab becomes disabled,
 a screen reader can't close it through that tab (Escape probably still works, not checked); the same
 for a collapsed group disabled while its drop down is open (unlike the tab, Escape probably doesn't work there, `ROUND13.md`);
 `ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
-through the pattern, which isn't offered there); a hidden tab, or a contextual tab whose
-group is hidden, still offers ScrollItem (scrolling to it is harmless but meaningless, `ROUND14.md`).
+through the pattern, which isn't offered there); a tab that isn't on screen (hidden,
+in a hidden contextual group, on a collapsed ribbon) still offers ScrollItem (scrolling to it is harmless but meaningless, `ROUND14.md`).
 
 From round 11 (`ROUND11.md`): controls added later to a Panel nested in a group
 don't get the simplified look; an app's own RibbonTabControl style without the

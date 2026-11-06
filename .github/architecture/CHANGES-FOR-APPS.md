@@ -251,4 +251,6 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
 ## Round 14
 
 - A ribbon tab now offers the UI Automation ScrollItem pattern (bring the tab
-  into view). UI tests that list a tab's patterns see it.
+  into view). UI tests that list a tab's patterns see it. Using it scrolls the
+  tab strip and, as with any WPF control, an app's own scroll area around the
+  ribbon.
