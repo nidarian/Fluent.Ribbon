@@ -1,7 +1,7 @@
 # Round 15: three bugs from a new audit
 
 Done 2026-11-06. **AI (Claude) was used** for all of it. Nothing was sent to the
-original project. The owner was travelling; the work followed the same rules.
+original project.
 
 How: a read-only bug hunt looked for new, testable problems. Its three
 candidates were each proven by a tests-only build that fails in the new tests on
@@ -37,8 +37,11 @@ copy showed the selection stays put.
 - The backstage page's focus path is fixed with the others but has no test of
   its own.
 - A value an app sets with a fixed style setter or trigger (not a binding) is no
-  longer pinned by a click or by typing in the toolbar copy; if the style is
-  applied again, its value comes back.
+  longer pinned by a click or by typing in the toolbar copy; it comes back when
+  the style is applied again or the trigger changes.
+- Not tested: a three-state grouped toggle button in the indeterminate state
+  (the rule covers it, like a click), and a disabled grouped menu item refusing
+  (tested for the toggle button only).
 
 Combined build of `integration/round15` (e24fd622, on top of round 14, built as
 `diag/round15`, which only adds the CI step that lists failed tests): **#594

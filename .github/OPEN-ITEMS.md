@@ -33,6 +33,10 @@ From round 11 (`ROUND11.md`): controls added later to a Panel nested in a group
 don't get the simplified look; an app's own RibbonTabControl style without the
 `IsSimplified` binding can show the wrong check marks.
 
+From round 15 (`ROUND15.md`): a selection or text that an app sets with a fixed style setter or
+trigger (not a binding) is no longer pinned by a click or by typing in the toolbar copy; it comes back
+when the style is applied again or the trigger changes.
+
 The Spinner and ComboBox toolbar copies, the ApplicationMenu KeyTip and the
 StatusBar `Visibility` gaps were fixed in round 7; UI Automation Expand/Collapse
 dropping an app's OneWay binding on `Ribbon.IsMinimized` and the InRibbonGallery
@@ -55,7 +59,7 @@ If nothing is decided, everything stays as it is now.
 | With `CanMinimize` off, UI Automation can neither minimize nor restore the ribbon (like the keyboard; the tabs can still be opened). Allow restore instead? The reviews argued both ways. Default: keep it blocked. | `ROUND13.md` |
 | A mouse click on a contextual group header restores a minimized ribbon even with `CanMinimize` off (the keyboard, the tab double-click, the menu and UI Automation don't). Default: leave it. | `ROUND13.md` |
 | With `CanMinimize` off, UI Automation Expand/Collapse on the ribbon quietly do nothing; throw instead? Default: quiet. | `ROUND13.md` |
-| UI Automation Toggle on the checked item of a group keeps its state but doesn't raise Click or run the command (a click does). Run the command too? Default: no. | `ROUND15.md` |
+| UI Automation Toggle on the checked item of a group keeps its state but doesn't raise Click or run the command (a click does, and so does Toggle on a grouped split button, which has its own older code). Run the command too, for toggle buttons and menu items? Default: no. | `ROUND15.md` |
 | The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
@@ -75,7 +79,8 @@ ribbon). The Collapse half of the disabled-tab refusal was never seen
 failing, only Expand (`ROUND12.md`). In round 13 the same for the second action
 of the disabled ribbon and group tests (`ROUND13.md`). In round 14 the test checks that a
 tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`). Round 15:
-the backstage page's focus path has no test of its own; `BackstageTabControl`'s own `SelectedItem`
+the backstage page's focus path, a three-state grouped toggle button in the indeterminate state and a
+disabled grouped menu item have no test of their own; `BackstageTabControl`'s own `SelectedItem`
 and `ColorGallery`'s internal items still use the CLR setter in one place each (`ROUND15.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
@@ -83,7 +88,7 @@ and `ColorGallery`'s internal items still use the CLR setter in one place each (
 Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
 items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
-ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`); round 14 a tab's ScrollItem (`ROUND14.md`). Still open, with details in
+ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`); round 14 a tab's ScrollItem (`ROUND14.md`); round 15 Toggle on grouped toggle buttons and menu items (`ROUND15.md`). Still open, with details in
 `ROUND8.md` and `ROUND11.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
 a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`).
