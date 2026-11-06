@@ -2,6 +2,8 @@
 
 The Ribbon keeps a few on/off switches that decide how it looks: minimized (only the tab headers show, and a tab's content opens as a popup when clicked), simplified (a flatter, single-row layout), collapsed (hidden entirely because the window is too small), backstage/start screen open, and whether the Quick Access Toolbar sits above or below the ribbon. Three of them (minimized, Quick Access Toolbar position, simplified) are written to a small file on the user's machine and read back the next time the Ribbon loads. That saving and loading is on by default and can be turned off with `AutomaticStateManagement`.
 
+Scope: this describes the code at this checkout (upstream). The fork's package (`integration/all-fixes` and the `integration/roundN` branches) changes some of it: UI Automation Expand/Collapse use `SetCurrentValue` (round 7) and, from round 13, refuse on a disabled ribbon and do nothing while `CanMinimize` is off (see `ROUND7.md`, `ROUND13.md`). Those changes are not described here.
+
 ## State diagram
 
 IsMinimized (owned by `Ribbon`, mirrored two-way into `RibbonTabControl`):
@@ -16,8 +18,8 @@ stateDiagram-v2
     Expanded --> Minimized : double-click tab header, if CanMinimize [E7]
     Minimized --> Expanded : double-click tab header, if CanMinimize [E7]
     Minimized --> Expanded : contextual tab group header clicked [E8]
-    Expanded --> Minimized : UI Automation Collapse(), if enabled and CanMinimize [E9]
-    Minimized --> Expanded : UI Automation Expand(), if enabled and CanMinimize [E9]
+    Expanded --> Minimized : UI Automation Collapse() [E9]
+    Minimized --> Expanded : UI Automation Expand() [E9]
     Expanded --> Minimized : stored state loaded, if CanMinimize [E31]
     Minimized --> Expanded : stored state loaded, if CanMinimize [E31]
 ```
@@ -95,7 +97,7 @@ stateDiagram-v2
 | E6 | While minimized, the tab control template moves the selected content from the main area into the popup. | `Fluent.Ribbon/Themes/Controls/RibbonTabControl.xaml:308` | `<Trigger Property="IsMinimized" Value="True">` |
 | E7 | Double-clicking a tab header flips `IsMinimized` on the `RibbonTabControl` if `CanMinimize`. | `Fluent.Ribbon/Controls/RibbonTabItem.cs:586` | `this.TabControlParent.IsMinimized = !this.TabControlParent.IsMinimized;` |
 | E8 | Clicking a contextual tab group header un-minimizes the tab control. | `Fluent.Ribbon/Controls/RibbonContextualTabGroup.cs:301` | `firstVisibleItem.TabControlParent.IsMinimized = false;` |
-| E9 | UI Automation Collapse minimizes the ribbon and Expand restores it (with `SetCurrentValue`, which keeps an app's binding); since round 13 both refuse on a disabled ribbon and do nothing while `CanMinimize` is off. | `Fluent.Ribbon/Automation/Peers/RibbonAutomationPeer.cs:168` | `this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);` |
+| E9 | UI Automation Collapse sets `Ribbon.IsMinimized = true` (Expand sets it false two lines later). | `Fluent.Ribbon/Automation/Peers/RibbonAutomationPeer.cs:142` | `this.OwningRibbon.IsMinimized = true;` |
 | E10 | `RibbonTabControl.IsDropDownOpen` is coerced to false when not minimized. | `Fluent.Ribbon/Controls/RibbonTabControl.cs:205` | `if (!tabControl.IsMinimized)` |
 | E11 | When `RibbonTabControl.IsMinimized` becomes false, the drop-down popup is closed. | `Fluent.Ribbon/Controls/RibbonTabControl.cs:872` | `tabControl.IsDropDownOpen = false;` |
 | E12 | `SelectFirstTab` does nothing while minimized. | `Fluent.Ribbon/Controls/RibbonTabControl.cs:846` | `if (this.IsMinimized)` |
@@ -147,7 +149,7 @@ stateDiagram-v2
 - `Ribbon.IsMinimized` and `RibbonTabControl.IsMinimized` must stay the same value. The only link is the two-way binding in the `RibbonTabControl` default style; a custom `RibbonTabControl` style that drops that setter breaks it [E5]. Code that minimizes from inside the tab control (double-click, contextual group click) writes to `RibbonTabControl.IsMinimized`, not to `Ribbon.IsMinimized`, and relies on that binding to reach the Ribbon and the saved state [E7, E8, E38].
 - The same holds for `IsSimplified`: `RibbonTabControl.IsSimplified` is only a mirror and has no callback; the push down to tabs happens only in `Ribbon.OnIsSimplifiedChanged` and in the `Tabs` collection-changed handler [E13, E14, E18]. Tabs pass it to groups, groups to their child controls [E19, E20].
 - The tab popup (`IsDropDownOpen`) can only be true while minimized, enforced by coercion and by closing it on un-minimize [E10, E11].
-- `CanMinimize` and `CanUseSimplified` are checked by the commands, the keyboard shortcuts, the tab double-click, UI Automation (`CanMinimize`, since round 13) and the state loader, but not by the `IsMinimized`/`IsSimplified` properties themselves [E3, E4, E7, E9, E15, E16, E17, E31, E32].
+- `CanMinimize` and `CanUseSimplified` are checked by the commands, the keyboard shortcuts, the tab double-click and the state loader, but not by the `IsMinimized`/`IsSimplified` properties themselves [E3, E4, E7, E15, E16, E17, E31, E32].
 - `Save()` refuses to write until `Load()` has run once for the current storage object; this prevents an unloaded default state from overwriting the file [E44, E45].
 - A new storage object is created after every `DetachFromWindow`, so the "loaded" flag resets and the next `Loaded` event reads the file again [E37, E39, E40, E42].
 - `IsCollapsed` is only recalculated on the owner window's `SizeChanged` or when `IsAutomaticCollapseEnabled` changes; there must be an owner window [E29, E30].
@@ -156,7 +158,7 @@ stateDiagram-v2
 
 ## How app code should interact
 
-- Minimize/expand: set `Ribbon.IsMinimized`, or execute `Ribbon.ToggleMinimizeTheRibbonCommand` which respects `CanMinimize` [E1, E3]. Listen with the `IsMinimizedChanged` event [E2]. Set `CanMinimize=false` to block the user paths [E3, E4, E7, E9]; a click on a contextual group header still restores [E8].
+- Minimize/expand: set `Ribbon.IsMinimized`, or execute `Ribbon.ToggleMinimizeTheRibbonCommand` which respects `CanMinimize` [E1, E3]. Listen with the `IsMinimizedChanged` event [E2]. Set `CanMinimize=false` to block the user paths [E3, E4, E7]; a click on a contextual group header still restores [E8].
 - Simplified layout: set `CanUseSimplified=true` first (default is false) [E15], then set `Ribbon.IsSimplified` or execute `SwitchToTheSimplifiedRibbonCommand` / `SwitchToTheClassicRibbonCommand` [E13, E16]. Tabs added later pick up the current value automatically [E18].
 - Auto-collapse: read `Ribbon.IsCollapsed` or handle `IsCollapsedChanged`; turn the automatic behaviour off with `IsAutomaticCollapseEnabled=false` [E25, E29].
 - Backstage/start screen: open and close through the `Backstage.IsOpen` property; treat `Ribbon.IsBackstageOrStartScreenOpen` as read-only status [E23, E24]. A `StartScreen` shows once; to show it again the app must set `StartScreen.Shown=false` [E53].
