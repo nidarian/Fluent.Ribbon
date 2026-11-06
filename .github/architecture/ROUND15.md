@@ -37,8 +37,8 @@ copy showed the selection stays put.
 - The backstage page's focus path is fixed with the others but has no test of
   its own.
 - Accepted side effect (a decision for the owner, default: keep): if an app sets
-  `IsSelected` or `Text` with a fixed style setter or trigger (not a binding), a
-  click or typing in the toolbar copy now overrides it only until the style is
+  `IsSelected` or `Text` with a fixed style setter or trigger (not a binding), any
+  of the selections above or typing in the toolbar copy now overrides it only until the style is
   applied again (for example on a theme switch) or the trigger changes; then the
   style's value returns and the user's selection or text is lost.
 - Not tested: a three-state grouped toggle button in the indeterminate state

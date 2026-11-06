@@ -262,7 +262,7 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   gallery unselecting the clicked item keep an app's explicit
   OneWay binding on `IsSelected`. The "refresh everything" note of round 7
   applies here too. If an app sets `IsSelected` with a fixed style setter or
-  trigger (not a binding), a click now overrides it only until the style is
+  trigger (not a binding), any of these selections now overrides it only until the style is
   applied again (for example on a theme switch) or the trigger changes; then
   the style's value returns.
 - UI Automation Toggle on the checked (or indeterminate) button of a group, or
