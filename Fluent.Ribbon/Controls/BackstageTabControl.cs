@@ -338,7 +338,7 @@ public class BackstageTabControl : Selector, ILogicalChildSupport
             var item = this.FindNextTabItem(startIndex, -1);
             if (item is not null)
             {
-                item.IsSelected = true;
+                item.SetCurrentValue(BackstageTabItem.IsSelectedProperty, BooleanBoxes.TrueBox); // keeps an app's binding on IsSelected
             }
         }
     }

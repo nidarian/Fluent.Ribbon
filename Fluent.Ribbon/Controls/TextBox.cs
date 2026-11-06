@@ -140,7 +140,9 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
     {
         RibbonControl.BindQuickAccessItem(this, element);
 
-        RibbonControl.Bind(this, element, nameof(this.Text), TextProperty, BindingMode.TwoWay, UpdateSourceTrigger.PropertyChanged);
+        // OneWay: the copy writes typed text back in OnQuickAccessItemTextChanged with SetCurrentValue, so an app's binding on our Text
+        // is kept (a TwoWay binding here would write with SetValue and replace an app's OneWay binding with a local value).
+        RibbonControl.Bind(this, element, nameof(this.Text), TextProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, element, nameof(this.IsReadOnly), IsReadOnlyProperty, BindingMode.OneWay);
         RibbonControl.Bind(this, element, nameof(this.CharacterCasing), CharacterCasingProperty, BindingMode.TwoWay);
         RibbonControl.Bind(this, element, nameof(this.MaxLength), MaxLengthProperty, BindingMode.TwoWay);
@@ -156,6 +158,20 @@ public class TextBox : System.Windows.Controls.TextBox, IQuickAccessItemProvider
         // The handler lives on the quick access item (which already references this control through its bindings),
         // so it does not keep the item alive after it was removed from the toolbar.
         element.LostFocus += this.OnQuickAccessItemLostFocus;
+
+        if (element is System.Windows.Controls.TextBox textBox)
+        {
+            textBox.TextChanged += this.OnQuickAccessItemTextChanged;
+        }
+    }
+
+    private void OnQuickAccessItemTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox quickAccessItem
+            && string.Equals(quickAccessItem.Text, this.Text, System.StringComparison.Ordinal) == false)
+        {
+            this.SetCurrentValue(TextProperty, quickAccessItem.Text);
+        }
     }
 
     private void OnQuickAccessItemLostFocus(object sender, RoutedEventArgs e)

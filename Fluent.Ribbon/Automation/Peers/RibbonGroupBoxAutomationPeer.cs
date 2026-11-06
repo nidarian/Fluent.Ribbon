@@ -120,6 +120,12 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
     /// <inheritdoc />
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         if (this.IsCollapseOrExpandValid == false)
         {
             return;
@@ -131,6 +137,12 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
     /// <inheritdoc />
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
         if (this.IsCollapseOrExpandValid == false)
         {
             return;
