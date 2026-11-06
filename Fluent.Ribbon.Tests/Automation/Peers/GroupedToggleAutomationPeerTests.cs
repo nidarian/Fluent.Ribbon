@@ -37,6 +37,43 @@ public class GroupedToggleAutomationPeerTests
     }
 
     [Test]
+    public void Toggle_on_a_disabled_checked_grouped_ToggleButton_refuses()
+    {
+        var left = new Fluent.ToggleButton { Header = "Left", GroupName = "Alignment", IsChecked = true, IsEnabled = false };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { left } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(left).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the toggle button offers the Toggle pattern");
+
+            Assert.That(() => toggle.Toggle(), Throws.InstanceOf<ElementNotEnabledException>(), "A disabled element must refuse");
+            Assert.That(left.IsChecked, Is.True);
+        }
+    }
+
+    // Guard: a toggle button without a group still toggles off through UI Automation (WPF's own Toggle).
+    [Test]
+    public void Toggle_on_a_checked_ungrouped_ToggleButton_still_unchecks_it()
+    {
+        var bold = new Fluent.ToggleButton { Header = "Bold", IsChecked = true };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { bold } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(bold).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the toggle button offers the Toggle pattern");
+
+            toggle.Toggle();
+            UIHelper.DoEvents();
+
+            Assert.That(bold.IsChecked, Is.False, "An ungrouped toggle button must still toggle off");
+        }
+    }
+
+    [Test]
     public void Toggle_on_a_checked_grouped_MenuItem_keeps_it_checked()
     {
         var left = new Fluent.MenuItem { Header = "Left", IsCheckable = true, GroupName = "Alignment", IsChecked = true };
