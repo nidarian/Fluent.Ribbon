@@ -97,6 +97,50 @@ public class ItemIsSelectedOneWayBindingTests
         }
     }
 
+    // A gallery with Selectable=false (a command gallery) unselects the clicked item again; that must not replace the binding either.
+    [Test]
+    public void Click_on_an_item_of_a_non_selectable_gallery_keeps_its_OneWay_IsSelected_binding()
+    {
+        var model = new SelectionModel();
+        var first = new GalleryItem { Content = "First" };
+        var second = new GalleryItem { Content = "Second" };
+        second.SetBinding(GalleryItem.IsSelectedProperty, new Binding(nameof(SelectionModel.IsSelected)) { Source = model, Mode = BindingMode.OneWay });
+        var gallery = new Gallery { Selectable = false, Items = { first, second } };
+
+        using (new TestRibbonWindow(gallery))
+        {
+            UIHelper.DoEvents();
+
+            second.RaiseClick();
+            UIHelper.DoEvents();
+
+            Assert.That(second.IsSelected, Is.False, "Precondition: a non-selectable gallery unselects the clicked item");
+            Assert.That(BindingOperations.GetBindingExpression(second, GalleryItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on IsSelected was lost");
+        }
+    }
+
+    [Test]
+    public void Click_on_an_item_of_a_non_selectable_InRibbonGallery_keeps_its_OneWay_IsSelected_binding()
+    {
+        var model = new SelectionModel();
+        var first = new GalleryItem { Content = "First" };
+        var second = new GalleryItem { Content = "Second" };
+        second.SetBinding(GalleryItem.IsSelectedProperty, new Binding(nameof(SelectionModel.IsSelected)) { Source = model, Mode = BindingMode.OneWay });
+        var gallery = new InRibbonGallery { Selectable = false, Items = { first, second } };
+
+        using (new TestRibbonWindow(gallery))
+        {
+            UIHelper.DoEvents();
+            Assert.That(gallery.ItemContainerGenerator.ContainerFromItem(second), Is.SameAs(second), "Precondition: the item is its own container");
+
+            second.RaiseClick();
+            UIHelper.DoEvents();
+
+            Assert.That(second.IsSelected, Is.False, "Precondition: a non-selectable gallery unselects the clicked item");
+            Assert.That(BindingOperations.GetBindingExpression(second, GalleryItem.IsSelectedProperty), Is.Not.Null, "The app's OneWay binding on IsSelected was lost");
+        }
+    }
+
     private sealed class SelectionModel : INotifyPropertyChanged
     {
         private bool isSelected;
