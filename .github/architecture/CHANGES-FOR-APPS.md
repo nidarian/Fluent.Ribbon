@@ -257,8 +257,9 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
 
 ## Round 15
 
-- A click, focus or KeyTip on a backstage page, a click on a gallery item, and a
-  non-selectable gallery unselecting the clicked item keep an app's explicit
+- A click, focus or KeyTip on a backstage page, selecting the next page after the
+  selected one is removed, a click on a gallery item, and a non-selectable
+  gallery unselecting the clicked item keep an app's explicit
   OneWay binding on `IsSelected`. The "refresh everything" note of round 7
   applies here too. A value set by a fixed style setter or trigger is no longer
   pinned by a click.

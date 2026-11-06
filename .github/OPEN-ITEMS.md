@@ -75,8 +75,8 @@ ribbon). The Collapse half of the disabled-tab refusal was never seen
 failing, only Expand (`ROUND12.md`). In round 13 the same for the second action
 of the disabled ribbon and group tests (`ROUND13.md`). In round 14 the test checks that a
 tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`). Round 15:
-selecting the next backstage page after the selected one is removed may still replace its OneWay
-binding, and the backstage page's focus path has no test of its own (`ROUND15.md`).
+the backstage page's focus path has no test of its own; `BackstageTabControl`'s own `SelectedItem`
+and `ColorGallery`'s internal items still use the CLR setter in one place each (`ROUND15.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 

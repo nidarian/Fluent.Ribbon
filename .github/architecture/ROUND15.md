@@ -12,7 +12,7 @@ adversarial) ran until two rounds in a row were clean.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| A click, focus or KeyTip on a backstage page, a click on a gallery item, and a non-selectable gallery unselecting the clicked item replaced an app's explicit OneWay binding on `IsSelected` (round 8 had checked only TwoWay bindings set in a style) | After using the page or item once, the app could no longer select it | `fix/items-isselected-oneway` | #579, #589 (non-selectable galleries) → #582, #590 |
+| A click, focus or KeyTip on a backstage page, selecting the next page after the selected one is removed, a click on a gallery item, and a non-selectable gallery unselecting the clicked item replaced an app's explicit OneWay binding on `IsSelected` (round 8 had checked only TwoWay bindings set in a style) | After using the page or item once, the app could no longer select it | `fix/items-isselected-oneway` | #579, #589 (non-selectable galleries), RED3 (page removal) → #582, #590, GREEN3 |
 | UI Automation Toggle on the checked button of a group (`GroupName`, like Left/Center/Right) unchecked it; a click keeps it checked (issue #481). Same for a checkable menu item in a group | A screen reader user could leave a group with nothing checked | `fix/grouped-toggle-uia` | #580 → #586 |
 | Typing in the Quick Access Toolbar copy of a `TextBox` replaced an app's OneWay binding on the original's `Text` (the combo box had the same bug, fixed in round 7) | After typing in the toolbar copy, the text box no longer followed the app | `fix/textbox-qat-oneway-text` | #581 → #585 |
 
@@ -26,9 +26,14 @@ copy showed the selection stays put.
 
 ## Deferred (tracked)
 
-- When the selected backstage page is removed, the next page is selected with
-  the CLR setter (`BackstageTabControl`), which would replace its OneWay
-  binding. Not a click or key path; not tested.
+- Same pattern, not proven or not reachable by a user here: `BackstageTabControl`
+  sets its own `SelectedItem` with the CLR setter in one place (an app's OneWay
+  binding on `SelectedItem` would be replaced); `ColorGallery` selects its
+  internal items that way; a click on a ribbon tab without a tab control
+  (`RibbonTabItem`, already tracked since round 12).
+- UI Automation Toggle on a grouped split button raises Click and runs the
+  command (its own peer, older); on a grouped toggle button or menu item it now
+  doesn't (default above).
 - The backstage page's focus path is fixed with the others but has no test of
   its own.
 - A value an app sets with a fixed style setter or trigger (not a binding) is no
