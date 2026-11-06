@@ -152,6 +152,19 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Collapse()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
+        // Like the tab double-click, the display options menu and Ctrl+F1, which don't minimize or restore while CanMinimize is off
+        // (on a minimized ribbon each tab can still be opened, also through UI Automation).
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.TrueBox);
     }
 
@@ -161,6 +174,19 @@ public class RibbonAutomationPeer : FrameworkElementAutomationPeer, IExpandColla
     /// </remarks>
     void IExpandCollapseProvider.Expand()
     {
+        // UI Automation: a disabled element must refuse actions.
+        if (this.IsEnabled() == false)
+        {
+            throw new ElementNotEnabledException();
+        }
+
+        // Like the tab double-click, the display options menu and Ctrl+F1, which don't minimize or restore while CanMinimize is off
+        // (on a minimized ribbon each tab can still be opened, also through UI Automation).
+        if (this.OwningRibbon.CanMinimize == false)
+        {
+            return;
+        }
+
         this.OwningRibbon.SetCurrentValue(Ribbon.IsMinimizedProperty, BooleanBoxes.FalseBox);
     }
 
