@@ -27,7 +27,7 @@ public class TextBoxQuickAccessTextBindingTests
             UIHelper.DoEvents();
             Assert.That(quickAccessCopy.Text, Is.EqualTo("Initial"), "Precondition: the copy shows the text of the original");
 
-            // Roughly what typing does: the copy's own Text changes without replacing its binding (the next test types for real).
+            // Roughly what typing does: the copy's own Text changes without replacing its binding (the next test simulates a key press through SelectedText).
             quickAccessCopy.SetCurrentValue(System.Windows.Controls.TextBox.TextProperty, "Typed");
             UIHelper.DoEvents();
 
