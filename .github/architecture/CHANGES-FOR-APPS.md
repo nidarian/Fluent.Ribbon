@@ -261,9 +261,10 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   selected one is removed, a click on a gallery item, and a non-selectable
   gallery unselecting the clicked item keep an app's explicit
   OneWay binding on `IsSelected`. The "refresh everything" note of round 7
-  applies here too. A value set by a fixed style setter or trigger is no longer
-  pinned by a click; it comes back when the style is applied again or the
-  trigger changes.
+  applies here too. If an app sets `IsSelected` with a fixed style setter or
+  trigger (not a binding), a click now overrides it only until the style is
+  applied again (for example on a theme switch) or the trigger changes; then
+  the style's value returns.
 - UI Automation Toggle on the checked (or indeterminate) button of a group, or
   the checked checkable menu item of a group, now leaves it as it is, where a
   click ends up too; it doesn't raise Click or run the command, and for a menu
@@ -273,5 +274,6 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   separate object, not the automation peer itself.
 - Typing in the Quick Access Toolbar copy of a `TextBox` keeps an app's OneWay
   binding on the original's `Text`. The copy now follows the original OneWay and
-  writes typed text back. A `Text` value set by a fixed style setter or trigger
-  is no longer pinned by typing in the copy.
+  writes typed text back. If an app sets the original's `Text` with a fixed style
+  setter or trigger, typed text now overrides it only until the style is applied
+  again or the trigger changes.
