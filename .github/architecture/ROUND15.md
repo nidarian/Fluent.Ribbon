@@ -12,7 +12,7 @@ adversarial) ran until two rounds in a row were clean.
 
 | Problem | What a user saw | Branch | Tests only → with fix |
 |---|---|---|---|
-| A click, focus or KeyTip on a backstage page, selecting the next page after the selected one is removed, a click on a gallery item, and a non-selectable gallery unselecting the clicked item replaced an app's explicit OneWay binding on `IsSelected` (round 8 had checked only TwoWay bindings set in a style) | After using the page or item once, the app could no longer select it | `fix/items-isselected-oneway` | #579, #589 (non-selectable galleries), RED3 (page removal) → #582, #590, GREEN3 |
+| A click, focus or KeyTip on a backstage page, selecting the next page after the selected one is removed, a click on a gallery item, and a non-selectable gallery unselecting the clicked item replaced an app's explicit OneWay binding on `IsSelected` (round 8 had checked only TwoWay bindings set in a style) | After using the page or item once, the app could no longer select it | `fix/items-isselected-oneway` | #579, #589 (non-selectable galleries), #592 (page removal) → #582, #590, #593 |
 | UI Automation Toggle on the checked button of a group (`GroupName`, like Left/Center/Right) unchecked it; a click keeps it checked (issue #481). Same for a checkable menu item in a group | A screen reader user could leave a group with nothing checked | `fix/grouped-toggle-uia` | #580 → #586 |
 | Typing in the Quick Access Toolbar copy of a `TextBox` replaced an app's OneWay binding on the original's `Text` (the combo box had the same bug, fixed in round 7) | After typing in the toolbar copy, the text box no longer followed the app | `fix/textbox-qat-oneway-text` | #581 → #585 |
 
