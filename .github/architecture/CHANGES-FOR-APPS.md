@@ -271,9 +271,12 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   item it doesn't fire Unchecked/Checked (a click unchecks it for a moment). A disabled one refuses with
   `ElementNotEnabledException`. Other toggles behave as before, but for every
   Fluent `ToggleButton` and checkable `MenuItem` the Toggle pattern is now a
-  separate object, not the automation peer itself.
+  separate object, not the automation peer itself. `RibbonToggleButtonAutomationPeer`
+  and `RibbonMenuItemAutomationPeer` have a new `GetPattern` override (only
+  matters for apps that subclass them).
 - Typing in the Quick Access Toolbar copy of a `TextBox` keeps an app's OneWay
   binding on the original's `Text`. The copy now follows the original OneWay and
-  writes typed text back. If an app sets the original's `Text` with a fixed style
+  writes typed text back. The "refresh everything" note of round 7 applies here
+  too. If an app sets the original's `Text` with a fixed style
   setter or trigger, typed text now overrides it only until the style is applied
   again or the trigger changes.
