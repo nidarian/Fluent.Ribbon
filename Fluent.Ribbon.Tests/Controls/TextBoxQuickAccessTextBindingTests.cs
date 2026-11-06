@@ -27,7 +27,7 @@ public class TextBoxQuickAccessTextBindingTests
             UIHelper.DoEvents();
             Assert.That(quickAccessCopy.Text, Is.EqualTo("Initial"), "Precondition: the copy shows the text of the original");
 
-            // What typing does: the text box changes its own Text (SetCurrentValue keeps the copy's own binding).
+            // Roughly what typing does: the copy's own Text changes without replacing its binding (the next test types for real).
             quickAccessCopy.SetCurrentValue(System.Windows.Controls.TextBox.TextProperty, "Typed");
             UIHelper.DoEvents();
 
@@ -42,8 +42,8 @@ public class TextBoxQuickAccessTextBindingTests
         }
     }
 
-    // Typing in the middle of the copy must not have the original's text pushed back into the copy, which would replace the copy's
-    // whole text and reset its caret or selection on every key press.
+    // Typing in the middle of the copy must not replace the copy's whole text when the original's text comes back to it through
+    // the OneWay binding, which would reset its caret or selection on every key press.
     [Test]
     public void QuickAccessCopy_Typing_In_The_Middle_Keeps_The_Copys_Selection()
     {
