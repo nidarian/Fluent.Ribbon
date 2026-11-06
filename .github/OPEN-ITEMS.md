@@ -81,7 +81,7 @@ of the disabled ribbon and group tests (`ROUND13.md`). In round 14 the test chec
 tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`). Round 15:
 the backstage page's focus path, a three-state grouped toggle button in the indeterminate state and a
 disabled grouped menu item have no test of their own; `BackstageTabControl`'s own `SelectedItem`
-and `ColorGallery`'s internal items still use the CLR setter in one place each (`ROUND15.md`).
+(one place) and `ColorGallery`'s internal items and list (several places) still use the CLR setter (`ROUND15.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 

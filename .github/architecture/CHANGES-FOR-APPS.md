@@ -267,8 +267,9 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
 - UI Automation Toggle on the checked (or indeterminate) button of a group, or
   the checked checkable menu item of a group, now leaves it as it is, like a
   click; it doesn't raise Click or run the command. A disabled one refuses with
-  `ElementNotEnabledException`. Other toggles are unchanged. The Toggle pattern
-  of these controls is now a separate object, not the automation peer itself.
+  `ElementNotEnabledException`. Other toggles behave as before, but for every
+  Fluent `ToggleButton` and checkable `MenuItem` the Toggle pattern is now a
+  separate object, not the automation peer itself.
 - Typing in the Quick Access Toolbar copy of a `TextBox` keeps an app's OneWay
   binding on the original's `Text`. The copy now follows the original OneWay and
   writes typed text back. A `Text` value set by a fixed style setter or trigger
