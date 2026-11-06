@@ -1,9 +1,9 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-06, after round 14 (rounds 12 to
-14 are in the package once `integration/round12` to `integration/round14` are
+One page for all loose ends. Status: 2026-11-06, after round 15 (rounds 12 to
+15 are in the package once `integration/round12` to `integration/round15` are
 merged into `integration/all-fixes`)
-(`architecture/ROUND7.md` to `architecture/ROUND14.md`). Each item points to the
+(`architecture/ROUND7.md` to `architecture/ROUND15.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -55,6 +55,7 @@ If nothing is decided, everything stays as it is now.
 | With `CanMinimize` off, UI Automation can neither minimize nor restore the ribbon (like the keyboard; the tabs can still be opened). Allow restore instead? The reviews argued both ways. Default: keep it blocked. | `ROUND13.md` |
 | A mouse click on a contextual group header restores a minimized ribbon even with `CanMinimize` off (the keyboard, the tab double-click, the menu and UI Automation don't). Default: leave it. | `ROUND13.md` |
 | With `CanMinimize` off, UI Automation Expand/Collapse on the ribbon quietly do nothing; throw instead? Default: quiet. | `ROUND13.md` |
+| UI Automation Toggle on the checked item of a group keeps its state but doesn't raise Click or run the command (a click does). Run the command too? Default: no. | `ROUND15.md` |
 | The old branch `fix/tab-isselected-remaining-sites` (its fix commit has a session link; the same code is on `fix/tab-isselected-sites-r12`) can be deleted. Default: keep it until you say so. | `ROUND12.md` |
 | The 2012 Walkthrough (`Doc/*.docx`, `.pdf`) is outdated: rewrite, mark outdated, or leave. | `architecture/DOCUMENTATION.md` |
 
@@ -73,7 +74,9 @@ control keeps an app's OneWay binding on `IsSelected` (only happens without a
 ribbon). The Collapse half of the disabled-tab refusal was never seen
 failing, only Expand (`ROUND12.md`). In round 13 the same for the second action
 of the disabled ribbon and group tests (`ROUND13.md`). In round 14 the test checks that a
-tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`).
+tab offers ScrollItem, not that the tab strip actually scrolls (`ROUND14.md`). Round 15:
+selecting the next backstage page after the selected one is removed may still replace its OneWay
+binding, and the backstage page's focus path has no test of its own (`ROUND15.md`).
 
 ## 4b. Accessibility (ADA / WCAG 2.1 AA) re-audit, not fixed yet
 
