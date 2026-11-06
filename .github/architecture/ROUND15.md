@@ -40,4 +40,17 @@ copy showed the selection stays put.
   longer pinned by a click or by typing in the toolbar copy; if the style is
   applied again, its value comes back.
 
-COMBINED_AND_REVIEWS
+Combined build of `integration/round15` (e24fd622, on top of round 14, built as
+`diag/round15`, which only adds the CI step that lists failed tests): **#594
+green** on net462, net6.0 and net8.0. The first tests-only build of all three
+candidates (#578) showed only 10 failures because GitHub caps the failure notes
+of one step, so each fix got its own tests-only build (#579 to #581).
+
+Blind reviews (pessimistic and adversarial):
+
+- Per fix, rounds A and B: the toolbar text box caret question (settled by a
+  test), the three-state toggle rule (aligned with a click), comment wording.
+- Combined rounds C to E: a non-selectable gallery and the next backstage page
+  after a removal still replaced the binding (both fixed above, each proven by
+  its own failing test; the second came up three times).
+- Combined rounds F and G: safe, no bugs. **Two clean rounds in a row.**
