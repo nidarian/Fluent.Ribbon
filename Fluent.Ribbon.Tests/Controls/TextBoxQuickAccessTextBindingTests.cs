@@ -42,6 +42,33 @@ public class TextBoxQuickAccessTextBindingTests
         }
     }
 
+    // Typing in the middle of the copy must not have the original's text pushed back into the copy, which would replace the copy's
+    // whole text and reset its caret or selection on every key press.
+    [Test]
+    public void QuickAccessCopy_Typing_In_The_Middle_Keeps_The_Copys_Selection()
+    {
+        var model = new TextModel { Text = "Hello" };
+        var textBox = new Fluent.TextBox();
+        textBox.SetBinding(System.Windows.Controls.TextBox.TextProperty, new Binding(nameof(TextModel.Text)) { Source = model, Mode = BindingMode.OneWay });
+        var quickAccessCopy = (Fluent.TextBox)textBox.CreateQuickAccessItem();
+
+        using (new TestRibbonWindow(new StackPanel { Children = { textBox, quickAccessCopy } }))
+        {
+            UIHelper.DoEvents();
+            Assert.That(quickAccessCopy.Text, Is.EqualTo("Hello"), "Precondition: the copy shows the text of the original");
+
+            // Replacing the selection is what a key press does (it changes the text content, not the Text property directly).
+            quickAccessCopy.Select(2, 0);
+            quickAccessCopy.SelectedText = "X";
+            UIHelper.DoEvents();
+
+            Assert.That(quickAccessCopy.Text, Is.EqualTo("HeXllo"), "Precondition: the typed character is in the copy");
+            Assert.That(textBox.Text, Is.EqualTo("HeXllo"), "The typed text must reach the original");
+            Assert.That(quickAccessCopy.SelectionStart, Is.EqualTo(2), "The copy's selection must stay on the typed character");
+            Assert.That(quickAccessCopy.SelectionLength, Is.EqualTo(1), "The copy's selection must stay on the typed character");
+        }
+    }
+
     private sealed class TextModel : INotifyPropertyChanged
     {
         private string text;
