@@ -7,9 +7,9 @@ using System.Windows.Automation.Provider;
 
 /// <summary>
 /// Wraps WPF's own Toggle pattern of a toggle button or checkable menu item that can be in a group (GroupName).
-/// A click on the checked item of a group keeps it checked (issue #481), so the group always has one checked item.
-/// WPF's Toggle doesn't know about groups and would uncheck it; this wrapper leaves a checked grouped item checked
-/// and passes everything else to WPF's Toggle unchanged.
+/// A click on the checked item of a group keeps its state (issue #481; for a three-state toggle button also the
+/// indeterminate state), so the group keeps its checked item. WPF's Toggle doesn't know about groups and would change it;
+/// this wrapper leaves such an item as it is and passes everything else to WPF's Toggle unchanged.
 /// </summary>
 internal sealed class GroupedToggleProvider : IToggleProvider
 {

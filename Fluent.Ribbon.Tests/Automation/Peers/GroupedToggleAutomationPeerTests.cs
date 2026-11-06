@@ -10,7 +10,8 @@ using NUnit.Framework;
 
 /// <summary>
 /// A checked toggle button or checkable menu item in a group (GroupName set) stays checked when it is clicked again, so a group
-/// like Left/Center/Right always has one checked item (issue #481). UI Automation Toggle must do what a click does.
+/// like Left/Center/Right keeps its checked item (issue #481). UI Automation Toggle must keep the state like a click does
+/// (it doesn't raise Click or run the command, as WPF's Toggle never did).
 /// </summary>
 [TestFixture]
 public class GroupedToggleAutomationPeerTests
