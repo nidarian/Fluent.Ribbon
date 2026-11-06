@@ -2,7 +2,7 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-11-03 (rounds 5 to 12; round 12 is in the package once `integration/round12` is merged into `integration/all-fixes`). The open choices about some of
+be checked when updating. Status: 2026-11-06 (rounds 5 to 15; rounds 12 to 15 are in the package once `integration/round12` to `integration/round15` are merged into `integration/all-fixes`). The open choices about some of
 these are in `AUDIT-DECISIONS.md` and `../OPEN-ITEMS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
@@ -265,8 +265,9 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   pinned by a click; it comes back when the style is applied again or the
   trigger changes.
 - UI Automation Toggle on the checked (or indeterminate) button of a group, or
-  the checked checkable menu item of a group, now leaves it as it is, like a
-  click; it doesn't raise Click or run the command. A disabled one refuses with
+  the checked checkable menu item of a group, now leaves it as it is, where a
+  click ends up too; it doesn't raise Click or run the command, and for a menu
+  item it doesn't fire Unchecked/Checked (a click unchecks it for a moment). A disabled one refuses with
   `ElementNotEnabledException`. Other toggles behave as before, but for every
   Fluent `ToggleButton` and checkable `MenuItem` the Toggle pattern is now a
   separate object, not the automation peer itself.

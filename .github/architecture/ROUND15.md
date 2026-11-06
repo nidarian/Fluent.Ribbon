@@ -29,7 +29,7 @@ copy showed the selection stays put.
 - Same pattern, not proven or not reachable by a user here: `BackstageTabControl`
   sets its own `SelectedItem` with the CLR setter in one place (an app's OneWay
   binding on `SelectedItem` would be replaced); `ColorGallery` selects its
-  internal items that way; a click on a ribbon tab without a tab control
+  internal items and list that way (several places); a click on a ribbon tab without a tab control
   (`RibbonTabItem`, already tracked since round 12).
 - UI Automation Toggle on a grouped split button raises Click and runs the
   command (its own peer, older); on a grouped toggle button or menu item it now
