@@ -158,7 +158,7 @@ stateDiagram-v2
 
 ## How app code should interact
 
-- Minimize/expand: set `Ribbon.IsMinimized`, or execute `Ribbon.ToggleMinimizeTheRibbonCommand` which respects `CanMinimize` [E1, E3]. Listen with the `IsMinimizedChanged` event [E2]. Set `CanMinimize=false` to block the user paths [E3, E4, E7]; a click on a contextual group header still restores [E8].
+- Minimize/expand: set `Ribbon.IsMinimized`, or execute `Ribbon.ToggleMinimizeTheRibbonCommand` which respects `CanMinimize` [E1, E3]. Listen with the `IsMinimizedChanged` event [E2]. Set `CanMinimize=false` to block the user paths [E3, E4, E7].
 - Simplified layout: set `CanUseSimplified=true` first (default is false) [E15], then set `Ribbon.IsSimplified` or execute `SwitchToTheSimplifiedRibbonCommand` / `SwitchToTheClassicRibbonCommand` [E13, E16]. Tabs added later pick up the current value automatically [E18].
 - Auto-collapse: read `Ribbon.IsCollapsed` or handle `IsCollapsedChanged`; turn the automatic behaviour off with `IsAutomaticCollapseEnabled=false` [E25, E29].
 - Backstage/start screen: open and close through the `Backstage.IsOpen` property; treat `Ribbon.IsBackstageOrStartScreenOpen` as read-only status [E23, E24]. A `StartScreen` shows once; to show it again the app must set `StartScreen.Shown=false` [E53].
