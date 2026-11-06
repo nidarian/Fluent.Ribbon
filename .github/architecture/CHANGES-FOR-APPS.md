@@ -247,3 +247,8 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   nothing (no minimize, no restore), like the tab double-click, the display
   options menu and Ctrl+F1. A UI test that minimized or restored such a ribbon
   through UI Automation will see no change.
+
+## Round 14
+
+- A ribbon tab now offers the UI Automation ScrollItem pattern (bring the tab
+  into view). UI tests that list a tab's patterns see it.

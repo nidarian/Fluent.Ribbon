@@ -60,7 +60,7 @@ forbids. History isn't rewritten here, so the same code went to a new branch
   the state shows it stale until it asks again (older).
 - `ExpandCollapseState` still says "Expanded" on a normal ribbon (only readable
   through the pattern, which isn't offered there).
-- The same peer implements ScrollItem, which is probably not offered either (not
+- (Fixed in round 14, `ROUND14.md`.) The same peer implements ScrollItem, which was not offered either (not
   tested).
 
 Combined build of the round (`integration/round12`, 90ab054a, built as `diag/round12`, which only adds the CI step that lists failed tests):

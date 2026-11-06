@@ -1,9 +1,9 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-04, after round 13 (rounds 12 and
-13 are in the package once `integration/round12` and `integration/round13` are
+One page for all loose ends. Status: 2026-11-06, after round 14 (rounds 12 to
+14 are in the package once `integration/round12` to `integration/round14` are
 merged into `integration/all-fixes`)
-(`architecture/ROUND7.md` to `architecture/ROUND13.md`). Each item points to the
+(`architecture/ROUND7.md` to `architecture/ROUND14.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -78,11 +78,10 @@ of the disabled ribbon and group tests (`ROUND13.md`).
 Round 8 fixed the names of the status bar menu entries and the Spinner text box
 and the checkable SplitButton's state; round 9 the KeyTips and help text of menu
 items, gallery items and groups, and the overflow sample's name (`ROUND9.md`); round 11 the contextual group labels and the
-ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`). Still open, with details in
+ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ribbon (`ROUND12.md`); round 13 a disabled ribbon or collapsed group refusing UI Automation (`ROUND13.md`); round 14 a tab's ScrollItem (`ROUND14.md`). Still open, with details in
 `ROUND8.md`, `ROUND11.md` and `ROUND12.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
-a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`), and tabs probably
-not offering ScrollItem on any ribbon (`ROUND12.md`).
+a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`).
 
 ## 5. Checks only a person can do (on a Windows PC)
 

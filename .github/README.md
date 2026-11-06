@@ -104,4 +104,5 @@ conflict later.
 | `architecture/ROUND11.md` | Round 11: accessibility (contextual group names, ColorGallery lists), display options and tab selection bindings, simplified look for wrapped templates |
 | `architecture/ROUND12.md` | Round 12: the remaining tab selection bindings (removing, restoring, hiding tabs) and opening a tab on a minimized ribbon with a screen reader |
 | `architecture/ROUND13.md` | Round 13: a disabled ribbon or group and `CanMinimize` respected by screen readers and UI tests |
+| `architecture/ROUND14.md` | Round 14: a ribbon tab's ScrollItem offered to screen readers |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |
