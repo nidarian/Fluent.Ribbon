@@ -74,6 +74,86 @@ public class GroupedToggleAutomationPeerTests
         }
     }
 
+    // Guards (mutation review): toggling an unchecked grouped item must still check it; an indeterminate grouped
+    // three-state button keeps its state like a click; an ungrouped checkable menu item still unchecks.
+    [Test]
+    public void Toggle_on_an_unchecked_grouped_ToggleButton_checks_it()
+    {
+        var left = new Fluent.ToggleButton { Header = "Left", GroupName = "Alignment" };
+        var right = new Fluent.ToggleButton { Header = "Right", GroupName = "Alignment", IsChecked = true };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { left, right } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(left).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the toggle button offers the Toggle pattern");
+
+            toggle.Toggle();
+            UIHelper.DoEvents();
+
+            Assert.That(left.IsChecked, Is.True, "UI Automation Toggle must check an unchecked grouped button");
+            Assert.That(right.IsChecked, Is.False, "The other button of the group must be unchecked");
+        }
+    }
+
+    [Test]
+    public void Toggle_on_an_indeterminate_grouped_three_state_ToggleButton_keeps_it_indeterminate()
+    {
+        var button = new Fluent.ToggleButton { Header = "Mixed", GroupName = "Alignment", IsThreeState = true, IsChecked = null };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { button } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(button).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the toggle button offers the Toggle pattern");
+
+            toggle.Toggle();
+            UIHelper.DoEvents();
+
+            Assert.That(button.IsChecked, Is.Null, "Like a click, UI Automation Toggle must leave an indeterminate grouped button as it is");
+        }
+    }
+
+    [Test]
+    public void Toggle_on_an_unchecked_grouped_MenuItem_checks_it()
+    {
+        var left = new Fluent.MenuItem { Header = "Left", IsCheckable = true, GroupName = "Alignment" };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { left } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(left).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the checkable menu item offers the Toggle pattern");
+
+            toggle.Toggle();
+            UIHelper.DoEvents();
+
+            Assert.That(left.IsChecked, Is.True, "UI Automation Toggle must check an unchecked grouped menu item");
+        }
+    }
+
+    [Test]
+    public void Toggle_on_a_checked_ungrouped_MenuItem_still_unchecks_it()
+    {
+        var wrap = new Fluent.MenuItem { Header = "Wrap", IsCheckable = true, IsChecked = true };
+
+        using (new TestRibbonWindow(new StackPanel { Children = { wrap } }))
+        {
+            UIHelper.DoEvents();
+
+            var toggle = UIElementAutomationPeer.CreatePeerForElement(wrap).GetPattern(PatternInterface.Toggle) as IToggleProvider;
+            Assert.That(toggle, Is.Not.Null, "Precondition: the checkable menu item offers the Toggle pattern");
+
+            toggle.Toggle();
+            UIHelper.DoEvents();
+
+            Assert.That(wrap.IsChecked, Is.False, "An ungrouped checkable menu item must still toggle off");
+        }
+    }
+
     [Test]
     public void Toggle_on_a_checked_grouped_MenuItem_keeps_it_checked()
     {

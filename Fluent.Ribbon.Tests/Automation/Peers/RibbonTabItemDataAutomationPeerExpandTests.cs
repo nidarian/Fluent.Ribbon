@@ -146,6 +146,27 @@ public class RibbonTabItemDataAutomationPeerExpandTests
     }
 
     // Collapse on a tab whose popup isn't the open one must not close the popup of another tab.
+    // Guard (mutation review): Collapse on the open tab must close its popup.
+    [Test]
+    public void Collapse_on_the_open_tab_closes_its_popup()
+    {
+        var (ribbon, tabs, _) = CreateRibbon();
+
+        using (new TestRibbonWindow(ribbon))
+        {
+            var dataPeer = PrepareMinimized(ribbon, tabs[1]);
+
+            ((IExpandCollapseProvider)dataPeer).Expand();
+            UIHelper.DoEvents();
+            Assert.That(ribbon.TabControl!.IsDropDownOpen, Is.True, "Precondition: the tab is open");
+
+            ((IExpandCollapseProvider)dataPeer).Collapse();
+            UIHelper.DoEvents();
+
+            Assert.That(ribbon.TabControl.IsDropDownOpen, Is.False, "Collapse on the open tab must close its popup");
+        }
+    }
+
     [Test]
     public void Collapse_on_a_tab_that_is_not_open_leaves_the_open_tab_alone()
     {
