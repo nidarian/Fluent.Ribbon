@@ -145,7 +145,6 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
-    // Collapse on a tab whose popup isn't the open one must not close the popup of another tab.
     // Guard (mutation review): Collapse on the open tab must close its popup.
     [Test]
     public void Collapse_on_the_open_tab_closes_its_popup()
@@ -167,6 +166,7 @@ public class RibbonTabItemDataAutomationPeerExpandTests
         }
     }
 
+    // Collapse on a tab whose popup isn't the open one must not close the popup of another tab.
     [Test]
     public void Collapse_on_a_tab_that_is_not_open_leaves_the_open_tab_alone()
     {
