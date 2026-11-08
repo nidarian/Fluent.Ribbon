@@ -22,7 +22,7 @@ public class RibbonToggleButtonAutomationPeer : System.Windows.Automation.Peers.
             && pattern is System.Windows.Automation.Provider.IToggleProvider toggleProvider
             && this.Owner is ToggleButton toggleButton)
         {
-            return new GroupedToggleProvider(toggleButton, toggleProvider, () => string.IsNullOrEmpty(toggleButton.GroupName) == false && toggleButton.IsChecked != false); // like ToggleButton.OnClick
+            return new GroupedToggleProvider(toggleButton, toggleProvider, () => string.IsNullOrEmpty(toggleButton.GroupName) == false); // like ToggleButton.OnClick
         }
 
         return pattern;

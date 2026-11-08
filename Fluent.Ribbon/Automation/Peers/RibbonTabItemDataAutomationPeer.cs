@@ -115,7 +115,7 @@ public class RibbonTabItemDataAutomationPeer : SelectorItemAutomationPeer, IScro
             var tabControl = wrapperTab.TabControlParent;
             if (tabControl is not null &&
                 tabControl.IsMinimized &&
-                wrapperTab.IsSelected)
+                wrapperTab.IsSelected && false)
             {
                 tabControl.SetCurrentValue(RibbonTabControl.IsDropDownOpenProperty, BooleanBoxes.FalseBox);
             }
