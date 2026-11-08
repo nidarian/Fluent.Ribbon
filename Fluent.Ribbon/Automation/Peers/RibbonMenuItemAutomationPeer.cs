@@ -16,6 +16,25 @@ public class RibbonMenuItemAutomationPeer : MenuItemAutomationPeer
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// The Toggle pattern is wrapped so that toggling the checked item of a group keeps it checked, which is where a click ends
+    /// up too (issue #481; a click unchecks it for a moment and checks it again).
+    /// </remarks>
+    public override object? GetPattern(PatternInterface patternInterface)
+    {
+        var pattern = base.GetPattern(patternInterface);
+
+        if (patternInterface == PatternInterface.Toggle
+            && pattern is System.Windows.Automation.Provider.IToggleProvider toggleProvider
+            && this.Owner is MenuItem menuItem)
+        {
+            return new GroupedToggleProvider(menuItem, toggleProvider, () => menuItem.IsCheckable && string.IsNullOrEmpty(menuItem.GroupName) == false && menuItem.IsChecked);
+        }
+
+        return pattern;
+    }
+
+    /// <inheritdoc />
     protected override string? GetAccessKeyCore()
     {
         return AutomationPeerHelper.GetAccessKey(this.Owner, base.GetAccessKeyCore());

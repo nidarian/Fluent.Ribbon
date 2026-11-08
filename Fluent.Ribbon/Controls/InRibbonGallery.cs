@@ -1119,7 +1119,7 @@ public class InRibbonGallery : Selector, IScalableRibbonControl, IDropDownContro
             if (basevalue is not null
                 && galleryItem is not null)
             {
-                galleryItem.IsSelected = false;
+                galleryItem.SetCurrentValue(GalleryItem.IsSelectedProperty, BooleanBoxes.FalseBox); // keeps an app's binding on IsSelected
             }
 
             return null;

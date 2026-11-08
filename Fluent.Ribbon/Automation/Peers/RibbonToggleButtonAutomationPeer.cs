@@ -11,6 +11,24 @@ public class RibbonToggleButtonAutomationPeer : System.Windows.Automation.Peers.
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// The Toggle pattern is wrapped so that toggling the checked button of a group keeps it checked, like a click (issue #481).
+    /// </remarks>
+    public override object? GetPattern(System.Windows.Automation.Peers.PatternInterface patternInterface)
+    {
+        var pattern = base.GetPattern(patternInterface);
+
+        if (patternInterface == System.Windows.Automation.Peers.PatternInterface.Toggle
+            && pattern is System.Windows.Automation.Provider.IToggleProvider toggleProvider
+            && this.Owner is ToggleButton toggleButton)
+        {
+            return new GroupedToggleProvider(toggleButton, toggleProvider, () => string.IsNullOrEmpty(toggleButton.GroupName) == false && toggleButton.IsChecked != false); // like ToggleButton.OnClick
+        }
+
+        return pattern;
+    }
+
+    /// <inheritdoc />
     protected override string GetClassNameCore()
     {
         return "RibbonToggleButton";
