@@ -2,6 +2,8 @@
 
 The Ribbon keeps a few on/off switches that decide how it looks: minimized (only the tab headers show, and a tab's content opens as a popup when clicked), simplified (a flatter, single-row layout), collapsed (hidden entirely because the window is too small), backstage/start screen open, and whether the Quick Access Toolbar sits above or below the ribbon. Three of them (minimized, Quick Access Toolbar position, simplified) are written to a small file on the user's machine and read back the next time the Ribbon loads. That saving and loading is on by default and can be turned off with `AutomaticStateManagement`.
 
+Scope: this describes the code at this checkout (upstream). The fork changes some of it on other branches, among others: on `integration/all-fixes` the tab double-click, the contextual group header click, the display options menu and UI Automation Expand/Collapse keep an app's OneWay binding on `IsMinimized` (round 7, see `.github/architecture/ROUND7.md`), and on `integration/round13` (until it is merged into `integration/all-fixes`) UI Automation Expand/Collapse also refuse on a disabled ribbon and do nothing while `CanMinimize` is off (see `.github/architecture/ROUND13.md`). The full list for apps is in `.github/architecture/CHANGES-FOR-APPS.md`. Those changes are not described here.
+
 ## State diagram
 
 IsMinimized (owned by `Ribbon`, mirrored two-way into `RibbonTabControl`):
