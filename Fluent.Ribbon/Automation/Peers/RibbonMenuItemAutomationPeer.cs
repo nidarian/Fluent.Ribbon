@@ -28,7 +28,7 @@ public class RibbonMenuItemAutomationPeer : MenuItemAutomationPeer
             && pattern is System.Windows.Automation.Provider.IToggleProvider toggleProvider
             && this.Owner is MenuItem menuItem)
         {
-            return new GroupedToggleProvider(menuItem, toggleProvider, () => menuItem.IsCheckable && string.IsNullOrEmpty(menuItem.GroupName) == false && menuItem.IsChecked);
+            return new GroupedToggleProvider(menuItem, toggleProvider, () => menuItem.IsCheckable && menuItem.IsChecked);
         }
 
         return pattern;
