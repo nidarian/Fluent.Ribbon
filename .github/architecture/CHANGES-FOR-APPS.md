@@ -286,7 +286,7 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
 - A control without a text `Header` (or with an empty one) that has a `ScreenTip`
   with a title now reports that title as its UI Automation name; before, the
   name was empty. This applies to `Button`, `ToggleButton`, `CheckBox`,
-  `RadioButton`, `DropDownButton`, `SplitButton`, `Spinner` (and its text box),
+  `RadioButton`, `DropDownButton` (and `ApplicationMenu`), `SplitButton`, `Spinner` (and its text box),
   `ComboBox`, `TextBox`, `InRibbonGallery`, a group's launcher button, and the
   inner button of a split button. A name that was not empty before stays the
   same. UI tests that find such a control by its empty name, or expect no name,

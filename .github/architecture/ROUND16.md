@@ -10,20 +10,29 @@ a row were clean.
 
 In the table, #605, #606 and #611 are tests-only builds on the code before this
 round. #608 and #612 are builds of an earlier version of the fix with the new
-test a review asked for; they fail in that test only.
+tests a review asked for (two in #608, one in #612); they fail in those only.
+
+#605 holds 22 new failing cases per .NET version, but GitHub shows only about
+ten failure notes per build. The ten shown cover a control without a header
+(`Button`, `TextBox`, `SplitButton`, `DropDownButton`, `Spinner`), a header that
+isn't text (`RadioButton`, `DropDownButton`, `CheckBox`, `ToggleButton`) and the
+changed title. #606 re-ran three cases that were cut off: `ComboBox` and
+`InRibbonGallery` without a header, and the launcher button. The remaining
+combinations of control and case (for example `CheckBox` without a header) were
+not seen failing one by one; they use the same shared code and pass in #613.
 
 ## Fixed
 
 | Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
-| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606 (the cases #605's list cut off) → #607; #611 (empty header) → #610 |
-| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" | same | #606 → #607 |
+| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606 (three cases #605's list cut off) → #607; #611 (empty header) → #610 |
+| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" (when reached with the screen reader's own navigation; Tab doesn't stop on it) | same | #606 → #607 |
 | The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #608 → #610; #612 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
-`DropDownButton`, `SplitButton`, `Spinner`, `ComboBox`, `TextBox` and
-`InRibbonGallery`, and through `Button` the launcher button of a group
-(`LauncherToolTip` set to a `ScreenTip`).
+`DropDownButton` (and `ApplicationMenu`, which is one), `SplitButton`, `Spinner`,
+`ComboBox`, `TextBox` and `InRibbonGallery`, and through `Button` the launcher
+button of a group (`LauncherToolTip` set to a `ScreenTip`).
 
 The order of names is now: a name the app set explicitly or that WPF finds
 itself (a labelling element, text content, the text of a command), then a
@@ -43,9 +52,10 @@ readers as help text, so it would be read twice.
   backstage page with a `Header` that isn't text; the text box inside an
   editable `ComboBox`.
 - A `ScreenTip` title that comes from a binding to the control's `DataContext`
-  (or a title looked up live from the window's resources) is empty until the ScreenTip has been shown
-  once (WPF connects a tooltip to its control only then). Until then the control
-  has no name. For the Spinner's text box the same applies. The help text
+  (or a title looked up live from the window's resources) is only reliable while
+  the ScreenTip is shown (WPF connects a tooltip to its control only then). Before
+  it was first shown the title is empty and the control has no name. Not tested;
+  this is how WPF tooltips work. For the Spinner's text box the same applies. The help text
   (`ScreenTip.Text`) always had this limit.
 - One `ScreenTip` object shared by several controls through a style, with its
   title bound to the control it is shown for, names each of them after the
@@ -68,8 +78,8 @@ readers as help text, so it would be read twice.
 
 Build of the branch (built as `diag/names-r16-green3`, which only adds the CI
 step that lists failed tests): **#613 green** on net462, net6.0 and net8.0.
-GitHub caps the failure notes of one step at about ten, so the cases cut off in
-#605 got their own tests-only build (#606).
+GitHub caps the failure notes of one step at about ten (see above for what
+#605 and #606 show).
 
 Blind reviews:
 
