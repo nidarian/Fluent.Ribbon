@@ -45,7 +45,8 @@ internal static class AutomationPeerHelper
             return screenTip.Title;
         }
 
-        return baseValue;
+        // Nothing names the control: return what the peers returned before the ScreenTip title was considered (null, or an empty header).
+        return (owner as IHeaderedControl)?.Header as string;
     }
 
     /// <summary>

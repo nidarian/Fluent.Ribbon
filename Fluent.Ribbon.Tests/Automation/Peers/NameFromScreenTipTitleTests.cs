@@ -145,6 +145,30 @@ public class NameFromScreenTipTitleTests
         Assert.That(peer.GetName(), Is.EqualTo(System.Windows.Input.ApplicationCommands.Paste.Text), "The command text was the name before and must stay the name");
     }
 
+    // Guard: with its template applied, the split button's inner button is named by the command text too (WPF finds it itself),
+    // so both parts agree.
+    [Test]
+    public void SplitButton_inner_button_is_named_by_the_command_text_too()
+    {
+        var splitButton = new SplitButton
+        {
+            Command = System.Windows.Input.ApplicationCommands.Paste,
+            ToolTip = new ScreenTip { Title = "Paste (Ctrl+V)" }
+        };
+
+        using (new TestRibbonWindow(splitButton))
+        {
+            splitButton.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            var innerButton = splitButton.Template.FindName("PART_Button", splitButton) as System.Windows.Controls.Primitives.ButtonBase;
+            Assert.That(innerButton, Is.Not.Null, "Precondition: the template has PART_Button");
+
+            Assert.That(UIElementAutomationPeer.CreatePeerForElement(splitButton).GetName(), Is.EqualTo(System.Windows.Input.ApplicationCommands.Paste.Text));
+            Assert.That(UIElementAutomationPeer.CreatePeerForElement(innerButton).GetName(), Is.EqualTo(System.Windows.Input.ApplicationCommands.Paste.Text));
+        }
+    }
+
     // A Spinner takes no focus itself; its text box does, so the text box needs the same name.
     [Test]
     public void Spinner_text_box_is_named_by_the_ScreenTip_title_of_the_spinner()
