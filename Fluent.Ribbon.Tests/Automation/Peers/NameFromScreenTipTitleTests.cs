@@ -116,6 +116,49 @@ public class NameFromScreenTipTitleTests
         Assert.That(peer.GetName(), Is.EqualTo("Fett"), "The name must follow the title (for example after a language change)");
     }
 
+    // A split button without a header was already named by its command's text. That name must stay:
+    // the ScreenTip title (often longer, like "Paste (Ctrl+V)") only comes after it.
+    [Test]
+    public void SplitButton_command_text_wins_over_the_ScreenTip_title()
+    {
+        var splitButton = new SplitButton
+        {
+            Command = System.Windows.Input.ApplicationCommands.Paste,
+            ToolTip = new ScreenTip { Title = "Paste (Ctrl+V)" }
+        };
+
+        var peer = UIElementAutomationPeer.CreatePeerForElement(splitButton);
+
+        Assert.That(peer.GetName(), Is.EqualTo(System.Windows.Input.ApplicationCommands.Paste.Text), "The command text was the name before and must stay the name");
+    }
+
+    // A Spinner takes no focus itself; its text box does, so the text box needs the same name.
+    [Test]
+    public void Spinner_text_box_is_named_by_the_ScreenTip_title_of_the_spinner()
+    {
+        var spinner = new Spinner { ToolTip = new ScreenTip { Title = "Font size" } };
+
+        using (new TestRibbonWindow(spinner))
+        {
+            spinner.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            var textBox = spinner.Template.FindName("PART_TextBox", spinner) as System.Windows.Controls.TextBox;
+            Assert.That(textBox, Is.Not.Null, "Precondition: the template has PART_TextBox");
+
+            var peer = UIElementAutomationPeer.CreatePeerForElement(textBox);
+            Assert.That(peer.GetName(), Is.EqualTo("Font size"), "The focused text box must be announced with the spinner's ScreenTip title");
+
+            spinner.Header = "Size";
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.EqualTo("Size"), "A text header wins over the ScreenTip title");
+
+            System.Windows.Automation.AutomationProperties.SetName(spinner, "Explicit");
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.EqualTo("Explicit"), "An explicit name wins over both");
+        }
+    }
+
     [Test]
     public void Group_launcher_button_is_named_by_the_title_of_its_ScreenTip()
     {
