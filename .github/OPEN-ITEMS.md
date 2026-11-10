@@ -90,11 +90,11 @@ ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ri
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
 a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`).
 
-Round 16 named icon-only controls, a group's launcher button and the Spinner's
-text box by the ScreenTip title (`ROUND16.md`). Still open from it ("Deferred"
-there): the same for gallery items and menu items, for the generic `RibbonControl`
-peer, a collapsed group and a backstage page when their `Header` isn't text, and for the text box of an editable
-ComboBox; a ScreenTip title that comes from the control's `DataContext` (or is looked up live from the window's resources) is only
+Round 16 named controls without a text header, a group's launcher button without
+`LauncherText` and the text box of a Spinner without a text header by the ScreenTip title (`ROUND16.md`). Still open from it ("Deferred"
+there): the same for gallery items and menu items, and for the Backstage button, `RibbonToolBar`, a ribbon tab,
+a collapsed group and a backstage page when their `Header` isn't text; the text box of an editable
+ComboBox has no name at all, not from the header either (older behaviour); a ScreenTip title that comes from the control's `DataContext` (or is looked up live from the window's resources) is only
 reliable while the ScreenTip is shown, and empty before it was first shown; one ScreenTip shared by several controls
 with a title bound to the shown control.
 

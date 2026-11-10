@@ -28,9 +28,9 @@ text box unnamed) and #612 on the second (Spinner text box keeps an old title).
 
 | Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
-| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #618 → #613 |
+| A ribbon control for which the app set no text `Header` (a button that only ever shows an icon; a small button that has a `Header` was already named) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #618 → #613 |
 | A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" | same | #618 → #613 |
-| The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #618, #608, #612 → #613 |
+| The text box of a Spinner without a text header or explicit name, which takes the keyboard focus, did not get that name either (found by the reviews of this round) | Only "edit" | same | #618, #608 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
 `DropDownButton` (and `ApplicationMenu`, which is one), `SplitButton`, `Spinner`,
@@ -50,11 +50,11 @@ readers as help text, so it would be read twice.
 
 ## Deferred (tracked)
 
-- Not changed in this round: gallery items and menu items (no name from the
-  ScreenTip title); the generic `RibbonControl` peer (for example
-  `RibbonToolBar`), a collapsed group and a backstage page when their `Header`
-  isn't text; the text box inside an editable `ComboBox` (read in the code, not
-  tested).
+- Not changed in this round, among others: gallery items and menu items (no
+  name from the ScreenTip title); the Backstage ("File") button, `RibbonToolBar`,
+  a ribbon tab, a collapsed group and a backstage page when their `Header` isn't
+  text; the text box inside an editable `ComboBox`, which has no name at all, not
+  from the header either (older behaviour; read in the code, not tested).
 - A `ScreenTip` title that comes from a binding to the control's `DataContext`
   (or a title looked up live from the window's resources) is only reliable while
   the ScreenTip is shown (WPF connects a tooltip to its control only then). Before
@@ -89,8 +89,9 @@ Blind reviews:
 - Round 1 (two reviewers): a split button named by its command would have been
   renamed to the ScreenTip title, and the Spinner's text box stayed unnamed.
   Both fixed, each proven by its own failing test (#608 → #610).
-- Round 2 (two reviewers): the Spinner's text box read the title only once
-  (fixed, #612 → #613). One claim was checked and rejected: that a split
+- Round 2 (two reviewers): in the second version of the fix the Spinner's text
+  box read the title only once and would have kept an old one after the app
+  changed it. That version was never in a package (fixed, #612 → #613). One claim was checked and rejected: that a split
   button's inner button gets a different name than the split button when it has
   a command (both get the command text; a guard test now pins that).
 - Rounds 3 and 4 (one reviewer each, pessimistic then adversarial): safe, no

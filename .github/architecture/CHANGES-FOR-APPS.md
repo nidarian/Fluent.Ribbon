@@ -298,7 +298,8 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   reliable while the ScreenTip is shown, and empty before it was first shown, so
   the control can be without a name; use a fixed title or set
   `AutomationProperties.Name`. In an editable `ComboBox` the focus goes to its
-  inner text box, which still has no name. Both are read from the code and from
+  inner text box, which still has no name at all (not from the header either;
+  older behaviour). Both are read from the code and from
   how WPF tooltips work, not tested. More in
   `ROUND16.md`, "Deferred".
 - Apps with their own automation peer derived from one of the fork's peers:
