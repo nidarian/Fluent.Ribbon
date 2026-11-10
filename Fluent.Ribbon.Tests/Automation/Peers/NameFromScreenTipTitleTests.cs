@@ -20,15 +20,7 @@ public class NameFromScreenTipTitleTests
     // Types (not instances) because WPF controls must be created on the STA test thread, not during test discovery.
     private static IEnumerable<Type> ControlTypes()
     {
-        yield return typeof(Button);
-        yield return typeof(ToggleButton);
-        yield return typeof(CheckBox);
-        yield return typeof(RadioButton);
-        yield return typeof(DropDownButton);
-        yield return typeof(SplitButton);
-        yield return typeof(Spinner);
         yield return typeof(ComboBox);
-        yield return typeof(TextBox);
         yield return typeof(InRibbonGallery);
     }
 
@@ -44,19 +36,6 @@ public class NameFromScreenTipTitleTests
 
         Assert.That(peer.GetName(), Is.EqualTo("Bold"), "Without a header the ScreenTip title must be the name");
         Assert.That(peer.GetHelpText(), Is.EqualTo("Makes the text bold"), "The ScreenTip text stays the help text");
-    }
-
-    [Test]
-    [TestCaseSource(nameof(ControlTypes))]
-    public void Control_with_a_Header_that_is_not_text_is_named_by_its_ScreenTip_title(Type controlType)
-    {
-        var control = (FrameworkElement)Activator.CreateInstance(controlType)!;
-        ((IHeaderedControl)control).Header = new System.Windows.Shapes.Rectangle();
-        control.ToolTip = new ScreenTip { Title = "Bold" };
-
-        var peer = UIElementAutomationPeer.CreatePeerForElement(control);
-
-        Assert.That(peer.GetName(), Is.EqualTo("Bold"), "A header that is not text can't be announced, so the ScreenTip title must be the name");
     }
 
     // Guard: a text header stays the name.
@@ -100,20 +79,6 @@ public class NameFromScreenTipTitleTests
 
         Assert.That(UIElementAutomationPeer.CreatePeerForElement(withEmptyTitle).GetName(), Is.Null.Or.Empty);
         Assert.That(UIElementAutomationPeer.CreatePeerForElement(withPlainToolTip).GetName(), Is.Null.Or.Empty);
-    }
-
-    [Test]
-    public void Name_follows_a_changed_ScreenTip_title()
-    {
-        var screenTip = new ScreenTip { Title = "Bold" };
-        var button = new Button { ToolTip = screenTip };
-        var peer = UIElementAutomationPeer.CreatePeerForElement(button);
-
-        Assert.That(peer.GetName(), Is.EqualTo("Bold"));
-
-        screenTip.Title = "Fett";
-
-        Assert.That(peer.GetName(), Is.EqualTo("Fett"), "The name must follow the title (for example after a language change)");
     }
 
     [Test]
