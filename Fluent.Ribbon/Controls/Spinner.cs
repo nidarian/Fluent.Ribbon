@@ -452,7 +452,8 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
         }
 
         // The text box takes the focus, so a screen reader announces it: give it the spinner's name,
-        // the app's AutomationProperties.Name or else a text header (never the type name of a header that isn't text).
+        // the app's AutomationProperties.Name or else a text header (never the type name of a header that isn't text)
+        // or else the title of the spinner's ScreenTip.
         // Not when the template already names it (an app's own Spinner template).
         if (DependencyPropertyHelper.GetValueSource(this.textBox, System.Windows.Automation.AutomationProperties.NameProperty).BaseValueSource == BaseValueSource.Default)
         {
@@ -684,12 +685,14 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
             Bindings =
             {
                 new Binding { Source = this, Path = new PropertyPath(System.Windows.Automation.AutomationProperties.NameProperty), Mode = BindingMode.OneWay },
-                new Binding { Source = this, Path = new PropertyPath(HeaderProperty), Mode = BindingMode.OneWay }
+                new Binding { Source = this, Path = new PropertyPath(HeaderProperty), Mode = BindingMode.OneWay },
+                new Binding { Source = this, Path = new PropertyPath(ToolTipProperty), Mode = BindingMode.OneWay }
             }
         });
     }
 
-    // Name for the spinner's text box: the spinner's AutomationProperties.Name, else its Header if that is text (without the access key marker).
+    // Name for the spinner's text box: the spinner's AutomationProperties.Name, else its Header if that is text (without the access key marker),
+    // else the title of its ScreenTip (read when the ToolTip is set; a title changed later is picked up with the next header, name or ToolTip change).
     private sealed class TextBoxNameConverter : IMultiValueConverter
     {
         public static readonly TextBoxNameConverter Instance = new();
@@ -703,9 +706,15 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
             }
 
             if (values.Length > 1
-                && values[1] is string header)
+                && values[1] is string { Length: > 0 } header)
             {
                 return AccessTextHelper.RemoveAccessKeyMarker(header) ?? string.Empty;
+            }
+
+            if (values.Length > 2
+                && values[2] is ScreenTip { Title.Length: > 0 } screenTip)
+            {
+                return screenTip.Title;
             }
 
             return string.Empty;
