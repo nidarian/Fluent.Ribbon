@@ -59,6 +59,19 @@ public class NameFromScreenTipTitleTests
         Assert.That(peer.GetName(), Is.EqualTo("Bold"), "A header that is not text can't be announced, so the ScreenTip title must be the name");
     }
 
+    [Test]
+    [TestCaseSource(nameof(ControlTypes))]
+    public void Control_with_an_empty_Header_is_named_by_its_ScreenTip_title(Type controlType)
+    {
+        var control = (FrameworkElement)Activator.CreateInstance(controlType)!;
+        ((IHeaderedControl)control).Header = string.Empty;
+        control.ToolTip = new ScreenTip { Title = "Bold" };
+
+        var peer = UIElementAutomationPeer.CreatePeerForElement(control);
+
+        Assert.That(peer.GetName(), Is.EqualTo("Bold"), "An empty header is no name, so the ScreenTip title must be the name");
+    }
+
     // Guard: a text header stays the name.
     [Test]
     [TestCaseSource(nameof(ControlTypes))]
