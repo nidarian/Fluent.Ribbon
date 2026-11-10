@@ -288,10 +288,17 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   name was empty. This applies to `Button`, `ToggleButton`, `CheckBox`,
   `RadioButton`, `DropDownButton` (and `ApplicationMenu`), `SplitButton`, `Spinner` (and its text box),
   `ComboBox`, `TextBox`, `InRibbonGallery`, a group's launcher button, and the
-  inner button of a split button. A name that was not empty before stays the
+  inner button of a split button (that last one from reading the code, not
+  tested). A name that was not empty before stays the
   same. UI tests that find such a control by its empty name, or expect no name,
   need an update. A title like "Bold (Ctrl+B)" becomes the name as it is; set
   `AutomationProperties.Name` for a different one.
+- Limits: a ScreenTip title that comes from a binding to the control's
+  `DataContext` (or is looked up live from the window's resources) is empty
+  before the ScreenTip was first shown, so the control has no name then; use a
+  fixed title or set `AutomationProperties.Name`. In an editable `ComboBox` the
+  focus goes to its inner text box, which still has no name. More in
+  `ROUND16.md`, "Deferred".
 - Apps with their own automation peer derived from one of the fork's peers:
   `base.GetNameCore()` now already returns the ScreenTip title when there is no
   other name, so a fallback the app applies only to an empty result no longer

@@ -3,35 +3,31 @@
 Done 2026-11-10. **AI (Claude) was used** for all of it. Nothing was sent to the
 original project.
 
-How: the first item of a read-only audit for accessibility gaps. It was proven
-by tests-only builds that fail in the new tests on net462, net6.0 and net8.0,
-then fixed. Blind reviews (pessimistic and adversarial) ran until two rounds in
-a row were clean.
+How: the first item of a read-only audit for accessibility gaps. Tests were
+written first and seen failing, then the fix was written. Blind reviews
+(pessimistic and adversarial) ran until two rounds in a row were clean.
 
-In the table, #605, #606 and #611 (and #615 to #617, below) are tests-only
-builds on the code before this round. #608 and #612 are builds of an earlier version of the fix with the new
-tests a review asked for (two in #608, one in #612); they fail in those only.
+Proof: build **#618** runs all tests of this round on the code from before the
+round (tests only). On each of net462, net6.0 and net8.0 it fails in the same 34
+test cases and in nothing else: for each of the ten controls a missing header, a
+header that isn't text and an empty header (30), the changed title, the launcher
+button and the two Spinner text box tests. Build **#613** is the fix with the
+same tests; everything passes. #618 lists the failed tests per .NET version in
+one line each, because GitHub shows only about ten failure notes per build;
+the earlier tests-only builds (#605, #606, #611, #615 to #617) each showed only
+a part for that reason and are superseded by #618.
 
-#605 holds 22 new failing cases per .NET version, but GitHub shows only about
-ten failure notes per build. The ten shown cover a control without a header
-(`Button`, `TextBox`, `SplitButton`, `DropDownButton`, `Spinner`), a header that
-isn't text (`RadioButton`, `DropDownButton`, `CheckBox`, `ToggleButton`) and the
-changed title. #606 re-ran three cases that were cut off: `ComboBox` and
-`InRibbonGallery` without a header, and the launcher button. The remaining
-nine combinations got three more tests-only builds, each small enough to show
-every failure three times (once per .NET version): #615 (`ToggleButton`,
-`CheckBox`, `RadioButton` without a header), #616 (`Button`, `SplitButton`,
-`Spinner` with a header that isn't text) and #617 (`ComboBox`, `TextBox`,
-`InRibbonGallery` with a header that isn't text). So every new failing case was
-seen failing on the code before this round.
+Two more builds show the tests that the reviews asked for failing on earlier
+versions of the fix: #608 on the first version (split button renamed, Spinner
+text box unnamed) and #612 on the second (Spinner text box keeps an old title).
 
 ## Fixed
 
 | Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
-| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606, #615 to #617 (cases #605's list cut off) → #607; #611 (empty header) → #610 |
-| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" (when reached with the screen reader's own navigation; Tab doesn't stop on it) | same | #606 → #607 |
-| The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #608 → #610; #612 → #613 |
+| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #618 → #613 |
+| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" (when reached with the screen reader's own navigation; Tab doesn't stop on it) | same | #618 → #613 |
+| The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #618, #608, #612 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
 `DropDownButton` (and `ApplicationMenu`, which is one), `SplitButton`, `Spinner`,
@@ -80,16 +76,15 @@ readers as help text, so it would be read twice.
   round (`null`, or the empty header), and a Spinner header that is only an
   access key marker ("_") no longer blocks the ScreenTip title for the text box.
 
-Build of the branch (built as `diag/names-r16-green3`, which only adds the CI
-step that lists failed tests): **#613 green** on net462, net6.0 and net8.0.
-GitHub caps the failure notes of one step at about ten (see above for what
-#605 and #606 show).
+`diag/names-r16-green3` (#613) is the fix branch plus only the CI step that
+lists failed tests; `diag/names-r16all` (#618) is the code before the round plus
+that step, a per-report summary line and the tests.
 
 Blind reviews:
 
 - Round 1 (two reviewers): a split button named by its command would have been
   renamed to the ScreenTip title, and the Spinner's text box stayed unnamed.
-  Both fixed, each proven by its own failing test (#608).
+  Both fixed, each proven by its own failing test (#608 → #610).
 - Round 2 (two reviewers): the Spinner's text box read the title only once
   (fixed, #612 → #613). One claim was checked and rejected: that a split
   button's inner button gets a different name than the split button when it has
