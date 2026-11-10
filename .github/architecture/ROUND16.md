@@ -6,7 +6,8 @@ original project.
 How: the first item of a read-only audit for accessibility gaps. Most tests were
 written first and seen failing, then the fix was written; the empty-header
 cases were added after the fix and fail only on the code from before the round
-(#618), and one split button test is a guard that passes before and after. Blind reviews
+(#618). The tests marked as guards in the test file check that existing
+names stay; they pass before and after. Blind reviews
 (pessimistic and adversarial) ran until two rounds in a row were clean.
 
 Proof: build **#618** runs all tests of this round on the code from before the
