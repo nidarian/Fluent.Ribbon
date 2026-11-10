@@ -311,6 +311,9 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   method as usual, and compile the app against the new package. With the
   library file only swapped in, the Spinner's text box doesn't get the ScreenTip
   title (nothing else breaks).
-- Unusual setup (from reading the code, not tested): an app's own list that uses a Fluent button without a header
-  as its item container and relied on WPF naming each entry by the data item's
-  text now gets the ScreenTip title as the entry's name when the button has one.
+- Unusual setup (from reading the code, not tested): an app's own list that uses
+  a Fluent control without content of its own (for example a `DropDownButton` or
+  `SplitButton`) and without a header as its item container, and relied on WPF
+  naming each entry by the data item's text, now gets the ScreenTip title as the
+  entry's name when the control has one. Buttons, toggle buttons, check boxes
+  and radio buttons are not affected (WPF names them by their content first).
