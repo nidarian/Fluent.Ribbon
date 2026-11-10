@@ -62,8 +62,9 @@ readers as help text, so it would be read twice.
   this is how WPF tooltips work. For the Spinner's text box the same applies. The help text
   (`ScreenTip.Text`) always had this limit.
 - One `ScreenTip` object shared by several controls through a style, with its
-  title bound to the control it is shown for, names each of them after the
-  control that showed it last. Give each control its own ScreenTip or a fixed
+  title bound to the control it is shown for, gives those controls an unreliable
+  name (empty, or the name of whichever control is showing the ScreenTip). Read
+  from the code, not tested. Give each control its own ScreenTip or a fixed
   title.
 - UI Automation is not told separately when only the title changes; it sees the
   new name with the next layout update, like a changed header.
@@ -77,8 +78,10 @@ readers as help text, so it would be read twice.
   of a split button getting the ScreenTip title; a Quick Access Toolbar copy.
 - Two small changes of the last fix commit have no failing-first test of their
   own: a control that nothing names reports the same empty result as before the
-  round (`null`, or the empty header), and a Spinner header that is only an
-  access key marker ("_") no longer blocks the ScreenTip title for the text box.
+  round (`null`, or the empty header), and for the Spinner's text box a header
+  whose text is empty after its access key marker is removed no longer blocks
+  the ScreenTip title. No real header is known to cause that (WPF probably
+  leaves a lone "_" as it is), so this is a precaution only.
 
 `diag/names-r16-green3` (#613) is the fix branch plus only the CI step that
 lists failed tests; `diag/names-r16all` (#618) is the code before the round plus

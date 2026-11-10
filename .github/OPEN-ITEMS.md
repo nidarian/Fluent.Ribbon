@@ -96,7 +96,7 @@ there): the same for gallery items and menu items, and for the Backstage button,
 a collapsed group and a backstage page when their `Header` isn't text; the text box of an editable
 ComboBox has no name at all, not from the header either (older behaviour); a ScreenTip title that comes from the control's `DataContext` (or is looked up live from the window's resources) is only
 reliable while the ScreenTip is shown, and empty before it was first shown; one ScreenTip shared by several controls
-with a title bound to the shown control.
+with a title bound to the shown control gives them an unreliable name (not tested).
 
 ## 5. Checks only a person can do (on a Windows PC)
 
