@@ -172,6 +172,43 @@ public class NameFromScreenTipTitleTests
         }
     }
 
+    // The spinner's text box must not keep an old title: it follows a changed title (for example after a language change)
+    // and a replaced or removed ScreenTip, like the spinner itself does.
+    [Test]
+    public void Spinner_text_box_name_follows_the_ScreenTip()
+    {
+        var screenTip = new ScreenTip { Title = "Font size" };
+        var spinner = new Spinner { ToolTip = screenTip };
+
+        using (new TestRibbonWindow(spinner))
+        {
+            spinner.ApplyTemplate();
+            UIHelper.DoEvents();
+
+            var textBox = spinner.Template.FindName("PART_TextBox", spinner) as System.Windows.Controls.TextBox;
+            Assert.That(textBox, Is.Not.Null, "Precondition: the template has PART_TextBox");
+
+            var peer = UIElementAutomationPeer.CreatePeerForElement(textBox);
+            Assert.That(peer.GetName(), Is.EqualTo("Font size"), "Precondition: the text box is named by the title");
+
+            screenTip.Title = "Schriftgrad";
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.EqualTo("Schriftgrad"), "The text box name must follow a changed title");
+
+            spinner.ToolTip = new ScreenTip { Title = "Size" };
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.EqualTo("Size"), "The text box name must follow a replaced ScreenTip");
+
+            screenTip.Title = "Old";
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.EqualTo("Size"), "A ScreenTip that is no longer the spinner's must not name the text box");
+
+            spinner.ToolTip = "Plain text";
+            UIHelper.DoEvents();
+            Assert.That(peer.GetName(), Is.Null.Or.Empty, "A plain text ToolTip is the help text, not a name");
+        }
+    }
+
     [Test]
     public void Group_launcher_button_is_named_by_the_title_of_its_ScreenTip()
     {
