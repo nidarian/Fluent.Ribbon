@@ -30,7 +30,7 @@ text box unnamed) and #612 on the second (Spinner text box keeps an old title).
 |---|---|---|---|
 | A ribbon control for which the app set no text `Header` (a button that only ever shows an icon; a small button that has a `Header` was already named) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #618 → #613 |
 | A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" | same | #618 → #613 |
-| The text box of a Spinner without a text header or explicit name, which takes the keyboard focus, did not get that name either (found by the reviews of this round) | Only "edit" | same | #618, #608 → #613 |
+| The text box of a Spinner without a text header or explicit name, which takes the keyboard focus, was not named by the ScreenTip title either (found by the reviews of this round) | Only "edit" | same | #618, #608 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
 `DropDownButton` (and `ApplicationMenu`, which is one), `SplitButton`, `Spinner`,
