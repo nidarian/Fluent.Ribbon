@@ -2,7 +2,7 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-11-06 (rounds 5 to 15; rounds 12 to 15 are in the package once `integration/round12` to `integration/round15` are merged into `integration/all-fixes`). The open choices about some of
+be checked when updating. Status: 2026-11-10 (rounds 5 to 16; rounds 5 to 15 are in the package, round 16 once `fix/automation-names-r16` is merged into `integration/all-fixes`). The open choices about some of
 these are in `AUDIT-DECISIONS.md` and `../OPEN-ITEMS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
@@ -280,3 +280,27 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   too. If an app sets the original's `Text` with a fixed style
   setter or trigger, typed text now overrides it only until the style is applied
   again or the trigger changes.
+
+## Round 16
+
+- A control without a text `Header` (or with an empty one) that has a `ScreenTip`
+  with a title now reports that title as its UI Automation name; before, the
+  name was empty. This applies to `Button`, `ToggleButton`, `CheckBox`,
+  `RadioButton`, `DropDownButton`, `SplitButton`, `Spinner` (and its text box),
+  `ComboBox`, `TextBox`, `InRibbonGallery`, a group's launcher button, and the
+  inner button of a split button. A name that was not empty before stays the
+  same. UI tests that find such a control by its empty name, or expect no name,
+  need an update. A title like "Bold (Ctrl+B)" becomes the name as it is; set
+  `AutomationProperties.Name` for a different one.
+- Apps with their own automation peer derived from one of the fork's peers:
+  `base.GetNameCore()` now already returns the ScreenTip title when there is no
+  other name, so a fallback the app applies only to an empty result no longer
+  runs for such a control.
+- `Spinner` has a new `OnPropertyChanged` override. It only matters for apps
+  that subclass `Spinner` and override that method themselves: call the base
+  method as usual, and compile the app against the new package. With the
+  library file only swapped in, the Spinner's text box doesn't get the ScreenTip
+  title (nothing else breaks).
+- Unusual setup: an app's own list that uses a Fluent button without a header
+  as its item container and relied on WPF naming each entry by the data item's
+  text now gets the ScreenTip title as the entry's name when the button has one.

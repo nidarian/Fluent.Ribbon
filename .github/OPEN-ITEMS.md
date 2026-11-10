@@ -1,9 +1,9 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-06, after round 15 (rounds 12 to
-15 are in the package once `integration/round12` to `integration/round15` are
-merged into `integration/all-fixes`)
-(`architecture/ROUND7.md` to `architecture/ROUND15.md`). Each item points to the
+One page for all loose ends. Status: 2026-11-10, after round 16 (rounds up to
+15 are in the package; round 16 once `fix/automation-names-r16` is merged into
+`integration/all-fixes`)
+(`architecture/ROUND7.md` to `architecture/ROUND16.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -89,6 +89,14 @@ ColorGallery list names (`ROUND11.md`); round 12 opening a tab on a minimized ri
 `ROUND8.md` and `ROUND11.md`: the ColorGallery (no automation peer of its own; colours read as hex codes, English headings; in highlight mode one list is announced as "Standard Colors"; the gradient lists have no name), expanded groups announcing their KeyTip, text that doesn't
 grow with the Windows text size, keyboard access to the status bar menu, the display options headings announced as unavailable,
 a contextual group's name not announced again when its header changes at runtime (`ROUND11.md`).
+
+Round 16 named icon-only controls, a group's launcher button and the Spinner's
+text box by the ScreenTip title (`ROUND16.md`). Still open from it ("Deferred"
+there): the same for gallery items, menu items, the generic `RibbonControl`
+peer, a collapsed group, a backstage page and the text box of an editable
+ComboBox; a ScreenTip title that comes from the control's `DataContext` is empty
+until the ScreenTip was shown once; one ScreenTip shared by several controls
+with a title bound to the shown control.
 
 ## 5. Checks only a person can do (on a Windows PC)
 
