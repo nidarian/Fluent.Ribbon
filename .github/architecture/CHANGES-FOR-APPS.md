@@ -294,10 +294,12 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   need an update. A title like "Bold (Ctrl+B)" becomes the name as it is; set
   `AutomationProperties.Name` for a different one.
 - Limits: a ScreenTip title that comes from a binding to the control's
-  `DataContext` (or is looked up live from the window's resources) is empty
-  before the ScreenTip was first shown, so the control has no name then; use a
-  fixed title or set `AutomationProperties.Name`. In an editable `ComboBox` the
-  focus goes to its inner text box, which still has no name. More in
+  `DataContext` (or is looked up live from the window's resources) is only
+  reliable while the ScreenTip is shown, and empty before it was first shown, so
+  the control can be without a name; use a fixed title or set
+  `AutomationProperties.Name`. In an editable `ComboBox` the focus goes to its
+  inner text box, which still has no name. Both are read from the code and from
+  how WPF tooltips work, not tested. More in
   `ROUND16.md`, "Deferred".
 - Apps with their own automation peer derived from one of the fork's peers:
   `base.GetNameCore()` now already returns the ScreenTip title when there is no
@@ -308,6 +310,6 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   method as usual, and compile the app against the new package. With the
   library file only swapped in, the Spinner's text box doesn't get the ScreenTip
   title (nothing else breaks).
-- Unusual setup: an app's own list that uses a Fluent button without a header
+- Unusual setup (from reading the code, not tested): an app's own list that uses a Fluent button without a header
   as its item container and relied on WPF naming each entry by the data item's
   text now gets the ScreenTip title as the entry's name when the button has one.

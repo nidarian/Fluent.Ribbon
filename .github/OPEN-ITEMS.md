@@ -92,8 +92,8 @@ a contextual group's name not announced again when its header changes at runtime
 
 Round 16 named icon-only controls, a group's launcher button and the Spinner's
 text box by the ScreenTip title (`ROUND16.md`). Still open from it ("Deferred"
-there): the same for gallery items, menu items, the generic `RibbonControl`
-peer, a collapsed group, a backstage page and the text box of an editable
+there): the same for gallery items and menu items, for the generic `RibbonControl`
+peer, a collapsed group and a backstage page when their `Header` isn't text, and for the text box of an editable
 ComboBox; a ScreenTip title that comes from the control's `DataContext` (or is looked up live from the window's resources) is only
 reliable while the ScreenTip is shown, and empty before it was first shown; one ScreenTip shared by several controls
 with a title bound to the shown control.

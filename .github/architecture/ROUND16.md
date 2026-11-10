@@ -3,8 +3,10 @@
 Done 2026-11-10. **AI (Claude) was used** for all of it. Nothing was sent to the
 original project.
 
-How: the first item of a read-only audit for accessibility gaps. Tests were
-written first and seen failing, then the fix was written. Blind reviews
+How: the first item of a read-only audit for accessibility gaps. Most tests were
+written first and seen failing, then the fix was written; the empty-header
+cases were added after the fix and fail only on the code from before the round
+(#618), and one split button test is a guard that passes before and after. Blind reviews
 (pessimistic and adversarial) ran until two rounds in a row were clean.
 
 Proof: build **#618** runs all tests of this round on the code from before the
@@ -13,7 +15,7 @@ test cases and in nothing else: for each of the ten controls a missing header, a
 header that isn't text and an empty header (30), the changed title, the launcher
 button and the two Spinner text box tests. Build **#613** is the fix with the
 same tests; everything passes. #618 lists the failed tests per .NET version in
-one line each, because GitHub shows only about ten failure notes per build;
+one line each, because GitHub shows only about ten failure notes per build step;
 the earlier tests-only builds (#605, #606, #611, #615 to #617) each showed only
 a part for that reason and are superseded by #618.
 
@@ -26,7 +28,7 @@ text box unnamed) and #612 on the second (Spinner text box keeps an old title).
 | Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
 | A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #618 → #613 |
-| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" (when reached with the screen reader's own navigation; Tab doesn't stop on it) | same | #618 → #613 |
+| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" | same | #618 → #613 |
 | The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #618, #608, #612 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
@@ -47,10 +49,11 @@ readers as help text, so it would be read twice.
 
 ## Deferred (tracked)
 
-- Not changed in this round, same gap: gallery items, menu items, the generic
-  `RibbonControl` peer (for example `RibbonToolBar`), a collapsed group and a
-  backstage page with a `Header` that isn't text; the text box inside an
-  editable `ComboBox`.
+- Not changed in this round: gallery items and menu items (no name from the
+  ScreenTip title); the generic `RibbonControl` peer (for example
+  `RibbonToolBar`), a collapsed group and a backstage page when their `Header`
+  isn't text; the text box inside an editable `ComboBox` (read in the code, not
+  tested).
 - A `ScreenTip` title that comes from a binding to the control's `DataContext`
   (or a title looked up live from the window's resources) is only reliable while
   the ScreenTip is shown (WPF connects a tooltip to its control only then). Before
