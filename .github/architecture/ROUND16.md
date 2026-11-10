@@ -8,8 +8,8 @@ by tests-only builds that fail in the new tests on net462, net6.0 and net8.0,
 then fixed. Blind reviews (pessimistic and adversarial) ran until two rounds in
 a row were clean.
 
-In the table, #605, #606 and #611 are tests-only builds on the code before this
-round. #608 and #612 are builds of an earlier version of the fix with the new
+In the table, #605, #606 and #611 (and #615 to #617, below) are tests-only
+builds on the code before this round. #608 and #612 are builds of an earlier version of the fix with the new
 tests a review asked for (two in #608, one in #612); they fail in those only.
 
 #605 holds 22 new failing cases per .NET version, but GitHub shows only about
@@ -18,14 +18,18 @@ ten failure notes per build. The ten shown cover a control without a header
 isn't text (`RadioButton`, `DropDownButton`, `CheckBox`, `ToggleButton`) and the
 changed title. #606 re-ran three cases that were cut off: `ComboBox` and
 `InRibbonGallery` without a header, and the launcher button. The remaining
-combinations of control and case (for example `CheckBox` without a header) were
-not seen failing one by one; they use the same shared code and pass in #613.
+nine combinations got three more tests-only builds, each small enough to show
+every failure three times (once per .NET version): #615 (`ToggleButton`,
+`CheckBox`, `RadioButton` without a header), #616 (`Button`, `SplitButton`,
+`Spinner` with a header that isn't text) and #617 (`ComboBox`, `TextBox`,
+`InRibbonGallery` with a header that isn't text). So every new failing case was
+seen failing on the code before this round.
 
 ## Fixed
 
 | Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
-| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606 (three cases #605's list cut off) → #607; #611 (empty header) → #610 |
+| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606, #615 to #617 (cases #605's list cut off) → #607; #611 (empty header) → #610 |
 | A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" (when reached with the screen reader's own navigation; Tab doesn't stop on it) | same | #606 → #607 |
 | The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #608 → #610; #612 → #613 |
 
