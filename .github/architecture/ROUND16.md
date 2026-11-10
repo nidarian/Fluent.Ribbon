@@ -8,13 +8,17 @@ by tests-only builds that fail in the new tests on net462, net6.0 and net8.0,
 then fixed. Blind reviews (pessimistic and adversarial) ran until two rounds in
 a row were clean.
 
+In the table, #605, #606 and #611 are tests-only builds on the code before this
+round. #608 and #612 are builds of an earlier version of the fix with the new
+test a review asked for; they fail in that test only.
+
 ## Fixed
 
-| Problem | What a user heard | Branch | Tests only → with fix |
+| Problem | What a user heard | Branch | Failing build → passing build |
 |---|---|---|---|
-| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606 (the cases #605's list cut off), #611 (empty header) → #607 |
-| A group's dialog launcher button had no name unless the app set `LauncherText` | Only "button" | same | #606 → #607 |
-| The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #608, #612 → #610, #613 |
+| A ribbon control without a text `Header` (an icon-only button, common in small groups and on the Quick Access Toolbar) had no name for screen readers, even when its `ScreenTip` has a title like "Bold". The same for a `Header` that is empty or not text | Only "button" | `fix/automation-names-r16` | #605, #606 (the cases #605's list cut off) → #607; #611 (empty header) → #610 |
+| A group's dialog launcher button had no name unless the app set `LauncherText` (or a launcher command that has a text) | Only "button" | same | #606 → #607 |
+| The Spinner's text box, which takes the keyboard focus, did not get that name, and would have kept an old title after the app changed it (both found by the reviews of this round) | Only "edit", or an outdated name | same | #608 → #610; #612 → #613 |
 
 Covered controls: `Button`, `ToggleButton`, `CheckBox`, `RadioButton`,
 `DropDownButton`, `SplitButton`, `Spinner`, `ComboBox`, `TextBox` and
@@ -39,7 +43,7 @@ readers as help text, so it would be read twice.
   backstage page with a `Header` that isn't text; the text box inside an
   editable `ComboBox`.
 - A `ScreenTip` title that comes from a binding to the control's `DataContext`
-  or to a resource of the window is empty until the ScreenTip has been shown
+  (or a title looked up live from the window's resources) is empty until the ScreenTip has been shown
   once (WPF connects a tooltip to its control only then). Until then the control
   has no name. For the Spinner's text box the same applies. The help text
   (`ScreenTip.Text`) always had this limit.
@@ -54,8 +58,9 @@ readers as help text, so it would be read twice.
   behaviour).
 - A Spinner with a header like "_Size" reports "_Size" itself and "Size" on its
   text box (older behaviour, only the text box removes the access key marker).
-- Not tested: a ScreenTip set by a style, trigger or binding on a Spinner; the
-  split button's inner button text; a Quick Access Toolbar copy.
+- Not tested: a ScreenTip set by a style, trigger or binding on a Spinner; a
+  split button taking its name from its inner button's text; the inner button
+  of a split button getting the ScreenTip title; a Quick Access Toolbar copy.
 - Two small changes of the last fix commit have no failing-first test of their
   own: a control that nothing names reports the same empty result as before the
   round (`null`, or the empty header), and a Spinner header that is only an
