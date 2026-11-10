@@ -12,6 +12,37 @@ using System.Windows;
 internal static class AutomationPeerHelper
 {
     /// <summary>
+    /// Gets the name for <paramref name="owner"/>.
+    /// </summary>
+    /// <param name="owner">The element owning the automation peer.</param>
+    /// <param name="baseValue">The value from the base peer. It contains an explicit AutomationProperties.Name, so it wins if set.</param>
+    /// <returns><paramref name="baseValue"/> if it's not empty, otherwise the text header, otherwise the title of a <see cref="ScreenTip"/> ToolTip.</returns>
+    /// <remarks>
+    /// A control without a text header (an icon-only button) would have no name at all. The ScreenTip title ("Bold") is the name sighted users get.
+    /// A plain string ToolTip is not used: WPF already exposes it as help text, so it would be announced twice.
+    /// </remarks>
+    public static string? GetName(UIElement owner, string? baseValue)
+    {
+        if (string.IsNullOrEmpty(baseValue) == false)
+        {
+            return baseValue;
+        }
+
+        if ((owner as IHeaderedControl)?.Header is string { Length: > 0 } header)
+        {
+            return header;
+        }
+
+        if ((owner as FrameworkElement)?.ToolTip is ScreenTip screenTip
+            && string.IsNullOrEmpty(screenTip.Title) == false)
+        {
+            return screenTip.Title;
+        }
+
+        return baseValue;
+    }
+
+    /// <summary>
     /// Gets the access key for <paramref name="owner"/>.
     /// </summary>
     /// <param name="owner">The element owning the automation peer.</param>
