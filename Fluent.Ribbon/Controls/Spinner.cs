@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -709,7 +709,7 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
             }
             else
             {
-                this.ClearValue(ScreenTipTitleProperty);
+                _ = e.NewValue;
             }
         }
     }
