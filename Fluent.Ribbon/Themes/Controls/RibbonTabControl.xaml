@@ -265,7 +265,7 @@
                                                      HorizontalContentAlignment="Stretch"
                                                      VerticalContentAlignment="Stretch"
                                                      NextContent="{Binding SelectedContent, RelativeSource={RelativeSource TemplatedParent}}"
-                                                     AreAnimationsEnabled="{DynamicResource {x:Static SystemParameters.ClientAreaAnimationKey}}"
+                                                     AreAnimationsEnabled="{DynamicResource {x:Static SystemParameters.MenuAnimationKey}}"
                                                      TransitionStoryboard="{DynamicResource Fluent.Ribbon.Storyboards.RibbonTabControl.Content.Transition}" />
                     </ContentControl>
                 </Grid>
