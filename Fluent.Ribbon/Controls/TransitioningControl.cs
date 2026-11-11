@@ -115,10 +115,8 @@ public class TransitioningControl : Control
     private static void OnAreAnimationsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         // Turned off during a transition: remove the old content at once.
-        if (e.NewValue is false)
-        {
-            ((TransitioningControl)d).StopTransition();
-        }
+        _ = d;
+        _ = e;
     }
 
     /// <inheritdoc />
