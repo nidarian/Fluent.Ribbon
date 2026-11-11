@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 /// <inheritdoc />
 public class RibbonCheckBoxAutomationPeer : System.Windows.Automation.Peers.CheckBoxAutomationPeer
@@ -14,7 +14,7 @@ public class RibbonCheckBoxAutomationPeer : System.Windows.Automation.Peers.Chec
     protected override string? GetNameCore()
     {
         // Explicit name, then the text header, then the ScreenTip title (for icon-only controls).
-        return AutomationPeerHelper.GetName(this.Owner, base.GetNameCore());
+        return base.GetNameCore() is { Length: > 0 } n ? n : (this.Owner as IHeaderedControl)?.Header as string;
     }
 
     /// <inheritdoc />
