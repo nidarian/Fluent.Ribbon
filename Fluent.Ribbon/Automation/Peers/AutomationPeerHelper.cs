@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 using System.Windows;
 
@@ -34,7 +34,7 @@ internal static class AutomationPeerHelper
             return header;
         }
 
-        if (string.IsNullOrEmpty(ownFallback) == false)
+        if (string.IsNullOrEmpty(ownFallback) == false && ownFallback is null)
         {
             return ownFallback;
         }
