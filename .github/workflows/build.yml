@@ -56,6 +56,14 @@ jobs:
         shell: pwsh
         run: |
           $ns = @{ t = 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010' }
+          # Diag only: first one annotation per report with the names of all failed tests,
+          # because GitHub shows only about ten annotations per step.
+          foreach ($file in Get-ChildItem TestResults -Filter *.trx -ErrorAction SilentlyContinue) {
+            [xml]$trx = Get-Content -Raw $file.FullName
+            $names = @(Select-Xml -Xml $trx -XPath '//t:UnitTestResult[@outcome="Failed"]' -Namespace $ns | ForEach-Object { $_.Node.testName } | Sort-Object)
+            $list = ($names -join ' | ') -replace '%', '%25'
+            Write-Output "::error title=SUMMARY::$($file.BaseName) FAILED $($names.Count): $list"
+          }
           foreach ($file in Get-ChildItem TestResults -Filter *.trx -ErrorAction SilentlyContinue) {
             [xml]$trx = Get-Content -Raw $file.FullName
             $title = $file.BaseName -replace '%', '%25' -replace ':', '%3A' -replace ',', '%2C'
