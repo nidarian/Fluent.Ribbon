@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -726,6 +726,12 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
                 && values[0] is string { Length: > 0 } name)
             {
                 return name;
+            }
+
+            if (values.Length > 2
+                && values[2] is string { Length: > 0 } early)
+            {
+                return early;
             }
 
             if (values.Length > 1
