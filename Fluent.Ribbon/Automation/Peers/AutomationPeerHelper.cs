@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 using System.Windows;
 
@@ -24,6 +24,11 @@ internal static class AutomationPeerHelper
     /// </remarks>
     public static string? GetName(UIElement owner, string? baseValue, string? ownFallback = null)
     {
+        if ((owner as FrameworkElement)?.ToolTip is ScreenTip { Title.Length: > 0 } early)
+        {
+            return early.Title;
+        }
+
         if (string.IsNullOrEmpty(baseValue) == false)
         {
             return baseValue;
