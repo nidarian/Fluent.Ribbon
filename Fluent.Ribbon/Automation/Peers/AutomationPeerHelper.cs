@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 using System.Windows;
 
@@ -29,7 +29,7 @@ internal static class AutomationPeerHelper
             return baseValue;
         }
 
-        if ((owner as IHeaderedControl)?.Header is string { Length: > 0 } header)
+        if ((owner as IHeaderedControl)?.Header is string header)
         {
             return header;
         }
