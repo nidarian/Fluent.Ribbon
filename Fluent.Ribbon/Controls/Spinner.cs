@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace Fluent;
 
 using System;
@@ -705,7 +705,7 @@ public class Spinner : RibbonControl, IMediumIconProvider, ISimplifiedRibbonCont
         {
             if (e.NewValue is ScreenTip screenTip)
             {
-                this.SetBinding(ScreenTipTitleProperty, new Binding { Source = screenTip, Path = new PropertyPath(ScreenTip.TitleProperty), Mode = BindingMode.OneWay });
+                this.SetValue(ScreenTipTitleProperty, screenTip.Title);
             }
             else
             {
