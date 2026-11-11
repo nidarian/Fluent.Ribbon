@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 using System.Windows;
 
@@ -46,7 +46,7 @@ internal static class AutomationPeerHelper
         }
 
         // Nothing names the control: return what the peers returned before the ScreenTip title was considered (null, or an empty header).
-        return (owner as IHeaderedControl)?.Header as string;
+        return baseValue;
     }
 
     /// <summary>
