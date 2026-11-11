@@ -17,8 +17,9 @@ header that isn't text and an empty header (30), the changed title, the launcher
 button and the two Spinner text box tests. Build **#613** is the fix with the
 same tests; everything passes. #618 lists the failed tests per .NET version in
 one line each, because GitHub shows only about ten failure notes per build step;
-the earlier tests-only builds (#605, #606, #611, #615 to #617) each showed only
-a part for that reason and are superseded by #618.
+the earlier tests-only builds each showed only a part (#605 because of that
+limit; #606, #611 and #615 to #617 ran a few cases each to stay under it) and
+are superseded by #618.
 
 Two more builds show the tests that the reviews asked for failing on earlier
 versions of the fix: #608 on the first version (split button renamed, Spinner
