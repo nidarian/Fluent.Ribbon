@@ -98,6 +98,29 @@ public class TransitioningControl : Control
         }
     }
 
+    /// <summary>Identifies the <see cref="AreAnimationsEnabled"/> dependency property.</summary>
+    public static readonly DependencyProperty AreAnimationsEnabledProperty = DependencyProperty.Register(nameof(AreAnimationsEnabled), typeof(bool), typeof(TransitioningControl), new PropertyMetadata(BooleanBoxes.TrueBox, OnAreAnimationsEnabledChanged));
+
+    /// <summary>
+    /// Gets or sets whether content changes are animated.
+    /// The ribbon's tab control binds this to the Windows animation setting (<see cref="SystemParameters.ClientAreaAnimation"/>),
+    /// so people who turned animations off (for example because of motion sensitivity) see the new content at once.
+    /// </summary>
+    public bool AreAnimationsEnabled
+    {
+        get => (bool)this.GetValue(AreAnimationsEnabledProperty);
+        set => this.SetValue(AreAnimationsEnabledProperty, BooleanBoxes.Box(value));
+    }
+
+    private static void OnAreAnimationsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        // Turned off during a transition: remove the old content at once.
+        if (e.NewValue is false)
+        {
+            ((TransitioningControl)d).StopTransition();
+        }
+    }
+
     /// <inheritdoc />
     public override void OnApplyTemplate()
     {
@@ -126,6 +149,12 @@ public class TransitioningControl : Control
         }
 
         this.StopTransition();
+
+        if (this.AreAnimationsEnabled == false)
+        {
+            this.currentContentPresenter.SetCurrentValue(ContentPresenter.ContentProperty, newContent);
+            return;
+        }
 
         if (this.currentStoryBoard is not null)
         {
