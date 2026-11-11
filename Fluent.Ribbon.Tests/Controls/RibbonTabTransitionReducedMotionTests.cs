@@ -28,7 +28,29 @@ public class RibbonTabTransitionReducedMotionTests
             var property = GetAreAnimationsEnabledProperty();
 
             Assert.That(transition.GetValue(property), Is.EqualTo(SystemParameters.ClientAreaAnimation), "The tab transition must follow the Windows animation setting");
-            Assert.That(DependencyPropertyHelper.GetValueSource(transition, property).IsExpression, Is.True, "It must keep following the setting when the user changes it while the app runs");
+        }
+    }
+
+    // The setting is looked up like a resource, so a value further up the tree stands in for Windows changing it while the app runs.
+    [Test]
+    public void Tab_transition_follows_a_change_of_the_animation_setting_while_the_app_runs()
+    {
+        var ribbon = CreateRibbon();
+
+        using (var window = new TestRibbonWindow(ribbon))
+        {
+            UIHelper.DoEvents();
+
+            var transition = GetTransitioningControl(ribbon);
+            var property = GetAreAnimationsEnabledProperty();
+
+            window.Resources[SystemParameters.ClientAreaAnimationKey] = false;
+            UIHelper.DoEvents();
+            Assert.That(transition.GetValue(property), Is.False, "Animations turned off: the tab transition must stop animating");
+
+            window.Resources[SystemParameters.ClientAreaAnimationKey] = true;
+            UIHelper.DoEvents();
+            Assert.That(transition.GetValue(property), Is.True, "Animations turned on again: the tab transition must animate again");
         }
     }
 
