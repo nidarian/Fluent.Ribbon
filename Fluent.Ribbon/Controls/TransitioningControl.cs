@@ -150,7 +150,7 @@ public class TransitioningControl : Control
 
         this.StopTransition();
 
-        if (this.AreAnimationsEnabled == false)
+        if (this.AreAnimationsEnabled == false && newContent is string)
         {
             this.currentContentPresenter.SetCurrentValue(ContentPresenter.ContentProperty, newContent);
             return;
