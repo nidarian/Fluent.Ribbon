@@ -1,4 +1,4 @@
-﻿namespace Fluent.Automation.Peers;
+namespace Fluent.Automation.Peers;
 
 using System.Windows;
 
@@ -29,6 +29,12 @@ internal static class AutomationPeerHelper
             return baseValue;
         }
 
+        if ((owner as FrameworkElement)?.ToolTip is ScreenTip screenTip
+            && string.IsNullOrEmpty(screenTip.Title) == false)
+        {
+            return screenTip.Title;
+        }
+
         if ((owner as IHeaderedControl)?.Header is string { Length: > 0 } header)
         {
             return header;
@@ -37,12 +43,6 @@ internal static class AutomationPeerHelper
         if (string.IsNullOrEmpty(ownFallback) == false)
         {
             return ownFallback;
-        }
-
-        if ((owner as FrameworkElement)?.ToolTip is ScreenTip screenTip
-            && string.IsNullOrEmpty(screenTip.Title) == false)
-        {
-            return screenTip.Title;
         }
 
         // Nothing names the control: return what the peers returned before the ScreenTip title was considered (null, or an empty header).
