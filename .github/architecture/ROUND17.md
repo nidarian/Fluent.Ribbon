@@ -67,7 +67,8 @@ Broken copies: six copies of the fix were each broken on purpose in one
 realistic way and built with the tests. Five were caught on each of the three
 .NET versions: the link to the setting removed from the template (#635), the
 setting ignored for tab content (#636), the new content not shown with
-animations off (#637; 16 other tests failed too, because the ribbon then shows
+animations off (#637; 16 other ribbon tests failed too: the build machine has
+animations turned off in Windows, so with this mistake every ribbon there showed
 no tab content), the link pointing to the wrong Windows setting (#639), and the
 old content kept with animations off (#640). One was not caught: removing the
 clean-up when the setting is turned off during a running transition (#638). That
