@@ -1,9 +1,9 @@
 # Open items: everything not done, not fixed or not tested yet
 
-One page for all loose ends. Status: 2026-11-10, after round 16 (rounds up to
-15 are in the package; round 16 once `fix/automation-names-r16` is merged into
-`integration/all-fixes`)
-(`architecture/ROUND7.md` to `architecture/ROUND16.md`). Each item points to the
+One page for all loose ends. Status: 2026-11-18, after round 17 (rounds up to
+16 are merged into `integration/all-fixes`; round 17 once
+`fix/tab-transition-reduced-motion-r17` is merged)
+(`architecture/ROUND7.md` to `architecture/ROUND17.md`). Each item points to the
 note with the details.
 When an item is done, delete it here and record it in that note.
 
@@ -97,6 +97,12 @@ a collapsed group and a backstage page when their `Header` isn't text; the text 
 ComboBox has no name at all, not from the header either (older behaviour); a ScreenTip title that comes from the control's `DataContext` (or is looked up live from the window's resources) is only
 reliable while the ScreenTip is shown, and empty before it was first shown; one ScreenTip shared by several controls
 with a title bound to the shown control gives them an unreliable name (not tested).
+
+Round 17 made the ribbon tab switch follow "Animation effects" in Windows
+(`ROUND17.md`). Still open from it: a `TransitioningControl` outside the ribbon,
+or an app's own copy of the tab control template, doesn't follow the setting by
+itself; turning the setting off during a running tab switch lets that switch
+finish (at most about 0.2 seconds).
 
 ## 5. Checks only a person can do (on a Windows PC)
 

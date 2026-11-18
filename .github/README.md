@@ -107,4 +107,5 @@ conflict later.
 | `architecture/ROUND14.md` | Round 14: a ribbon tab's ScrollItem offered to screen readers |
 | `architecture/ROUND15.md` | Round 15: backstage pages and gallery items keep OneWay selection bindings, grouped toggles via screen readers, the text box's toolbar copy |
 | `architecture/ROUND16.md` | Round 16: icon-only controls, a group's launcher button and the Spinner's text box named by the ScreenTip title for screen readers |
+| `architecture/ROUND17.md` | Round 17: the ribbon tab switch follows "Animation effects" in Windows (reduced motion) |
 | `architecture/MEMORY-LEAKS.md` | Memory leaks found and fixed (closed windows, removed ribbons, toolbar copies), and what was ruled out |

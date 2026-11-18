@@ -2,7 +2,7 @@
 
 Most fixes only change something when the bug happens. This page lists the
 changes that **every** app using the fork's package can notice, so they can
-be checked when updating. Status: 2026-11-10 (rounds 5 to 16; rounds 5 to 15 are in the package, round 16 once `fix/automation-names-r16` is merged into `integration/all-fixes`). The open choices about some of
+be checked when updating. Status: 2026-11-18 (rounds 5 to 17; rounds 5 to 16 are merged into `integration/all-fixes`, round 17 once `fix/tab-transition-reduced-motion-r17` is merged). The open choices about some of
 these are in `AUDIT-DECISIONS.md` and `../OPEN-ITEMS.md`.
 
 ## The built-in themes look slightly different (`contrast-wcag`)
@@ -317,3 +317,19 @@ the first tab will see the ribbon go back to that tab on such a refresh. Use
   naming each entry by the data item's text, now gets the ScreenTip title as the
   entry's name when the control has one. Buttons, toggle buttons, check boxes
   and radio buttons are not affected (WPF names them by their content first).
+
+## Round 17
+
+- With "Animation effects" turned off in Windows, switching ribbon tabs shows the
+  new content at once, without the slide and fade. With it on, nothing changes.
+  UI tests that run on a machine with animations off no longer have to wait for
+  the transition.
+- `TransitioningControl` has a new public property `AreAnimationsEnabled`
+  (on by default). Only the ribbon's own tab control template links it to the
+  Windows setting. An app that uses `TransitioningControl` itself, or has its
+  own copy of the ribbon's tab control template, keeps the old behaviour unless
+  it sets or links the property. A subclass that overrides `StartTransition`
+  without calling the base method ignores the property; one that overrides
+  `StopTransition` may now be called before the template is applied (when the
+  setting is off at start-up), so it should not assume the template parts
+  exist.
