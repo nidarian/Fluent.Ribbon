@@ -1,5 +1,6 @@
 namespace Fluent.Tests.Automation.Peers;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -50,6 +51,52 @@ public class RibbonGroupBoxAutomationPeerTests
             UIHelper.DoEvents();
             Assert.That(groupBox.IsDropDownOpen, Is.False);
             Assert.That(expandCollapse.ExpandCollapseState, Is.EqualTo(ExpandCollapseState.Collapsed));
+        }
+    }
+
+    /// <summary>
+    /// The base walk listed the header TextBlock as a direct child of the group, and the header peer listed the same peer
+    /// as its own child. From the second walk on the TextBlock's parent was the header peer, so UI Automation's next-sibling
+    /// navigation stopped at it and the dialog launcher and the header dropped out of the tree: a screen reader saw them
+    /// once, then never again.
+    /// </summary>
+    [Test]
+    public void Every_walk_gives_each_child_one_parent_and_keeps_the_launcher()
+    {
+        var groupBox = new RibbonGroupBox
+        {
+            Header = "Group",
+            IsLauncherVisible = true,
+            LauncherToolTip = new ScreenTip { Title = "Launcher" },
+            Items = { new Fluent.Button { Header = "Button" } }
+        };
+
+        using (new TestRibbonWindow(groupBox))
+        {
+            UIHelper.DoEvents();
+
+            var peer = UIElementAutomationPeer.CreatePeerForElement(groupBox);
+
+            for (var walk = 1; walk <= 3; walk++)
+            {
+                var all = new List<AutomationPeer>();
+                CollectAndCheckParents(peer, all, walk);
+
+                Assert.That(all.Count(x => x.GetAutomationId() == "PART_DialogLauncherButton"), Is.EqualTo(1), $"Walk {walk}: the launcher is in the tree once");
+                Assert.That(all.Count(x => x is Fluent.Automation.Peers.RibbonGroupHeaderAutomationPeer), Is.EqualTo(1), $"Walk {walk}: the header is in the tree once");
+                var twice = all.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => $"{g.Key.GetType().Name} '{g.Key.GetName()}' ({(g.Key as UIElementAutomationPeer)?.Owner.GetType().Name})");
+                Assert.That(twice, Is.Empty, $"Walk {walk}: no peer is listed twice");
+            }
+        }
+    }
+
+    private static void CollectAndCheckParents(AutomationPeer parent, List<AutomationPeer> all, int walk)
+    {
+        foreach (var child in parent.GetChildren() ?? new List<AutomationPeer>())
+        {
+            Assert.That(child.GetParent(), Is.SameAs(parent), $"Walk {walk}: {child.GetType().Name} '{child.GetName()}' must have the peer that lists it as its parent");
+            all.Add(child);
+            CollectAndCheckParents(child, all, walk);
         }
     }
 }
