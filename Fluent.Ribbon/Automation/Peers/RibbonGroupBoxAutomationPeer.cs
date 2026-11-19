@@ -54,14 +54,25 @@ public class RibbonGroupBoxAutomationPeer : FrameworkElementAutomationPeer, IExp
     {
         var list = base.GetChildrenCore();
 
-        if (this.HeaderPeer is not null)
+        var header = this.HeaderPeer;
+        if (header is not null)
         {
             if (list is null)
             {
                 list = new List<AutomationPeer>(1);
             }
 
-            list.Add(this.HeaderPeer);
+            // The header ContentControl has no peer of its own, so the base walk goes through it and lists its content
+            // (the header TextBlock) as a direct child of the group. The header peer lists that same peer as its child.
+            // A peer has one parent, and the last walk wins: from the second walk on, the TextBlock's parent is the header
+            // peer while the group still lists it, so UI Automation's next-sibling navigation ends there and everything after
+            // it (the dialog launcher, the header) drops out of the tree. Leave the header's content to the header peer.
+            var headerOwner = header.Owner;
+            list.RemoveAll(peer => peer is UIElementAutomationPeer { Owner: { } owner }
+                                   && owner != headerOwner
+                                   && owner.IsDescendantOf(headerOwner));
+
+            list.Add(header);
         }
 
         return list;
